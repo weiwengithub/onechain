@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "Onechain Wallet",
+  "description": "Non-custodial multi-chain extension wallet powered by Onechain, the interchain validator.",
+  "action": {
+    "default_icon": {
+      "16": "extension-assets/icon16.png",
+      "19": "extension-assets/icon19.png",
+      "32": "extension-assets/icon32.png",
+      "38": "extension-assets/icon38.png",
+      "64": "extension-assets/icon64.png",
+      "128": "extension-assets/icon128.png",
+      "512": "extension-assets/icon512.png"
+    },
+    "default_title": "Onechain Wallet",
+    "default_popup": "popup.html"
+  },
+  "sidebar_action": {
+    "default_icon": {
+      "16": "extension-assets/icon16.png",
+      "32": "extension-assets/icon32.png"
+    },
+    "default_title": "Onechain Wallet",
+    "default_panel": "sidepanel.html",
+    "open_at_install": true
+  },
+  "author": "Onechain",
+  "icons": {
+    "16": "extension-assets/icon16.png",
+    "19": "extension-assets/icon19.png",
+    "32": "extension-assets/icon32.png",
+    "38": "extension-assets/icon38.png",
+    "48": "extension-assets/icon48.png",
+    "64": "extension-assets/icon64.png",
+    "128": "extension-assets/icon128.png",
+    "256": "extension-assets/icon256.png",
+    "512": "extension-assets/icon512.png"
+  },
+  "permissions": ["storage", "unlimitedStorage", "clipboardWrite", "activeTab", "webRequest"],
+  "optional_permissions": ["clipboardWrite", "activeTab", "webRequest"],
+  "host_permissions": ["<all_urls>"],
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "support@cosmostation.io"
+    }
+  }
+}
