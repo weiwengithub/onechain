@@ -88,7 +88,13 @@ export interface IotaAsset extends AssetBase {
   category?: number;
 }
 
-export type Asset = CosmosAsset | CosmosCw20Asset | EvmAsset | EvmErc20Asset | SuiAsset | AptosAsset | BitcoinAsset | IotaAsset;
+export interface TronAsset extends AssetBase {
+  chainType: 'tron';
+  type: string;
+  category?: number;
+}
+
+export type Asset = CosmosAsset | CosmosCw20Asset | EvmAsset | EvmErc20Asset | SuiAsset | AptosAsset | BitcoinAsset | IotaAsset | TronAsset;
 
 export type AssetSingleGroup = {
   singles: Asset[];

@@ -140,6 +140,7 @@ export function useAccountAllAssets({
       customCw20AccountAssets: data.customCw20AccountAssets,
       bitcoinAccountAssets: filterAssetList(data.bitcoinAccountAssets),
       iotaAccountAssets: filterAssetList(data.iotaAccountAssets),
+      tronAccountAssets: filterAssetList(data.tronAccountAssets),
     };
   }, [bitcoinBalanceInfo, data, disableBalanceFilter, disableHiddenFilter, hiddenAssetIds, hiddenCustomAssetIds, visibleAssetIds]);
 

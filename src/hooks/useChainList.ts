@@ -28,6 +28,7 @@ export function useChainList() {
 
     const allCosmosChains = [...(data?.cosmosChains || []), ...customCosmosChains];
     const allEVMChains = [...(data?.evmChains || []), ...customEvmChains];
+    const allTronChains = data?.tronChains || [];
 
     return {
       ...data,
@@ -35,6 +36,7 @@ export function useChainList() {
       customEvmChains,
       allCosmosChains,
       allEVMChains,
+      allTronChains,
     };
   }, [addedCustomChainList, data]);
 
@@ -145,6 +147,7 @@ export function useChainList() {
             ...(chainList.suiChains || []),
             ...(chainList.bitcoinChains || []),
             ...(chainList.iotaChains || []),
+            ...(chainList.allTronChains || []),
           ].sort((a, b) => a.name.localeCompare(b.name))
         : [],
     [chainList],

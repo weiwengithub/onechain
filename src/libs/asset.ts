@@ -507,7 +507,7 @@ export async function getAccountAssets(id: string, option?: GetAccountAssetsOpti
               const vestingRemained = getVestingRemained(accountInfo, type);
               const delegatedVestingTotal = chain.id === KAVA_CHAINLIST_ID ? getDelegatedVestingTotal(accountInfo, type) : delegation;
 
-               
+
               const [vestingRelatedAvailable, _] = (() => {
                 if (gt(vestingRemained, '0')) {
                   if (chain.id === PERSISTENCE_CHAINLIST_ID) {
@@ -973,6 +973,75 @@ export async function getAccountAssets(id: string, option?: GetAccountAssetsOpti
       return results;
     });
 
+  const tronPromise = PromisePool.withConcurrency(concurrency)
+    .for(iotaAssetsWithoutHidden)
+    .process(async (asset) => {
+      const addresses = accountAddress.filter((address) => address.chainId === asset.chainId && address.chainType === asset.chainType);
+      const chain = iotaChains.find((chain) => chain.id === asset.chainId && chain.chainType === asset.chainType)!;
+
+      const { results } = await PromisePool.withConcurrency(concurrency)
+        .for(addresses)
+        .process((address) => {
+          const type = asset.id;
+          const balanceInfo = iotaBalances?.find(
+            (balance) => balance.chainId === address.chainId && balance.chainType === address.chainType && balance.address === address.address,
+          );
+          const balance = balanceInfo?.balances?.find((balance) => balance.coinType === type)?.totalBalance || '0';
+
+          if (type === IOTA_COIN_TYPE) {
+            const delegationInfo = iotaDelegations?.find(
+              (balance) => balance.chainId === address.chainId && balance.chainType === address.chainType && balance.address === address.address,
+            );
+
+            const delegation =
+              delegationInfo?.delegations.reduce(
+                (allValidatorStakedSum, item) =>
+                  plus(
+                    allValidatorStakedSum,
+                    item.stakes.reduce((eachValidatorStakedSum, stakeItem) => plus(eachValidatorStakedSum, stakeItem.principal), '0'),
+                  ),
+                '0',
+              ) || '0';
+            const reward =
+              delegationInfo?.delegations?.reduce(
+                (allValidatorRewardsSum, item) =>
+                  plus(
+                    allValidatorRewardsSum,
+                    item.stakes.reduce(
+                      (eachValidatorRewardSum, stakeItem) => plus(eachValidatorRewardSum, 'estimatedReward' in stakeItem ? stakeItem.estimatedReward : '0'),
+                      '0',
+                    ),
+                  ),
+                '0',
+              ) || '0';
+            const totalBalance = sum([balance, delegation, reward]);
+
+            const result: AccountIotaAsset = {
+              chain,
+              asset,
+              address,
+              balance: balance,
+              delegation,
+              reward,
+              totalBalance,
+            };
+
+            return result;
+          }
+
+          const result: AccountIotaAsset = {
+            chain,
+            asset,
+            address,
+            balance: balance,
+          };
+
+          return result;
+        });
+
+      return results;
+    });
+
   const results = await Promise.all([
     cosmosPromise,
     evmPromise,
@@ -984,6 +1053,7 @@ export async function getAccountAssets(id: string, option?: GetAccountAssetsOpti
     customCW20Promise,
     bitcoinPromise,
     iotaPromise,
+    tronPromise,
   ]);
 
   const cosmosAccountAssets = results[0].results.flat().filter((asset) => asset.chain && asset.address);
@@ -996,6 +1066,7 @@ export async function getAccountAssets(id: string, option?: GetAccountAssetsOpti
   const customCw20AccountAssets = results[7].results.flat().filter((asset) => asset.chain && asset.address);
   const bitcoinAccountAssets = results[8].results.flat().filter((asset) => asset.chain && asset.address);
   const iotaAccountAssets = results[9].results.flat().filter((asset) => asset.chain && asset.address);
+  const tronAccountAssets = results[10].results.flat().filter((asset) => asset.chain && asset.address);
 
   type AssetWithBalance = {
     balance: string;
@@ -1059,6 +1130,7 @@ export async function getAccountAssets(id: string, option?: GetAccountAssetsOpti
   const filteredEVMAccountAssets = filterHiddenStakableAssetsByBalance(evmAccountAssets);
   const filteredSuiAccountAssets = filterHiddenStakableAssetsByBalance(suiAccountAssets);
   const filteredIotaAccountAssets = filterHiddenStakableAssetsByBalance(iotaAccountAssets);
+  const filteredTronAccountAssets = filterHiddenStakableAssetsByBalance(tronAccountAssets);
 
   const filteredAptosAccountAssets = filterHiddenAssetsByBalance(aptosAccountAssets);
   const filteredCW20AccountAssets = filterHiddenAssetsByBalance(cw20AccountAssets);
@@ -1081,6 +1153,7 @@ export async function getAccountAssets(id: string, option?: GetAccountAssetsOpti
     customCw20AccountAssets: filteredCustomCW20AccountAssets,
     bitcoinAccountAssets: filteredBitcoinAccountAssets,
     iotaAccountAssets: filteredIotaAccountAssets,
+    tronAccountAssets: filteredTronAccountAssets,
   };
 }
 

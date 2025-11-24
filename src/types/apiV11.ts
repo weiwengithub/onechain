@@ -72,6 +72,11 @@ export type V11Param = {
         is_eip1559: boolean;
         simulated_gas_multiply: number;
       };
+      tron_fee_info?: {
+        bandwidth_fee: number;
+        energy_fee: number;
+        gas_coefficient: number;
+      };
       grpc_endpoint?: {
         provider: string;
         url: string;

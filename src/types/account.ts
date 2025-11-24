@@ -12,6 +12,7 @@ import type {
   EvmAsset,
   EvmErc20Asset,
   IotaAsset,
+  TronAsset,
   SuiAsset,
 } from './asset';
 import type { BitcoinBalance } from './bitcoin/balance';
@@ -26,6 +27,7 @@ import type {
   CustomEvmChain,
   EvmChain,
   IotaChain,
+  TronChain,
   SuiChain,
 } from './chain';
 import type { AuthAccountsPayload } from './cosmos/account';
@@ -296,6 +298,16 @@ export interface AccountBitcoinAsset {
 export interface AccountIotaAsset {
   chain: IotaChain;
   asset: IotaAsset;
+  address: AccountAddress;
+  balance: string;
+  delegation?: string;
+  reward?: string;
+  totalBalance?: string;
+}
+
+export interface AccountTronAsset {
+  chain: TronChain;
+  asset: TronAsset;
   address: AccountAddress;
   balance: string;
   delegation?: string;
