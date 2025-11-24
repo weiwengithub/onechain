@@ -493,7 +493,7 @@ export async function getChains(forZkLoginOnly = false) {
     };
   });
 
-  const remappedTronChains = tronChains.map((chain) => {
+  const remappedTronChains: TronChain[] = tronChains.map((chain) => {
     const id = chain.id;
     const chainType = 'tron';
     const chainId = chain.params.chainlist_params.chain_id!;
@@ -509,9 +509,6 @@ export async function getChains(forZkLoginOnly = false) {
         ...endpoint,
         url: removeTrailingSlash(endpoint.url),
       })) ?? [];
-
-    const fullNodeUrls = rpcUrls;
-    const solidityNodeUrls = rpcUrls;
 
     const explorer = chain.params.chainlist_params?.explorer
       ? Object.entries(chain.params.chainlist_params.explorer).reduce((acc, [key, value]) => {
@@ -539,6 +536,12 @@ export async function getChains(forZkLoginOnly = false) {
 
     const isTestnet = isTestnetChain(id);
 
+    const feeInfo = {
+      bandwidthFee: chain.params.chainlist_params?.tron_fee_info?.bandwidth_fee ?? 1000,
+      energyFee: chain.params.chainlist_params?.tron_fee_info?.energy_fee ?? 420,
+      gasCoefficient: chain.params.chainlist_params?.tron_fee_info?.gas_coefficient ?? 1.0,
+    };
+
     return {
       id,
       chainId,
@@ -548,10 +551,9 @@ export async function getChains(forZkLoginOnly = false) {
       mainAssetDenom,
       chainDefaultCoinDenoms,
       rpcUrls,
-      fullNodeUrls,
-      solidityNodeUrls,
       explorer,
       accountTypes,
+      feeInfo,
       isTestnet,
     };
   });
