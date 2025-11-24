@@ -4,7 +4,10 @@ import { styled } from '@mui/material/styles';
 import { FilledTabPanel } from '@/components/common/FilledTab';
 
 export const Container = styled('div')({
-  width: '100%',
+  height: 'calc(100vh - 176px)',
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'hidden',
 });
 
 export const ManageIconContainer = styled('div')(({ theme }) => ({
@@ -19,9 +22,8 @@ export const ManageText = styled(Typography)(({ theme }) => ({
 export const StickyTabContainer = styled('div')(() => ({
   width: '100%',
   height: 'fit-content',
-  position: 'sticky',
-  top: '3rem',
   paddingBottom: '24px',
+  position: 'relative',
   zIndex: 1,
 
   '&::after': {

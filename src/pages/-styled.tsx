@@ -4,6 +4,18 @@ import { styled } from '@mui/material/styles';
 import Image from '@/components/common/Image';
 import { TabPanel } from '@/components/common/Tab';
 
+export const ScrollWrapper = styled('div')({
+  height: '100%',
+  overflowX: 'hidden',
+  overflowY: 'auto',
+  msOverflowStyle: 'none',
+  scrollbarWidth: 'none',
+
+  '&::-webkit-scrollbar': {
+    display: 'none',
+  },
+})
+
 export const Container = styled('div')({
   width: '100%',
   display: 'flex',

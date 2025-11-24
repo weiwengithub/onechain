@@ -10,6 +10,7 @@ import { Route as Initial } from '@/pages/account/initial';
 import { toastSuccess } from '@/utils/toast';
 import { useExtensionSessionStorageStore } from '@/zustand/hooks/useExtensionSessionStorageStore';
 import { useExtensionStorageStore } from '@/zustand/hooks/useExtensionStorageStore';
+import ForgetPasswordIcon from "@/assets/images/icons/ForgetPassword.svg"
 
 import ResetBottomSheet from './-components/ResetBottomSheet';
 import {
@@ -20,7 +21,17 @@ import {
   DescriptionSubTitle,
   DescriptionTitle,
   StyledCheckBoxContainer,
+  StyledInputContainer,
+  StyledInput
 } from './-styled';
+import { type ResetForm, useSchema } from '@/pages/manage-account/reset-wallet/-components/ResetBottomSheet/useSchema.ts';
+import { useForm } from 'react-hook-form';
+import { joiResolver } from '@hookform/resolvers/joi';
+import StandardInput from '@components/common/StandardInput';
+import { InputAdornment } from '@mui/material';
+import { StyledIconButton } from '@components/common/StandardInput/styled.tsx';
+import ViewIcon from '@/assets/images/icons/View12.svg';
+import ViewHideIcon from '@/assets/images/icons/ViewHide20.svg';
 
 export default function Entry() {
   const { t } = useTranslation();
@@ -32,7 +43,7 @@ export default function Entry() {
 
   const [isOpenResetBottomSheet, setIsOpenResetBottomSheet] = useState(false);
 
-  const isButtonEnabled = isCheckTerms.every((isCheck) => isCheck);
+  const [isConfirm, setIsConfirm] = useState(false);
 
   const handleCheck = (index: number) => {
     setIsCheckTerms((prev) => {
@@ -42,7 +53,11 @@ export default function Entry() {
     });
   };
 
-  const reset = () => {
+  const [resetText, setResetText] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const isButtonDisabled = isConfirm && !resetText;
+
+  const handleSubmit = () => {
     resetExtensionStorageStore();
     resetExtensionSessionStorageStore();
     toastSuccess(t('pages.manage-account.reset-wallet.entry.resetSuccess'));
@@ -52,62 +67,63 @@ export default function Entry() {
     });
   };
 
+
   return (
     <>
       <BaseBody>
         <Body>
-          <DescriptionContainer>
-            <DescriptionTitle variant="h2_B">{t('pages.manage-account.reset-wallet.entry.title')}</DescriptionTitle>
-            <DescriptionSubTitle variant="b3_R_Multiline">{t('pages.manage-account.reset-wallet.entry.subTitle')}</DescriptionSubTitle>
-          </DescriptionContainer>
-          <CheckBoxContainer>
-            <StyledCheckBoxContainer
-              onClick={() => {
-                handleCheck(0);
-              }}
-            >
-              <CheckBoxTextContainer>
-                <Base1300Text variant="b3_R_Multiline">{t('pages.manage-account.reset-wallet.entry.description1')}</Base1300Text>
-              </CheckBoxTextContainer>
-            </StyledCheckBoxContainer>
-            <StyledCheckBoxContainer
-              onClick={() => {
-                handleCheck(1);
-              }}
-            >
-              <CheckBoxTextContainer>
-                <Base1300Text variant="b3_R">{t('pages.manage-account.reset-wallet.entry.description2')}</Base1300Text>
-              </CheckBoxTextContainer>
-            </StyledCheckBoxContainer>
-            <StyledCheckBoxContainer
-              onClick={() => {
-                handleCheck(2);
-              }}
-            >
-              <CheckBoxTextContainer>
-                <Base1300Text variant="b3_R">{t('pages.manage-account.reset-wallet.entry.description3')}</Base1300Text>
-              </CheckBoxTextContainer>
-            </StyledCheckBoxContainer>
-          </CheckBoxContainer>
+          {isConfirm ? (
+            <>
+              <div className="leading-[40px] text-[36px] text-white font-bold">{t('pages.manage-account.reset-wallet.entry.title2')}</div>
+              <div className="mt-[16px] leading-[19px] text-[16px] text-white opacity-60">{t('pages.manage-account.reset-wallet.entry.subTitle2')}</div>
+              <div className="mt-[24px] leading-[19px] text-[16px] text-white font-bold">{t('pages.manage-account.reset-wallet.entry.resetOneWallet')}</div>
+              <div className="mt-[8px] leading-[19px] text-[16px] text-white opacity-60">{t('pages.manage-account.reset-wallet.entry.description5')}</div>
+              <StyledInputContainer className="mt-[16px]">
+                <StyledInput
+                  placeholder={t('pages.manage-account.reset-wallet.components.ResetBottomSheet.index.inputLabel')}
+                  type="text"
+                  hideViewIcon={true}
+                  value={resetText}
+                  onChange={e => {
+                    setResetText(e.target.value)
+                    setErrorMessage('')
+                  }}
+                  error={!!errorMessage}
+                  helperText={errorMessage}
+                />
+              </StyledInputContainer>
+            </>
+            ) : (
+            <>
+              <div className="flex justify-center">
+                <ForgetPasswordIcon />
+              </div>
+              <div className="mt-[16px] leading-[24px] text-[24px] text-white font-bold text-center">{t('pages.manage-account.reset-wallet.entry.title1')}</div>
+              <div className="mt-[16px] leading-[18px] text-[14px] text-white text-center opacity-70">{t('pages.manage-account.reset-wallet.entry.subTitle1')}</div>
+              <div className="mt-[16px] leading-[18px] text-[14px] text-white text-center opacity-70 px-[12px]">{t('pages.manage-account.reset-wallet.entry.description4')}</div>
+            </>
+          )}
         </Body>
       </BaseBody>
       <BaseFooter>
         <Button
           onClick={() => {
-            setIsOpenResetBottomSheet(true);
+            if (isConfirm) {
+              if (resetText !== 'RESET') {
+                setErrorMessage(t('schema.resetForm.reset.any.only'));
+                return;
+              }
+              handleSubmit()
+            } else {
+              setIsConfirm(true)
+            }
           }}
-          disabled={!isButtonEnabled}
+          variant = 'red'
+          disabled={isButtonDisabled}
         >
-          {t('pages.manage-account.reset-wallet.entry.resetWallet')}
+          {t('pages.manage-account.reset-wallet.entry.resetOneWallet')}
         </Button>
       </BaseFooter>
-      <ResetBottomSheet
-        open={isOpenResetBottomSheet}
-        onClose={() => setIsOpenResetBottomSheet(false)}
-        onClickReset={() => {
-          reset();
-        }}
-      />
     </>
   );
 }

@@ -23,7 +23,11 @@ export default function Layout({ children }: LayoutProps) {
   const navigate = useNavigate();
 
   const { userAccounts, updateExtensionStorageStore } = useExtensionStorageStore((state) => state);
-  const { menmonicRestoreStrings: newSortedMnemonicRestoreStrings, privateKeyAccountIds: newSortedPrivateKeyAccountIds } = useNewSortedAccountStore(
+  const { 
+    menmonicRestoreStrings: newSortedMnemonicRestoreStrings, 
+    privateKeyAccountIds: newSortedPrivateKeyAccountIds,
+    zkLoginAccountIds: newSortedZkLoginAccountIds
+  } = useNewSortedAccountStore(
     (state) => state,
   );
 
@@ -33,6 +37,8 @@ export default function Layout({ children }: LayoutProps) {
     .filter((value, index, self) => self.indexOf(value) === index);
 
   const originPrivateKeyAccountIds = userAccounts.filter((item) => item.type === 'PRIVATE_KEY').map((account) => account.id);
+
+  const originZkLoginAccountIds = userAccounts.filter((item) => item.type === 'ZKLOGIN').map((account) => account.id);
 
   const handleUpdateUserAccounts = useCallback(() => {
     try {
@@ -76,9 +82,30 @@ export default function Layout({ children }: LayoutProps) {
         return isPrivateKeyChanged;
       })();
 
-      if (isOkToChangeMnemonicOrder || isOkToChangePrivateKeyOrder) {
+      const isOkToChangeZkLoginOrder = (() => {
+        if (newSortedZkLoginAccountIds.length === 0) return false;
+
+        const isZkLoginLengthMismatch = originZkLoginAccountIds.length !== newSortedZkLoginAccountIds.length;
+        const isZkLoginAccountIdsEqual =
+          new Set(originZkLoginAccountIds).size === new Set(newSortedZkLoginAccountIds).size &&
+          originZkLoginAccountIds.every((item) => newSortedZkLoginAccountIds.includes(item));
+
+        const isZkLoginValidationFailed = !isZkLoginAccountIdsEqual || isZkLoginLengthMismatch;
+
+        if (isZkLoginValidationFailed) {
+          throw new Error('Invalid zklogin order');
+        }
+
+        const isZkLoginChanged =
+          newSortedZkLoginAccountIds.length > 0 && originZkLoginAccountIds.some((item, idx) => item !== newSortedZkLoginAccountIds[idx]);
+
+        return isZkLoginChanged;
+      })();
+
+      if (isOkToChangeMnemonicOrder || isOkToChangePrivateKeyOrder || isOkToChangeZkLoginOrder) {
         const mnemonicAccounts = userAccounts.filter((acc) => acc.type === 'MNEMONIC');
         const privateKeyAccounts = userAccounts.filter((acc) => acc.type === 'PRIVATE_KEY');
+        const zkLoginAccounts = userAccounts.filter((acc) => acc.type === 'ZKLOGIN');
 
         const sortedMnemonicAccounts = isOkToChangeMnemonicOrder
           ? mnemonicAccounts.sort(
@@ -90,7 +117,11 @@ export default function Layout({ children }: LayoutProps) {
           ? privateKeyAccounts.sort((a, b) => newSortedPrivateKeyAccountIds.indexOf(a.id) - newSortedPrivateKeyAccountIds.indexOf(b.id))
           : privateKeyAccounts;
 
-        const sortedAccounts = [...sortedMnemonicAccounts, ...sortedPrivateKeyAccounts];
+        const sortedZkLoginAccounts = isOkToChangeZkLoginOrder
+          ? zkLoginAccounts.sort((a, b) => newSortedZkLoginAccountIds.indexOf(a.id) - newSortedZkLoginAccountIds.indexOf(b.id))
+          : zkLoginAccounts;
+
+        const sortedAccounts = [...sortedMnemonicAccounts, ...sortedPrivateKeyAccounts, ...sortedZkLoginAccounts];
         const isSortIntegrityMaintained =
           JSON.stringify([...sortedAccounts].sort((a, b) => (a.id > b.id ? 1 : a.id < b.id ? -1 : 0))) ===
           JSON.stringify([...userAccounts].sort((a, b) => (a.id > b.id ? 1 : a.id < b.id ? -1 : 0)));
@@ -113,6 +144,8 @@ export default function Layout({ children }: LayoutProps) {
     newSortedMnemonicRestoreStrings,
     originPrivateKeyAccountIds,
     newSortedPrivateKeyAccountIds,
+    originZkLoginAccountIds,
+    newSortedZkLoginAccountIds,
     t,
     userAccounts,
     updateExtensionStorageStore,

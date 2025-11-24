@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { before } from 'lodash';
 
 export const Container = styled('div')({
   display: 'flex',
@@ -11,14 +12,9 @@ export const StickyContainer = styled('div')(({ theme }) => ({
   width: '100%',
   height: 'fit-content',
   position: 'sticky',
-  top: '3rem',
-
-  padding: '0.8rem 1.2rem',
-
+  top: '80px',
   boxSizing: 'border-box',
-
   zIndex: 1,
-  backgroundColor: theme.palette.color.base50,
 }));
 
 export const RowContainer = styled('div')({
@@ -26,20 +22,22 @@ export const RowContainer = styled('div')({
   justifyContent: 'space-between',
   alignItems: 'center',
 
-  marginTop: '1rem',
+  marginTop: '16px',
 });
 
 export const PurpleContainer = styled('div')(({ theme }) => ({
   '& > svg': {
-    fill: theme.palette.accentColor.purple400,
+    fill: '#477CFC',
+    fontSize: '16px',
     '& > path': {
-      fill: theme.palette.accentColor.purple400,
+      fill: '#477CFC',
     },
   },
 }));
 
 export const AddTextContainer = styled('div')(({ theme }) => ({
-  color: theme.palette.accentColor.purple400,
+  color: '#477CFC',
+  fontSize: '16px',
   marginLeft: '0.2rem',
 }));
 
@@ -52,13 +50,26 @@ export const ContentsContainer = styled('div')({
   flex: '1',
   display: 'flex',
   flexDirection: 'column',
+  paddingTop: '16px',
+  position: 'relative',
+
+  '&:before': {
+    content: '""',
+    display: 'block',
+    height: '1px',
+    background: 'linear-gradient(90deg, #121315 0%, #2C3039 51.32%, #121315 100%)',
+    position: 'absolute',
+    left: '-24px',
+    right: '-24px',
+    top: '16px',
+  },
 });
 
 export const AddressItemWrapper = styled('div')(({ theme }) => ({
   width: '100%',
 
   '& > *:last-child': {
-    borderBottom: `0.1rem solid ${theme.palette.color.base200}`,
+    borderBottom: 'none',
   },
 }));
 

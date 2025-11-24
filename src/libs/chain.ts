@@ -13,6 +13,7 @@ import type {
   SuiChain,
 } from '@/types/chain';
 import type { ExtensionStorage } from '@/types/extension';
+import { ZKLOGIN_SUPPORTED_CHAIN_ID } from '@/constants/zklogin';
 import { isTestnetChain } from '@/utils/chain';
 import { parsingHdPath, removeTrailingSlash } from '@/utils/string';
 
@@ -31,8 +32,10 @@ function collectDefaultDenoms(
   ];
 }
 
-export async function getChains() {
-  const { paramsV11: chains } = await chrome.storage.local.get<ExtensionStorage>('paramsV11');
+export async function getChains(forZkLoginOnly = false) {
+  const {
+    paramsV11: chains,
+  } = await chrome.storage.local.get<ExtensionStorage>(['paramsV11']);
 
   if (!chains) {
     throw new Error('No chains found');
@@ -487,6 +490,20 @@ export async function getChains() {
       accountTypes,
     };
   });
+
+  // ZkLogin 用户只返回指定链
+  if (forZkLoginOnly) {
+    const zkLoginSuiChains = remappedSuiChains.filter(chain => chain.id === ZKLOGIN_SUPPORTED_CHAIN_ID);
+
+    return {
+      cosmosChains: [],
+      evmChains: [],
+      suiChains: zkLoginSuiChains,
+      aptosChains: [],
+      bitcoinChains: [],
+      iotaChains: [],
+    };
+  }
 
   return {
     cosmosChains: remappedCosmosChains,

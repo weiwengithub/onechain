@@ -41,14 +41,14 @@ type CoinSelectProps = {
 };
 
 export default function CoinSelect({
-  currentCoinId,
-  chainList,
-  coinList,
-  variant = 'default',
-  isBottomSheet = false,
-  searchPlaceholder,
-  onSelectCoin,
-}: CoinSelectProps) {
+                                     currentCoinId,
+                                     chainList,
+                                     coinList,
+                                     variant = 'default',
+                                     isBottomSheet = false,
+                                     searchPlaceholder,
+                                     onSelectCoin,
+                                   }: CoinSelectProps) {
   const { t } = useTranslation();
 
   const { data: coinGeckoPrice } = useCoinGeckoPrice();
@@ -217,17 +217,17 @@ export default function CoinSelect({
   // todo
   const tempDisplay = false;
 
-  const onlySuiCoinList = useMemo(() => {
+  const onlyCoinList = useMemo(() => {
     // @ts-ignore
-    let res = [];
-      filteredCoinList.forEach((item) => {
-        if (item.asset.chainType === 'sui') {
-          res.push(item);
-        }
-      }) ;
-      // @ts-ignore
+    const res = [];
+    filteredCoinList.forEach((item) => {
+      if (item.asset.chainType === 'sui' || item.asset.chainType === 'evm') {
+        res.push(item);
+      }
+    });
+    // @ts-ignore
     return res;
-    }, [filteredCoinList]);
+  }, [filteredCoinList]);
 
   return (
     <Container>
@@ -263,7 +263,7 @@ export default function CoinSelect({
       {filteredCoinList.length > 0 ? (
         <VirtualizedList
           // items={filteredCoinList}
-          items={onlySuiCoinList}
+          items={onlyCoinList}
           estimateSize={() => 60}
           renderItem={(coin) => {
             const balance = isStakeableAsset(coin) ? coin.totalBalance || coin.balance || '0' : coin.balance;
@@ -313,29 +313,29 @@ export default function CoinSelect({
         optionButtonProps={
           variant === 'stake'
             ? [
-                {
-                  sortKey: DASHBOARD_COIN_SORT_KEY.VALUE_HIGH_ORDER,
-                  children: <Typography variant="b2_M">{t('components.CoinSelect.index.valueHighOrder')}</Typography>,
-                },
-                {
-                  sortKey: DASHBOARD_COIN_SORT_KEY.ALPHABETICAL_ASC,
-                  children: <Typography variant="b2_M">{t('components.CoinSelect.index.alphabeticalAsc')}</Typography>,
-                },
-                {
-                  sortKey: COIN_SELECT_SORT_KEY.APR_DESC,
-                  children: <Typography variant="b2_M">{t('components.CoinSelect.index.aprDesc')}</Typography>,
-                },
-              ]
+              {
+                sortKey: DASHBOARD_COIN_SORT_KEY.VALUE_HIGH_ORDER,
+                children: <Typography variant="b2_M">{t('components.CoinSelect.index.valueHighOrder')}</Typography>,
+              },
+              {
+                sortKey: DASHBOARD_COIN_SORT_KEY.ALPHABETICAL_ASC,
+                children: <Typography variant="b2_M">{t('components.CoinSelect.index.alphabeticalAsc')}</Typography>,
+              },
+              {
+                sortKey: COIN_SELECT_SORT_KEY.APR_DESC,
+                children: <Typography variant="b2_M">{t('components.CoinSelect.index.aprDesc')}</Typography>,
+              },
+            ]
             : [
-                {
-                  sortKey: DASHBOARD_COIN_SORT_KEY.VALUE_HIGH_ORDER,
-                  children: <Typography variant="b2_M">{t('components.CoinSelect.index.valueHighOrder')}</Typography>,
-                },
-                {
-                  sortKey: DASHBOARD_COIN_SORT_KEY.ALPHABETICAL_ASC,
-                  children: <Typography variant="b2_M">{t('components.CoinSelect.index.alphabeticalAsc')}</Typography>,
-                },
-              ]
+              {
+                sortKey: DASHBOARD_COIN_SORT_KEY.VALUE_HIGH_ORDER,
+                children: <Typography variant="b2_M">{t('components.CoinSelect.index.valueHighOrder')}</Typography>,
+              },
+              {
+                sortKey: DASHBOARD_COIN_SORT_KEY.ALPHABETICAL_ASC,
+                children: <Typography variant="b2_M">{t('components.CoinSelect.index.alphabeticalAsc')}</Typography>,
+              },
+            ]
         }
         currentSortOption={sortOption}
         open={isOpenSortBottomSheet}

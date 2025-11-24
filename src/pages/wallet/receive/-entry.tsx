@@ -6,7 +6,7 @@ import CoinSelect from '@/components/CoinSelect';
 import { useAccountAllAssets } from '@/hooks/useAccountAllAssets';
 import { Route as Receive } from '@/pages/wallet/receive/$coinId';
 import { useMemo } from 'react';
-import { FlatAccountAssets } from '@/types/accountAssets.ts';
+import type { FlatAccountAssets } from '@/types/accountAssets.ts';
 
 export default function Entry() {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export default function Entry() {
 
   const coinList = useMemo(() => {
     const assets = accountAllAssets?.flatAccountAssets;
-    let res: FlatAccountAssets[] = [];
+    const res: FlatAccountAssets[] = [];
     if (assets && assets.length > 0) {
       assets.forEach((item) => {
         if (item.asset.chainType === 'sui') {

@@ -13,6 +13,7 @@ import SetAccountNameBottomSheet from '@/components/SetNameBottomSheet';
 import { useCurrentAccount } from '@/hooks/useCurrentAccount';
 import { useCurrentPassword } from '@/hooks/useCurrentPassword';
 import { Route as Dashboard } from '@/pages/index';
+import { Route as RestoreWalletWithMnemonic } from '@/pages/account/restore-wallet/mnemonic';
 import type { Account, AccountWithName, PrivateAccount } from '@/types/account';
 import { aesEncrypt } from '@/utils/crypto';
 import { sha512 } from '@/utils/crypto/password';
@@ -43,6 +44,10 @@ import ClearIcon from '@/assets/images/icons/Clear16.svg';
 import PasteIcon from '@/assets/images/icons/Paste18.svg';
 import ViewIcon from '@/assets/images/icons/View12.svg';
 import ViewHideIcon from '@/assets/images/icons/ViewHide20.svg';
+import { FilledTab, FilledTabs } from '@components/common/FilledTab';
+import { Route as RestoreWalletWithPrivateKey } from '@/pages/account/restore-wallet/privatekey/index.tsx';
+import EyeOnIcon from '@/assets/images/icons/EyeOn20.svg';
+import EyeOffIcon from '@/assets/images/icons/EyeOff20.svg';
 
 export default function Entry() {
   const { t } = useTranslation();
@@ -55,7 +60,11 @@ export default function Entry() {
 
   const [isViewPrivateKey, setIsViewPrivateKey] = useState(false);
 
-  const { userAccounts, comparisonPasswordHash, updateExtensionStorageStore } = useExtensionStorageStore((state) => state);
+  const {
+    userAccounts,
+    comparisonPasswordHash,
+    updateExtensionStorageStore,
+  } = useExtensionStorageStore((state) => state);
 
   const { addAccountWithName, setCurrentAccount } = useCurrentAccount();
   const { currentPassword } = useCurrentPassword();
@@ -132,6 +141,7 @@ export default function Entry() {
         await updateExtensionStorageStore('comparisonPasswordHash', comparisonPasswordHash);
       }
 
+
       await addAccountWithName(newAccount);
 
       await addPreferAccountType(newAccount.id);
@@ -161,26 +171,46 @@ export default function Entry() {
       <FormContainer onSubmit={handleSubmit(submit)}>
         <BaseBody>
           <Body>
-            <DescriptionContainer>
-              <DescriptionTitle variant="h2_B">{t('pages.account.restore-wallet.privatekey.index.title')}</DescriptionTitle>
-              <DescriptionSubTitle variant="b3_R_Multiline">{t('pages.account.restore-wallet.privatekey.index.subTitle')}</DescriptionSubTitle>
-            </DescriptionContainer>
+            <FilledTabs value={1} variant="fullWidth">
+              <FilledTab
+                key="Mnenmonic"
+                label={t('pages.account.restore-wallet.mnemonic.entry.mnemonicTab')}
+                onClick={() =>
+                  navigate({
+                    to: RestoreWalletWithMnemonic.to,
+                    replace: true,
+                  })
+                }
+              />
+              <FilledTab key="Private Key" label={t('pages.account.restore-wallet.mnemonic.entry.privateKeyTab')} />
+            </FilledTabs>
+            <div
+              className="mt-[16px] w-[312px] text-[36px] leading-[40px] font-bold text-white"
+            >{t('pages.account.restore-wallet.privatekey.index.title')}</div>
+            <div className="mt-[12px] flex justify-between">
+              <div
+                className="text-[16px] leading-[19px] font-normal text-white opacity-60"
+              >{t('pages.account.restore-wallet.privatekey.index.subTitle')}</div>
+            </div>
             <PrivateKeyInputWrapper>
               <TopContainer>
                 <IconTextButton
-                  trailingIcon={<ViewIconContainer>{isViewPrivateKey ? <ViewHideIcon /> : <ViewIcon />}</ViewIconContainer>}
+                  trailingIcon={<ViewIconContainer>{isViewPrivateKey ? <ViewHideIcon /> :
+                    <ViewIcon />}</ViewIconContainer>}
                   onClick={() => {
                     setIsViewPrivateKey(!isViewPrivateKey);
                   }}
                 >
-                  <MarginRightTypography variant="h4_B">{t('pages.account.restore-wallet.privatekey.index.privateKey')}</MarginRightTypography>
+                  <MarginRightTypography
+                    variant="h4_B"
+                  >{t('pages.account.restore-wallet.privatekey.index.privateKey')}</MarginRightTypography>
                 </IconTextButton>
               </TopContainer>
 
               <StyledOutlinedInput
                 placeholder={t('pages.account.restore-wallet.privatekey.index.enterPrivateKey')}
                 multiline
-                minRows={5}
+                minRows={4}
                 type={isViewPrivateKey ? 'text' : 'password'}
                 error={!!errors.privateKey}
                 hideViewIcon
@@ -198,7 +228,9 @@ export default function Entry() {
                     }
                     onClick={clearAll}
                   >
-                    <ControlInputText variant="b3_R">{t('pages.account.restore-wallet.privatekey.index.clearAll')}</ControlInputText>
+                    <ControlInputText
+                      variant="b3_R"
+                    >{t('pages.account.restore-wallet.privatekey.index.clearAll')}</ControlInputText>
                   </StyledIconTextButton>
                 ) : (
                   <StyledIconTextButton
@@ -209,7 +241,9 @@ export default function Entry() {
                     }
                     onClick={pasteFromClipboard}
                   >
-                    <ControlInputText variant="b3_R">{t('pages.account.restore-wallet.privatekey.index.pasteFromClipboard')}</ControlInputText>
+                    <ControlInputText
+                      variant="b3_R"
+                    >{t('pages.account.restore-wallet.privatekey.index.pasteFromClipboard')}</ControlInputText>
                   </StyledIconTextButton>
                 )}
               </ControlInputButtonContainer>

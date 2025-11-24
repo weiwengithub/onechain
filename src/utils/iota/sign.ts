@@ -21,7 +21,7 @@ export async function signAndExecuteTxSequentially(
       });
 
       return response;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-empty
+      // eslint-disable-next-line no-empty
     } catch (_) {}
   }
   throw new Error('All RPC URLs failed');
@@ -38,7 +38,7 @@ export async function signTxSequentially(signer: Ed25519Keypair, transaction: Tr
       const response = await signer.signTransaction(encoded);
 
       return response;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-empty
+      // eslint-disable-next-line no-empty
     } catch (_) {}
   }
   throw new Error('All RPC URLs failed');

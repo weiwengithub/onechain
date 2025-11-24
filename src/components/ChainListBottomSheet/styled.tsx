@@ -96,7 +96,8 @@ export const StickyContainer = styled('div')(({ theme }) => ({
   zIndex: 1,
   backgroundColor: theme.palette.color.base50,
   borderBottom: `0.1rem solid ${theme.palette.color.base100}`,
-  paddingBottom: '24px',
+  paddingTop: '24px',
+  marginBottom: '24px',
 }));
 
 export const NetworkCounts = styled('span')(({ theme }) => ({

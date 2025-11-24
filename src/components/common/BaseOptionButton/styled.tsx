@@ -10,7 +10,7 @@ export const StyledButton = styled('button')<StyledButtonProps>(({ theme, ...pro
   alignItems: 'center',
   border: 'none',
   cursor: 'pointer',
-  marginTop: '24px',
+  marginBottom: '24px',
 
   '&: disabled': {
     cursor: 'not-allowed',
@@ -28,7 +28,7 @@ export const ActiveLabel = styled('div')(({ theme }) => ({
 export const LeftContainer = styled('div')({
   width: 'fit-content',
 
-  marginRight: '1.2rem',
+  marginRight: '7px',
 });
 
 export const MiddleContainer = styled('div')({

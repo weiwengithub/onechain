@@ -10,6 +10,7 @@ export function useCurrentPassword() {
     const timestamp = new Date().getTime();
     const key = uuidv4();
 
+    // 更新密码
     await updateExtensionSessionStorageStore(
       'sessionPassword',
       password
@@ -20,6 +21,14 @@ export function useCurrentPassword() {
           }
         : null,
     );
+
+    // 同时更新活动时间戳（如果设置了密码）
+    if (password) {
+      await updateExtensionSessionStorageStore('lastActivityTimestamp', Date.now());
+      console.log('[useCurrentPassword] Password and activity timestamp updated');
+    } else {
+      console.log('[useCurrentPassword] Password cleared');
+    }
   };
 
   const currentPassword = sessionPassword ? aesDecrypt(sessionPassword.encryptedPassword, `${sessionPassword.key}${sessionPassword.timestamp}`) : null;

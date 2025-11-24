@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Onechain Wallet",
-  "description": "onechain wallet chrome extension",
+  "name": "OneWallet",
+  "description": "oneWallet chrome extension",
   "action": {
-    "default_title": "Onechain Wallet",
+    "default_title": "OneWallet",
     "default_icon": {
       "16": "extension-assets/icon16.png",
       "24": "extension-assets/icon24.png",
@@ -20,18 +20,46 @@
     "128": "extension-assets/icon128.png",
     "256": "extension-assets/icon256.png"
   },
-  "permissions": ["storage", "unlimitedStorage", "tabs", "sidePanel"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "tabs",
+    "sidePanel",
+    "identity",
+    "offscreen",
+    "webRequest"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "web_accessible_resources": [
     {
-      "resources": ["js/inject.js"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "js/inject.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ],
+      "exclude_matches": [
+        "https://docs.google.com/*",
+        "https://drive.google.com/*",
+        "https://*.docs.google.com/*"
+      ]
     }
   ],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["js/content.js"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "exclude_matches": [
+        "https://docs.google.com/*",
+        "https://drive.google.com/*",
+        "https://*.docs.google.com/*"
+      ],
+      "js": [
+        "js/content.js"
+      ],
       "run_at": "document_start"
     }
   ],

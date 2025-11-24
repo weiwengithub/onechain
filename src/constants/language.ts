@@ -1,4 +1,5 @@
 export const LANGUAGE_TYPE = {
   EN: 'en',
-  KO: 'ko',
+  // KO: 'ko',
+  ZH: 'zh',
 } as const;

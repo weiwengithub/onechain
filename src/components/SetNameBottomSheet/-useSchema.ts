@@ -13,7 +13,7 @@ export function useSchema() {
       .trim()
       .required()
       .min(1)
-      .max(20)
+      .max(30)
       .messages({
         'string.base': t('schema.common.string.base'),
         'string.empty': t('schema.common.string.empty'),

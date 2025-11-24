@@ -2,7 +2,11 @@ import validate from 'bitcoin-address-validation';
 import { Transaction } from 'bitcoinjs-lib';
 
 import { Network } from '@/constants/bitcoin/common';
-import { BITCOIN_METHOD_TYPE, BITCOIN_NO_POPUP_METHOD_TYPE, BITCOIN_POPUP_METHOD_TYPE } from '@/constants/bitcoin/message';
+import {
+  BITCOIN_METHOD_TYPE,
+  BITCOIN_NO_POPUP_METHOD_TYPE,
+  BITCOIN_POPUP_METHOD_TYPE,
+} from '@/constants/bitcoin/message';
 import { BITCOIN_RPC_ERROR_MESSAGE, RPC_ERROR, RPC_ERROR_MESSAGE } from '@/constants/error';
 import { getAddress, getKeypair } from '@/libs/address';
 import { sendMessage } from '@/libs/extension';
@@ -20,10 +24,10 @@ import type {
   BitRequestAccount,
   BitSwitchNetwork,
 } from '@/types/message/inject/bitcoin';
-import { BitcoinRPCError } from '@/utils/error';
+import { AptosRPCError, BitcoinRPCError } from '@/utils/error';
 import { get, post } from '@/utils/fetch';
 import { refreshOriginConnectionTime } from '@/utils/origins';
-import { processRequest } from '@/utils/requestApp';
+import { handleMissingAccountRequest, processRequest } from '@/utils/requestApp';
 import { extensionLocalStorage, extensionSessionStorage } from '@/utils/storage';
 
 export async function bitcoinProcess(message: BitcoinRequest) {
@@ -37,6 +41,23 @@ export async function bitcoinProcess(message: BitcoinRequest) {
   const { currentPassword } = await extensionSessionStorage();
 
   const chain = currentBitcoinNetwork;
+
+  // If no account exists, return error (expected on first launch)
+  const requiresInitialUiMethods = new Set<BitcoinRequest['method']>(['bit_requestAccount']);
+
+  if (!currentAccount) {
+    console.log('No account available bitcoin');
+    if (method && requiresInitialUiMethods.has(method as BitcoinRequest['method'])) {
+      void processRequest(message);
+    } else {
+      await handleMissingAccountRequest({
+        origin,
+        requestId,
+        tabId,
+      });
+    }
+    return;
+  }
 
   try {
     if (!method || !bitcoinMethods.includes(method)) {

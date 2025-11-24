@@ -7,6 +7,7 @@ import BaseBody from '@/components/BaseLayout/components/BaseBody';
 // import TextButton from '@/components/common/TextButton/index.tsx';
 import { NATIVE_EVM_COIN_ADDRESS } from '@/constants/evm.ts';
 import { useAccountAllAssets } from '@/hooks/useAccountAllAssets.ts';
+import { useClipboard } from '@/hooks/useClipboard';
 import { isTestnetChain } from '@/utils/chain.ts';
 import { getCoinId } from '@/utils/queryParamGenerator.ts';
 import { isEqualsIgnoringCase } from '@/utils/string.ts';
@@ -19,8 +20,6 @@ import {
 // import BottomLeftCornerStrokeIcon from '@/assets/images/icons/BorderStroke27.svg';
 import { QRCode } from '@components/onechain/QRCode.tsx';
 import { useTranslation } from 'react-i18next';
-import copy from 'copy-to-clipboard';
-import { toastDefault, toastError } from '@/utils/toast.tsx';
 
 type EntryProps = {
   coinId: string;
@@ -28,6 +27,7 @@ type EntryProps = {
 
 export default function Entry({ coinId }: EntryProps) {
   const { t } = useTranslation();
+  const { copyToClipboard } = useClipboard();
   const [tabValue] = useState(0);
 
   const { data: currentAccountAssets } = useAccountAllAssets({
@@ -73,14 +73,6 @@ export default function Entry({ coinId }: EntryProps) {
   console.log(chainName);
   const [copied, setCopied] = useState(false);
 
-  const copyToClipboard = () => {
-    if (chainAddress && copy(chainAddress)) {
-      toastDefault(t('components.MainBox.CoinDetailBox.index.copied'));
-    } else {
-      toastError(t('components.MainBox.CoinDetailBox.index.copyFailed'));
-    }
-  };
-
   useEffect(() => {
     if (!copied) return;
 
@@ -109,8 +101,8 @@ export default function Entry({ coinId }: EntryProps) {
         </div>
         <div className="m-auto mt-[40px] w-[240px] px-[12px] text-center text-[14px] leading-[16px] text-white break-all">{chainAddress}</div>
         <div
-          className="m-auto mt-[14px] w-[288px] h-[36px] rounded-lg border border-solid border-[#1E2025] text-center leading-[36px] text-[#0047C4]"
-          onClick={copyToClipboard}
+          className="mt-[24px] w-full h-[50px] bg-[#0047C4] rounded-[12px] text-center leading-[50px] text-white text-[16px] font-bold hover:bg-[#3B82FF] cursor-pointer"
+          onClick={() => chainAddress && copyToClipboard(chainAddress)}
         >
           Copy Address
         </div>

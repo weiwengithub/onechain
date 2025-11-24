@@ -1,16 +1,17 @@
-import type { AxiosInstance } from "axios";
-import { createRequestInstance } from "./request.ts";
+import type { AxiosInstance } from 'axios';
+import { createRequestInstance } from './request.ts';
 import {
   type MarketPriceResp,
   PAGE_NUM_START,
+  type RwaProjectDetailResp,
   type TransferHistoryReq,
   type TransferHistoryResp,
   type TransferInfo,
-} from "./type.ts";
+} from './type.ts';
 
-import sleep from "sleep-promise";
+import sleep from 'sleep-promise';
 
-const ONECHAIN_API = "http://ec2-52-221-196-74.ap-southeast-1.compute.amazonaws.com:9000/api";
+const ONECHAIN_API = 'https://api.one-wallet.cc/api/ext';
 
 class OneChainApi {
   reqInstance: AxiosInstance;
@@ -39,8 +40,8 @@ class OneChainApi {
       searchAddress,
       pageNum = PAGE_NUM_START,
       pageSize = 100,
-      orderDirection = "desc",
-      orderByColumn = "timestampMs",
+      orderDirection = 'desc',
+      orderByColumn = 'timestampMs',
     } = params;
 
     try {

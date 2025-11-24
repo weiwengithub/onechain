@@ -27,6 +27,7 @@ import ReceiveIcon2 from 'assets/images/onechain/wallet_home_receive.png';
 // import DefaultCoinImage from '@/assets/images/coin/defaultCoin.png';
 import { cn } from '@/utils/date.ts';
 import { usePrice } from '@/onechain/usePrice.ts';
+import { FunctionButton } from '@components/MainBox/Portfolio/components/FunctionButton.tsx';
 
 type CoinDetailBoxProps = {
   coinId: string;
@@ -70,7 +71,7 @@ export default function CoinDetailBox({ coinId }: CoinDetailBoxProps) {
   //   getPrice();
   // }, []);
 
-  const {chainPrice} = usePrice({coinId:currentCoin?.asset.id, coinGeckoId:currentCoin?.asset.coinGeckoId});
+  const { chainPrice } = usePrice({ coinId: currentCoin?.asset.id, coinGeckoId: currentCoin?.asset.coinGeckoId });
 
   const totalValue = times(totalDisplayAmount, chainPrice);
 
@@ -167,33 +168,16 @@ export default function CoinDetailBox({ coinId }: CoinDetailBoxProps) {
       <div className="h-[24px] text-center text-[32px] leading-[24px] font-bold text-white">
         {formatNumberWithSeparator(formatDecimal(totalDisplayAmount))}
       </div>
-      <div className="mt-[12px] h-[16px] text-center text-[14px] leading-[16px] text-white opacity-60">≈${formatNumberWithSeparator(formatDecimal(totalValue, 2))}</div>
+      <div
+        className="mt-[12px] h-[16px] text-center text-[14px] leading-[16px] text-white opacity-60"
+      >≈${formatNumberWithSeparator(formatDecimal(totalValue, 2))}</div>
       <div className="mt-[24px] flex justify-center gap-[8px]">
-        <div
-          className={cn(
-              "flex size-[72px] flex-col items-center rounded-[8px] bg-[#2C3039] pr-[12px] pl-[12px] leading-[40px]",
-              parseFloat(totalDisplayAmount) > 0 ? "cursor-pointer hover:bg-[#0047C4]" : "opacity-33",
-            )}
-          onClick={hanldeOnClickSend}
-        >
-          <img
-            className="mx-auto mt-[12px] size-[24px]"
-            src={SendIcon2}
-            alt="send"
-          />
-          <div className="mt-[8px] h-[20px] text-center text-[14px] text-white leading-[20px]">Send</div>
-        </div>
-        <div
-          className="flex size-[72px] cursor-pointer flex-col items-center rounded-[8px] bg-[#2C3039] pr-[12px] pl-[12px] leading-[40px] hover:bg-[#0047C4]"
-          onClick={hanldeOnClickReceive}
-        >
-          <img
-            className="mx-auto mt-[12px] size-[24px]"
-            src={ReceiveIcon2}
-            alt="receive"
-          />
-          <div className="mt-[8px] h-[20px] text-center text-[14px] text-white leading-[20px]">Receive</div>
-        </div>
+        <FunctionButton
+          onClick={hanldeOnClickSend} imageSrc={SendIcon2} name={t('components.MainBox.Portfolio.index.send')}
+        />
+        <FunctionButton
+          onClick={hanldeOnClickReceive} imageSrc={ReceiveIcon2} name={t('components.MainBox.Portfolio.index.receive')}
+        />
       </div>
       {cosmosStyleCoin && (
         <EthermintSendBottomSheet
@@ -204,7 +188,10 @@ export default function CoinDetailBox({ coinId }: CoinDetailBoxProps) {
         />
       )}
       {moreOptionProps && (
-        <MoreOptionBottomSheet open={isOpenMoreOptionBottomSheet} onClose={() => setIsOpenMoreOptionBottomSheet(false)} buttonProps={moreOptionProps} />
+        <MoreOptionBottomSheet
+          open={isOpenMoreOptionBottomSheet} onClose={() => setIsOpenMoreOptionBottomSheet(false)}
+          buttonProps={moreOptionProps}
+        />
       )}
     </>
   );

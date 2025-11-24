@@ -10,9 +10,11 @@ import BaseFooter from '@/components/BaseLayout/components/BaseFooter';
 import Button from '@/components/common/Button';
 import MnemonicBitsPopover from '@/components/MnemonicViewer/components/MnemonicBitsPopover';
 import SetAccountNameBottomSheet from '@/components/SetNameBottomSheet';
+import { FilledTab, FilledTabs } from '@/components/common/FilledTab';
 import { useCurrentAccount } from '@/hooks/useCurrentAccount';
 import { useCurrentPassword } from '@/hooks/useCurrentPassword';
 import { getPassword } from '@/libs/account';
+import { Route as RestoreWalletWithPrivateKey } from '@/pages/account/restore-wallet/privatekey';
 import { Route as Dashboard } from '@/pages/index';
 import type { AccountWithName } from '@/types/account';
 import { aesEncrypt } from '@/utils/crypto';
@@ -24,17 +26,21 @@ import { useExtensionStorageStore } from '@/zustand/hooks/useExtensionStorageSto
 import HdPathBottomSheet from './-components/HdPathBottomSheet';
 import {
   Body,
+  MnemonicContainer,
   MnemonicInputContainer,
   MnemonicInputWrapper,
   MnemonicWordIndexText,
   StyledInput,
 } from './-styled';
 import type { MnemonicBits } from '../../create-wallet/mnemonic/-entry';
+import EyeOffIcon from '@/assets/images/icons/EyeOff20.svg';
+import EyeOnIcon from '@/assets/images/icons/EyeOn20.svg';
 
 export default function Entry() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  const [showPhrase, setShowPhrase] = useState(false);
   const { currentPassword } = useCurrentPassword();
   const { comparisonPasswordHash, updateExtensionStorageStore } = useExtensionStorageStore((state) => state);
   const { addAccountWithName, setCurrentAccount } = useCurrentAccount();
@@ -56,7 +62,7 @@ export default function Entry() {
 
   const mnemonicWordList = bip39.wordlists.english;
 
-  const [inputTypes, setInputTypes] = useState(values.map(() => (isViewMnemonic ? 'text' : 'password')));
+  const [inputTypes, setInputTypes] = useState(values.map(() => (showPhrase ? 'text' : 'password')));
 
   const handleFocusMnemonicInput = (index: number) => {
     setInputTypes((prevTypes) => {
@@ -69,7 +75,7 @@ export default function Entry() {
   const handleBlurMnemonicInput = (index: number) => {
     setInputTypes((prevTypes) => {
       const newTypes = [...prevTypes];
-      newTypes[index] = isViewMnemonic ? 'text' : 'password';
+      newTypes[index] = showPhrase ? 'text' : 'password';
       return newTypes;
     });
   };
@@ -128,21 +134,32 @@ export default function Entry() {
   };
 
   useEffect(() => {
-    setInputTypes(values.map(() => (isViewMnemonic ? 'text' : 'password')));
-  }, [values, isViewMnemonic]);
+    setInputTypes(values.map(() => (showPhrase ? 'text' : 'password')));
+  }, [values, showPhrase]);
 
   const setUpAccount = async (newAccountName: string) => {
     try {
       setIsLoadingBalance(true);
 
       const joinedMnemonicPhrase = values.join(' ');
+      const encryptedRestoreString = sha512(joinedMnemonicPhrase);
+
+      // Check if mnemonic already exists by comparing encryptedRestoreString
+      const { userAccounts } = useExtensionStorageStore.getState();
+      const existingMnemonic = userAccounts.find(
+        (account) => account.type === 'MNEMONIC' && account.encryptedRestoreString === encryptedRestoreString
+      );
+
+      if (existingMnemonic) {
+        toastError(t('pages.account.restore-wallet.mnemonic.index.mnemonicAlreadyExists'));
+        return;
+      }
 
       const accountId = uuidv4();
 
       const decryptedPassword = await getPassword();
 
       const encryptedMnemonic = aesEncrypt(joinedMnemonicPhrase, decryptedPassword);
-      const encryptedRestoreString = sha512(joinedMnemonicPhrase);
 
       const newAccount: AccountWithName = {
         id: accountId,
@@ -157,6 +174,7 @@ export default function Entry() {
         const comparisonPasswordHash = sha512(currentPassword!);
         await updateExtensionStorageStore('comparisonPasswordHash', comparisonPasswordHash);
       }
+
 
       await addAccountWithName(newAccount);
 
@@ -177,36 +195,61 @@ export default function Entry() {
     <>
       <BaseBody>
         <Body>
-          <div className="w-[312px] text-[36px] leading-[40px] font-bold text-white">Import recovery phrase</div>
-          <div className="mt-[12px] text-[16px] leading-[19px] font-normal text-white opacity-60">From an existing wallet.</div>
+          <FilledTabs value={0} variant="fullWidth">
+            <FilledTab key="mnemonic" label={t('pages.account.restore-wallet.mnemonic.entry.mnemonicTab')} />
+            <FilledTab
+              key="privateKey"
+              label={t('pages.account.restore-wallet.mnemonic.entry.privateKeyTab')}
+              onClick={() =>
+                navigate({
+                  to: RestoreWalletWithPrivateKey.to,
+                  replace: true,
+                })
+              }
+            />
+          </FilledTabs>
 
-          <MnemonicInputWrapper>
-            <MnemonicInputContainer>
-              {values.map((value, index) => (
-                <StyledInput
-                  key={index}
-                  value={value}
-                  type={isViewMnemonic ? 'text' : inputTypes[index]}
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <MnemonicWordIndexText variant="h5n_M">{index + 1}</MnemonicWordIndexText>
-                    </InputAdornment>
-                  }
-                  hideViewIcon
-                  error={!!value && !mnemonicWordList.includes(value)}
-                  onFocus={() => handleFocusMnemonicInput(index)}
-                  onBlur={() => handleBlurMnemonicInput(index)}
-                  onChange={(e) => {
-                    if (e.target.value.endsWith(' ')) {
-                      return;
+          <MnemonicContainer>
+            <div className="mt-[16px] w-[312px] text-[36px] leading-[40px] font-bold text-white">
+              {t('pages.account.restore-wallet.mnemonic.index.title')}
+            </div>
+            <div className="mt-[12px] flex justify-between">
+              <div className="text-[16px] leading-[19px] font-normal text-white opacity-60">
+                {t('pages.account.restore-wallet.mnemonic.entry.description')}
+              </div>
+              <div onClick={() => setShowPhrase(!showPhrase)}>
+                {showPhrase ? <EyeOnIcon  /> : <EyeOffIcon />}
+              </div>
+            </div>
+
+            <MnemonicInputWrapper>
+              <MnemonicInputContainer>
+                {values.map((value, index) => (
+                  <StyledInput
+                    key={index}
+                    value={value}
+                    type={showPhrase ? 'text' : inputTypes[index]}
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <MnemonicWordIndexText variant="h5n_M">{index + 1}</MnemonicWordIndexText>
+                      </InputAdornment>
                     }
+                    hideViewIcon
+                    error={!!value && !mnemonicWordList.includes(value)}
+                    onFocus={() => handleFocusMnemonicInput(index)}
+                    onBlur={() => handleBlurMnemonicInput(index)}
+                    onChange={(e) => {
+                      if (e.target.value.endsWith(' ')) {
+                        return;
+                      }
 
-                    updateMnemonicWords(index, e.target.value);
-                  }}
-                />
-              ))}
-            </MnemonicInputContainer>
-          </MnemonicInputWrapper>
+                      updateMnemonicWords(index, e.target.value);
+                    }}
+                  />
+                ))}
+              </MnemonicInputContainer>
+            </MnemonicInputWrapper>
+          </MnemonicContainer>
         </Body>
       </BaseBody>
       <BaseFooter>

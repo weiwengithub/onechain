@@ -121,9 +121,11 @@ export default function Entry() {
       <FormContainer onSubmit={handleSubmit(submit, error)}>
         <BaseBody>
           <>
-            <div className="w-[312px] text-[36px] leading-[40px] font-bold text-white">Confirm recovery Phrase</div>
+            <div className="w-[312px] text-[36px] leading-[40px] font-bold text-white">
+              {t('pages.account.backup-check.entry.confirmTitle')}
+            </div>
             <div className="mt-[12px] text-[16px] leading-[19px] font-normal text-white opacity-60">
-              To ensure that you have savedrecovery phase.
+              {t('pages.account.backup-check.entry.confirmDescription')}
             </div>
             <MnemnicBackupChecker
               mnemonic={decryptedMnemonic}

@@ -28,7 +28,16 @@ import type { BalanceFetchOption } from './balance';
 export async function updateStakingRelatedBalance(id: string) {
   console.time(`update-staking-related-balance-${id}`);
   try {
-    await getAccount(id);
+    // Check if account exists before proceeding
+    try {
+      await getAccount(id);
+    } catch (accountError) {
+      if ((accountError as Error).message === 'Account not found') {
+        console.log(`[updateStakingRelatedBalance] Account ${id} not found, skipping staking balance update`);
+        return;
+      }
+      throw accountError;
+    }
 
     await Promise.all([cosmosStaking(id), suiStaking(id), iotaStaking(id)]);
   } catch (error) {
@@ -45,7 +54,16 @@ export async function updateStakingRelatedBalance(id: string) {
 export async function updateSpecificChainStaking(id: string, chainId: UniqueChainId, address: string) {
   console.time(`chain-staking-balance-${id}-${chainId}-${address}`);
   try {
-    await getAccount(id);
+    // Check if account exists before proceeding
+    try {
+      await getAccount(id);
+    } catch (accountError) {
+      if ((accountError as Error).message === 'Account not found') {
+        console.log(`[updateSpecificChainStaking] Account ${id} not found, skipping chain staking update`);
+        return;
+      }
+      throw accountError;
+    }
 
     await fetchStakingByChainType(id, chainId, address);
   } catch (error) {

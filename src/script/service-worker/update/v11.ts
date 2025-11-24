@@ -8,7 +8,7 @@ import type { CosmosCw20Asset, EvmErc20Asset } from '@/types/asset';
 import type { ExtensionStorage } from '@/types/extension';
 import { getCoinId } from '@/utils/queryParamGenerator';
 import {
-  AWS_URL,
+  AWS_URL, eth_mainnet_assets, eth_mainnet_coin,
   oct_mainnet_assets,
   oct_testnet_assets,
   octMainnet,
@@ -18,12 +18,14 @@ import {
   suiTestnet,
 } from '@/script/service-worker/update/constant.ts';
 import { SUI_COIN_TYPE } from '@/constants/sui';
+import erc20Json from '@/onechain/s3/erc20.json';
 
 // params, assets, erc20, cw20
 export async function v11() {
   console.time('chainsAndAsset');
   try {
     // const paramsUrl = 'https://front.api.mintscan.io/v11/utils/params';
+    //  https://file.one-wallet.cc/appInfo/chains.json
     const now = Date.now();
     const paramsUrl = `${AWS_URL}/appInfo/chains.json?time=${now}`;
     const paramResponse = await axios.get<Record<string, V11Param>>(paramsUrl);
@@ -36,6 +38,7 @@ export async function v11() {
     );
 
     // 手动添加oct主网, oct测试网, sui测试网
+    // debugger;
 
     // @ts-expect-error -- oct
     filteredChains['oct'] = octMainnet;
@@ -51,6 +54,7 @@ export async function v11() {
     }
 
     // const assetsUrl = 'https://front.api.mintscan.io/v11/assets';
+    //  https://file.one-wallet.cc/appInfo/assets.json
     const assetsUrl = `${AWS_URL}/appInfo/assets.json?time=${now}`;
 
     const assetResponse = await axios.get<Record<'assets', V11Asset[]>>(assetsUrl);
@@ -69,37 +73,57 @@ export async function v11() {
       throw new Error('No assets found');
     }
 
+    const newAssets = [...assets, ...eth_mainnet_coin];
+
+    // Preserve user-added custom assets (type: 'bridge') before overwriting
+    let existingUserAssets: V11Asset[] = [];
+    try {
+      const currentStorage = await chrome.storage.local.get<Pick<ExtensionStorage, 'assetsV11'>>(['assetsV11']);
+      if (currentStorage.assetsV11) {
+        existingUserAssets = currentStorage.assetsV11.filter(asset => asset.type === 'bridge');
+      }
+    } catch (error) {
+      console.warn('Failed to read existing user assets:', error);
+    }
+
+    // Merge system assets with preserved user assets, avoiding duplicates
+    const mergedAssets = [...newAssets];
+
+    // debugger;
+
+    existingUserAssets.forEach(userAsset => {
+      // Check if user asset already exists in system assets (by denom + chain)
+      const isDuplicate = newAssets.some(
+        systemAsset => systemAsset.denom === userAsset.denom && systemAsset.chain === userAsset.chain,
+      );
+
+      if (!isDuplicate) {
+        mergedAssets.push(userAsset);
+      }
+    });
+
     await chrome.storage.local.set<Pick<ExtensionStorage, 'paramsV11' | 'assetsV11'>>({
       paramsV11: filteredChains,
-      assetsV11: assets,
+      assetsV11: mergedAssets,
     });
 
     const { cosmosChains, evmChains } = await getChains();
 
     // ERC20
-    const { results: erc20AssetsResponse } = await PromisePool.withConcurrency(5)
-      .for(evmChains)
-      .handleError((error) => {
-        throw error;
+    const erc20AssetsSource = (erc20Json as V11Erc20[]).filter((asset) => evmChains.some((chain) => chain.id === asset.chain));
+
+    // @ts-ignore
+    const erc20Assets: EvmErc20Asset[] = erc20AssetsSource
+      .map((asset) => {
+        return {
+          ...asset,
+          id: asset.contract?.toLowerCase(),
+          chainId: asset.chain,
+          type: 'erc20',
+          chainType: 'evm',
+        };
       })
-      .process(async (evmChain) => {
-        const { id } = evmChain;
-        const erc20AssetResponse = await axios.get<V11Erc20[]>(`https://front.api.mintscan.io/v11/assets/${id}/erc20/info`);
-        const erc20Asset = erc20AssetResponse.data;
-
-        const erc20Assets: EvmErc20Asset[] = erc20Asset.map((asset) => {
-          return {
-            ...asset,
-            id: asset.contract?.toLowerCase(),
-            chainId: id,
-            type: 'erc20',
-            chainType: 'evm',
-          };
-        });
-        return erc20Assets;
-      });
-
-    const erc20Assets = erc20AssetsResponse.flat().filter((asset) => asset.id);
+      .filter((asset) => asset.id);
 
     // cw20
     const cosmosChainsWithCosmwasm = cosmosChains.filter((chain) => chain.isCosmwasm);

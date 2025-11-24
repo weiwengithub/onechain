@@ -1,7 +1,7 @@
-import useSWR from "swr";
+import useSWR from 'swr';
 import { useCallback, useMemo } from 'react';
 import oneChainApi from '@/onechain/api';
-import { MarketPriceInfo } from '@/onechain/api/type.ts';
+import type { MarketPriceInfo } from '@/onechain/api/type.ts';
 
 export type PriceReq = {
   refreshInterval?: number;
@@ -19,7 +19,7 @@ export const useOctPrice = (params?: PriceReq) => {
     const res = await oneChainApi.getMarketPrice();
 
     return res?.data;
-  }, [oneChainApi]);
+  }, []);
 
   const {
     data,
@@ -33,16 +33,17 @@ export const useOctPrice = (params?: PriceReq) => {
   const priceInfo = useMemo(() => {
     const info: Record<string, MarketPriceInfo> = {};
     if (data) {
-      for (let i = 0; i < data.length; i++) {
-        const contractAddress = data[i].contractAddress;
+
+      for (const item of data) {
+        const contractAddress = item.contractAddress;
         if (contractAddress) {
-          const octPrice = Number(data[i]?.price ?? 0.0);
-          const percentStr = data[i]?.percentChange24h ?? "0";
-          const octPricePercent = parseFloat(percentStr.replace("%", ""));
+          const octPrice = Number(item.price ?? 0.0);
+          const percentStr = item.percentChange24h ?? '0';
+          const octPricePercent = parseFloat(percentStr.replace('%', ''));
           info[contractAddress] = {
             octPrice,
             octPricePercent,
-            ...data[i]
+            ...item,
           };
         }
       }
@@ -54,7 +55,7 @@ export const useOctPrice = (params?: PriceReq) => {
     return {
       priceInfo,
       error,
-      getPrice:mutate,
+      getPrice: mutate,
       isLoading,
     };
   }, [priceInfo, error, mutate, isLoading]);

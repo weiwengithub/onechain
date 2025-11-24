@@ -73,7 +73,7 @@ export function useGroupAccountAssets({ accountId }: UseGroupAccountAssetsProps 
     // debugger;
 
     const validGroups = Object.fromEntries(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+       
       Object.entries(groups).filter(([_, value]) => {
         return value.length > 1;
       }),
@@ -81,7 +81,7 @@ export function useGroupAccountAssets({ accountId }: UseGroupAccountAssetsProps 
 
     const invalidGroups = Object.values(
       Object.fromEntries(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+         
         Object.entries(groups).filter(([_, value]) => {
           return value.length === 1;
         }),

@@ -12,3 +12,6 @@ export const TRANSACTION_RESULT = {
   SUCCESS: 'success',
   FAILURE: 'failure',
 } as const;
+
+export const SUI_FAUCET_URL = 'https://faucet.testnet.sui.io/v2/gas';
+export const OCT_FAUCET_URL = 'https://faucet-testnet.onelabs.cc/gas';

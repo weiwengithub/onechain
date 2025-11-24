@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
+ 
 import { isTransaction } from '@onelabs/sui/transactions';
 import type {
   IdentifierArray,

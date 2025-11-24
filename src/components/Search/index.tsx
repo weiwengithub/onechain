@@ -1,4 +1,5 @@
 import { InputAdornment } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 import { Container, FilterIconButton, StyledCircularProgress, StyledInput } from './styled';
 import IconButton from '../common/IconButton';
@@ -17,6 +18,8 @@ export type SearchProps = OutlinedInputProps & {
 };
 
 export default function Search({ searchPlaceholder, disableFilter, isPending, onClickFilter, onClear, ...remainder }: SearchProps) {
+  const { t } = useTranslation();
+
   return (
     <Container>
       <StyledInput
@@ -30,7 +33,7 @@ export default function Search({ searchPlaceholder, disableFilter, isPending, on
             <SearchIcon />
           </InputAdornment>
         }
-        placeholder={searchPlaceholder || 'Search crypto or contract address'}
+        placeholder={searchPlaceholder || t('components.Search.placeholder')}
         {...remainder}
         endAdornment={
           isPending ? (

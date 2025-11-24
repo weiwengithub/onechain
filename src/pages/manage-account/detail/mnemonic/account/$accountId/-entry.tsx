@@ -38,9 +38,10 @@ import {
 import MainContentsLayout from '../../../-components/MainContentsLayout';
 
 import CautionIcon from '@/assets/images/icons/Caution16.svg';
-import EditIcon from '@/assets/images/icons/Edit18.svg';
-import MnemonicViewIcon from '@/assets/images/icons/MnemonicView28.svg';
-import PrivateViewIcon from '@/assets/images/icons/PrivateKeyView28.svg';
+import EditIcon from '@/assets/images/icons/Edit20.svg';
+import MnemonicViewIcon from '@/assets/images/icons/Mnemonic18.svg';
+import PrivateViewIcon from '@/assets/images/icons/PrivateKey18.svg';
+import Avatar from 'boring-avatars';
 
 type EntryProps = {
   accountId: string;
@@ -119,7 +120,11 @@ export default function Entry({ accountId }: EntryProps) {
             <MainContentsLayout
               top={
                 <AccountImgContainer>
-                  <AccountImage accountId={accountId} />
+                  <Avatar
+                    size={80}
+                    name={accountId}
+                    variant={'marble'}
+                  />
                 </AccountImgContainer>
               }
               body={
@@ -130,12 +135,12 @@ export default function Entry({ accountId }: EntryProps) {
                     }}
                     trailingIcon={<EditIcon />}
                   >
-                    <MainContentTitleText variant="h2_B">{accountName}</MainContentTitleText>
+                    <MainContentTitleText>{accountName}</MainContentTitleText>
                   </IconTextButton>
-                  <MainContentSubtitleText variant="b3_R">
-                    {`${t('pages.manage-account.detail.mnemonic.account.entry.lastHdPath')} : `}
-                    <MainContentSubtitleText variant="h5n_M">{hdPath}</MainContentSubtitleText>
-                  </MainContentSubtitleText>
+                  {/*<MainContentSubtitleText variant="b3_R">*/}
+                  {/*  {`${t('pages.manage-account.detail.mnemonic.account.entry.lastHdPath')} : `}*/}
+                  {/*  <MainContentSubtitleText variant="h5n_M">{hdPath}</MainContentSubtitleText>*/}
+                  {/*</MainContentSubtitleText>*/}
                 </MainContentBody>
               }
             />
@@ -181,16 +186,16 @@ export default function Entry({ accountId }: EntryProps) {
           </EdgeAligner>
         </>
       </BaseBody>
-      {/*<BaseFooter>*/}
-      {/*  <Button*/}
-      {/*    onClick={() => {*/}
-      {/*      setIsOpenDeleteAccountBottomSheet(true);*/}
-      {/*    }}*/}
-      {/*    variant="red"*/}
-      {/*  >*/}
-      {/*    {t('pages.manage-account.detail.mnemonic.account.entry.deleteAccount')}*/}
-      {/*  </Button>*/}
-      {/*</BaseFooter>*/}
+      <BaseFooter>
+        <Button
+          onClick={() => {
+            setIsOpenDeleteAccountBottomSheet(true);
+          }}
+          variant="red"
+        >
+          {t('pages.manage-account.detail.mnemonic.account.entry.deleteAccount')}
+        </Button>
+      </BaseFooter>
       <VerifyPasswordBottomSheet
         open={isOpenVerifyPasswordBottomSheetWithMnemonic || isOpenVerifyPasswordBottomSheetWithPK || isOpenVerifyPasswordBottomSheetWithRemove}
         onClose={() => {

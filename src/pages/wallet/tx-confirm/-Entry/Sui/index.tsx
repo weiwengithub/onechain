@@ -2,12 +2,14 @@ import BaseBody from '@/components/BaseLayout/components/BaseBody';
 import BaseFooter from '@/components/BaseLayout/components/BaseFooter/index.tsx';
 import { getKeypair } from '@/libs/address.ts';
 import { Ed25519Keypair } from '@onelabs/sui/keypairs/ed25519';
+import { Ed25519Keypair as MyStenEd25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import sendConfirmImage from '@/assets/images/etc/sendConfirm.png';
 import OctChain from '@/assets/img/chains/oct.png';
 import CopyIcon from '@/assets/img/icon/copy_primary.png';
 import { useTranslation } from 'react-i18next';
 import { useDebounce } from 'use-debounce';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import VerifyPasswordBottomSheet from '@/components/VerifyPasswordBottomSheet';
 import { useGetAccountAsset } from '@/hooks/useGetAccountAsset.ts';
 import { gt, toBaseDenomAmount } from '@/utils/numbers.ts';
 import { signAndExecuteTxSequentially } from '@/utils/sui/sign.ts';
@@ -16,18 +18,27 @@ import { getShortAddress } from '@/utils/string';
 import { Transaction as TransactionOct, type Transaction as TransactionTypeOct } from '@onelabs/sui/transactions';
 import { Transaction, type Transaction as TransactionType } from '@mysten/sui/transactions';
 import { isValidSuiAddress } from '@onelabs/sui/utils';
+import { genAddressSeed, getZkLoginSignature } from '@mysten/sui/zklogin';
+import { jwtDecode } from 'jwt-decode';
+import type { ZkLoginAccount } from '@/types/account';
+import { aesDecrypt } from '@/utils/crypto';
+import type { PartialZkLoginSignature } from '@/utils/sui/zkloginService';
+import { RPC_URL } from '@/utils/sui/zkloginService';
+import type { IdTokenPayload } from '@/hooks/useZklogin';
+import { getSuiClient, getSuiCoinType } from '@/onechain/utils';
 // import { SUI_COIN_TYPE } from '@/constants/sui';
 import { useGetCoins } from '@/hooks/sui/useGetCoins.ts';
 import { useCurrentAccount } from '@/hooks/useCurrentAccount.ts';
 import { useCurrentPassword } from '@/hooks/useCurrentPassword.ts';
+import { useClipboard } from '@/hooks/useClipboard';
 import { useNavigate, useRouter } from '@tanstack/react-router';
 import { useTxTrackerStore } from '@/zustand/hooks/useTxTrackerStore.ts';
 import { Route as TxResult } from '@/pages/wallet/tx-result';
-import copy from 'copy-to-clipboard';
 import { toastDefault, toastError } from '@/utils/toast.tsx';
 import { getCoinType } from '@/utils/sui/coin.ts';
 import { useAccountAllAssets } from '@/hooks/useAccountAllAssets.ts';
-import { getSuiCoinType } from '@/onechain/utils';
+import { ZKLOGIN_SUPPORTED_CHAIN_ID } from '@/constants/zklogin.ts';
+import { useExtensionStorageStore } from '@/zustand/hooks/useExtensionStorageStore.ts';
 
 type SuiProps = {
   coinId: string;
@@ -39,7 +50,8 @@ type SuiProps = {
 
 export default function Sui({ coinId, sendAmount, sendAmountPrice, recipientAddress, feeAmount }: SuiProps) {
   const isOct = coinId.includes('oct');
-
+  const { copyToClipboard } = useClipboard();
+  const [showPasswordVerification, setShowPasswordVerification] = useState(false);
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { history } = useRouter();
@@ -100,11 +112,30 @@ export default function Sui({ coinId, sendAmount, sendAmountPrice, recipientAddr
     }
 
     return tx;
-  }, [address, currentCoinType, ownedEqualCoins, recipientAddress, sendBaseAmount]);
+  }, [SUI_COIN_TYPE, address, currentCoinType, isOct, ownedEqualCoins, recipientAddress, sendBaseAmount]);
 
   const [debouncedTx] = useDebounce(sendTx, 500);
 
-  const handleOnClickConfirm = async () => {
+  const { isSignatureEnabled } = useExtensionStorageStore((state) => state);
+
+  const handleOnClickConfirm = () => {
+    if (isSignatureEnabled) {
+      setShowPasswordVerification(true);
+    } else {
+      executeTransaction();
+    }
+  };
+
+  const handlePasswordVerified = () => {
+    setShowPasswordVerification(false);
+    executeTransaction();
+  };
+
+  const handlePasswordVerificationClose = () => {
+    setShowPasswordVerification(false);
+  };
+
+  const executeTransaction = async () => {
     try {
       if (!selectedCoinToSend?.chain) {
         throw new Error('Chain not found');
@@ -114,17 +145,85 @@ export default function Sui({ coinId, sendAmount, sendAmountPrice, recipientAddr
         throw new Error('Transaction not found');
       }
 
-      const keyPair = getKeypair(selectedCoinToSend.chain, currentAccount, currentPassword);
-      const privateKey = Buffer.from(keyPair.privateKey, 'hex');
+      let response;
 
-      const signer = Ed25519Keypair.fromSecretKey(privateKey);
-      const rpcURLs = selectedCoinToSend?.chain.rpcUrls.map((item) => item.url) || [];
+      // Check if this is a zklogin account
+      if (currentAccount.type === 'ZKLOGIN') {
+        // Handle zklogin transaction
+        const zkLoginAccount = currentAccount as ZkLoginAccount;
 
-      if (!rpcURLs.length) {
-        throw new Error('RPC URLs not found');
+        // Decrypt zklogin data
+        if (!currentPassword) {
+          throw new Error('Password is required for zklogin transaction');
+        }
+
+        const idToken = aesDecrypt(zkLoginAccount.encryptedIdToken, currentPassword);
+        const userSalt = aesDecrypt(zkLoginAccount.encryptedUserSalt, currentPassword);
+        const ephemeralKeyData = aesDecrypt(zkLoginAccount.encryptedEphemeralKey, currentPassword);
+        const zkProofData = aesDecrypt(zkLoginAccount.encryptedZkProof, currentPassword);
+
+        // Parse zkProof
+        const partialZkLoginSignature: PartialZkLoginSignature = JSON.parse(zkProofData);
+        const { maxEpoch } = zkLoginAccount;
+
+        // Create ephemeral keypair from stored data
+        const ephemeralKeyPair = MyStenEd25519Keypair.fromSecretKey(ephemeralKeyData);
+
+        // Set sender address for zklogin transaction
+        debouncedTx.setSender(zkLoginAccount.address);
+
+        // Get client - use appropriate client based on transaction type
+        const client = getSuiClient(isOct, RPC_URL[ZKLOGIN_SUPPORTED_CHAIN_ID]);
+
+        // Sign transaction with ephemeral keypair
+        const { bytes, signature: userSignature } = await debouncedTx.sign({
+          // @ts-expect-error - client type compatibility issue between @mysten/sui and @onelabs/sui
+          client,
+          signer: ephemeralKeyPair,
+        });
+
+        // Decode JWT to get claims
+        const decodedJwt = jwtDecode<IdTokenPayload>(idToken);
+
+        // Generate addressSeed
+        const addressSeed: string = genAddressSeed(
+          BigInt(userSalt),
+          'sub',
+          decodedJwt.sub!,
+          decodedJwt.aud as string,
+        ).toString();
+
+        // Generate zkLogin signature
+        const zkLoginSignature = getZkLoginSignature({
+          inputs: {
+            ...partialZkLoginSignature,
+            addressSeed,
+          },
+          maxEpoch,
+          userSignature,
+        });
+
+        // Execute transaction
+        response = await client.executeTransactionBlock({
+          transactionBlock: bytes,
+          signature: zkLoginSignature,
+        });
+
+      } else {
+        // Handle regular mnemonic/private key accounts
+        const keyPair = getKeypair(selectedCoinToSend.chain, currentAccount, currentPassword);
+        const privateKey = Buffer.from(keyPair.privateKey, 'hex');
+
+        const signer = Ed25519Keypair.fromSecretKey(privateKey);
+        const rpcURLs = selectedCoinToSend?.chain.rpcUrls.map((item) => item.url) || [];
+
+        if (!rpcURLs.length) {
+          throw new Error('RPC URLs not found');
+        }
+
+        response = await signAndExecuteTxSequentially(signer, debouncedTx, rpcURLs);
       }
 
-      const response = await signAndExecuteTxSequentially(signer, debouncedTx, rpcURLs);
       if (!response) {
         throw new Error('Failed to send transaction');
       }
@@ -147,7 +246,8 @@ export default function Sui({ coinId, sendAmount, sendAmountPrice, recipientAddr
           txHash: response.digest,
         },
       });
-    } catch {
+    } catch (error) {
+      console.error('Transaction failed:', error);
       navigate({
         to: TxResult.to,
         search: {
@@ -157,28 +257,26 @@ export default function Sui({ coinId, sendAmount, sendAmountPrice, recipientAddr
     }
   };
 
-  const copyToClipboard = (address: string) => {
-    if (copy(address)) {
-      toastDefault(t('components.MainBox.CoinDetailBox.index.copied'));
-    } else {
-      toastError(t('components.MainBox.CoinDetailBox.index.copyFailed'));
-    }
-  };
-
   return (
     <>
       <BaseBody>
-        <img src={sendConfirmImage} alt="send" className="mx-auto mt-[-14px] h-[100px]" />
-        <div className="mt-[-14px] h-[24px] text-center text-[18px] leading-[24px] font-bold text-white">Send</div>
+        <img src={sendConfirmImage} alt={t('pages.wallet.tx-confirm.entry.Sui.index.imageAlt')} className="mx-auto mt-[-14px] h-[100px]" />
+        <div className="mt-[-14px] h-[24px] text-center text-[18px] leading-[24px] font-bold text-white">
+          {t('pages.wallet.tx-confirm.entry.Sui.index.title')}
+        </div>
         <div className="mt-[4px] h-[24px] text-center text-[24px] leading-[24px] font-bold text-white">
           -{sendAmount} {coinSymbol}
         </div>
         <div
           className="mt-[4px] h-[24px] text-center text-[14px] leading-[24px] text-white opacity-40"
-        >≈${sendAmountPrice}</div>
+        >
+          {t('pages.wallet.tx-confirm.entry.Sui.index.approxAmount', { amount: sendAmountPrice })}
+        </div>
         <div className="relative mt-[24px] h-[118px] overflow-hidden rounded-[12px] bg-[#1e2025] pr-[12px] pl-[12px]">
           <div className="mt-[12px] flex h-[24px] justify-between text-[14px] leading-[24px]">
-            <div className="opacity-40 text-white">Gas Fee</div>
+            <div className="opacity-40 text-white">
+              {t('pages.wallet.tx-confirm.entry.Sui.index.gasFee')}
+            </div>
             <div className="flex items-center">
               <img src={coinFeeImage} alt="oct" className="mr-[4px] size-[20px]" />
               <span className="text-white">
@@ -187,12 +285,14 @@ export default function Sui({ coinId, sendAmount, sendAmountPrice, recipientAddr
             </div>
           </div>
           <div className="mt-[12px] flex h-[24px] justify-between text-[14px] leading-[24px]">
-            <div className="opacity-40 text-white">From</div>
+            <div className="opacity-40 text-white">
+              {t('pages.wallet.tx-confirm.entry.Sui.index.from')}
+            </div>
             <div className="flex items-center">
               <span className="text-white">{getShortAddress(address)}</span>
               <img
                 src={CopyIcon}
-                alt="copy"
+                alt={t('pages.wallet.tx-confirm.entry.Sui.index.copyAlt')}
                 className="ml-[4px] size-[12px] cursor-pointer"
                 onClick={() => {
                   copyToClipboard(address);
@@ -201,12 +301,14 @@ export default function Sui({ coinId, sendAmount, sendAmountPrice, recipientAddr
             </div>
           </div>
           <div className="mt-[12px] flex h-[24px] justify-between text-[14px] leading-[24px]">
-            <div className="opacity-40 text-white">To</div>
+            <div className="opacity-40 text-white">
+              {t('pages.wallet.tx-confirm.entry.Sui.index.to')}
+            </div>
             <div className="flex items-center">
               <span className="text-white">{getShortAddress(recipientAddress)}</span>
               <img
                 src={CopyIcon}
-                alt="copy"
+                alt={t('pages.wallet.tx-confirm.entry.Sui.index.copyAlt')}
                 className="ml-[4px] size-[12px] cursor-pointer"
                 onClick={() => {
                   copyToClipboard(recipientAddress || '');
@@ -234,6 +336,11 @@ export default function Sui({ coinId, sendAmount, sendAmountPrice, recipientAddr
           </button>
         </div>
       </BaseFooter>
+      <VerifyPasswordBottomSheet
+        open={showPasswordVerification}
+        onClose={handlePasswordVerificationClose}
+        onSubmit={handlePasswordVerified}
+      />
     </>
   );
 }

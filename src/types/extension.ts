@@ -110,6 +110,7 @@ export interface ExtensionStorage {
   [key: `${string}-delegation-iota`]: AccountAddressDelegationsIota[];
   [key: `${string}-hidden-assetIds`]: AssetId[];
   [key: `${string}-visible-assetIds`]: AssetId[];
+  [key: `${string}-user-hidden-assetIds`]: AssetId[];
   [key: `${string}-custom-address`]: AccountAddress[];
   [key: `${string}-custom-balance-erc20`]: AccountAddressBalanceErc20[];
   [key: `${string}-custom-balance-cw20`]: AccountAddressBalanceCw20[];
@@ -153,6 +154,8 @@ export interface ExtensionStorage {
   pinnedDappIds: number[];
   autoLockTimeInMinutes: LockupTimeOptions;
   autoLockTimeStampAt: number | null;
+  isSignatureEnabled: boolean;
+  isDeveloperMode: boolean;
   migrationStatus: MigrationStatus | null;
   userPriceTrendPreference: PriceTrendType;
   selectedChainFilterId: UniqueChainId | null;
@@ -162,6 +165,7 @@ export type ExtensionStorageKeys = keyof ExtensionStorage;
 
 export interface ExtensionSessionStorage {
   sessionPassword: Password | null;
+  lastActivityTimestamp: number | null;
 }
 
 export type ExtensionSessionStorageKeys = keyof ExtensionSessionStorage;

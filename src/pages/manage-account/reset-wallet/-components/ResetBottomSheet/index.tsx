@@ -65,7 +65,7 @@ export default function ResetBottomSheet({ onClose, onClickReset, ...remainder }
             {t('pages.manage-account.reset-wallet.components.ResetBottomSheet.index.description2')}
           </DescriptionText>
           <StandardInput
-            label={t('pages.manage-account.reset-wallet.components.ResetBottomSheet.index.inputLabel')}
+            placeholder={t('pages.manage-account.reset-wallet.components.ResetBottomSheet.index.inputLabel')}
             error={!!errors.resetText}
             helperText={errors.resetText?.message}
             slotProps={{

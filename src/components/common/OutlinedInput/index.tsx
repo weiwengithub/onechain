@@ -42,7 +42,7 @@ export default function OutlinedInput({
                 }}
                 edge="end"
               >
-                {textFieldType === 'password' ? <ViewIcon /> : <ViewHideIcon />}
+                {textFieldType === 'password' ? <ViewHideIcon /> : <ViewIcon />}
               </StyledIconButton>
             </InputAdornment>
           )
@@ -60,7 +60,7 @@ export default function OutlinedInput({
           <BottomContainer>
             {helperText && (
               <HelperTextContainer data-is-error={error}>
-                <Typography variant="b4_M">{helperText}</Typography>
+                {helperText}
               </HelperTextContainer>
             )}
             {rightBottomAdornment && <RightBottomAdornmentContainer>{rightBottomAdornment}</RightBottomAdornmentContainer>}

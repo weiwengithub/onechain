@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { InputAdornment, type TextFieldProps, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 
 import type { ChainBase, CosmosChain, EvmChain, UniqueChainId } from '@/types/chain';
 import { getUniqueChainIdWithManual, isMatchingUniqueChainId, parseUniqueChainId } from '@/utils/queryParamGenerator';
@@ -15,12 +15,15 @@ import {
   Container,
   HelperTextContainer,
   RightAdormentConatiner,
-  StyledSelectBox,
+  StyledCardContainer,
+  CardContent,
+  ChainNameText,
+  LabelText,
 } from './styled';
 
-import BottomFilledChevronIcon from '@/assets/images/icons/BottomFilledChevron14.svg';
+import ArrowRightIcon from '@/assets/img/icon/arrow_right_16.png';
 
-type ChainSelectBoxProps = TextFieldProps & {
+type ChainSelectBoxProps = {
   chainList: ChainBase[];
   currentSelectedChain?: ChainBase;
   helperText?: string;
@@ -39,6 +42,9 @@ type ChainSelectBoxProps = TextFieldProps & {
   };
   disableSortChain?: boolean;
   customVarient?: 'default' | 'contract-token';
+  disabled?: boolean;
+  error?: boolean;
+  label?: string;
   onClickChain?: (id?: UniqueChainId) => void;
 };
 
@@ -53,12 +59,11 @@ export default function EthermintFilterChainSelectBox({
   disableSortChain = false,
   ethermintSelectTextProps,
   customVarient = 'default',
+  disabled = false,
+  label,
   onClickChain,
-  ...remainder
 }: ChainSelectBoxProps) {
   const { t } = useTranslation();
-
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const [isBottomSheetOpen, setBottomSheetOpen] = useState(false);
   const [pendingChainId, setPendingChainId] = useState<UniqueChainId | undefined>();
@@ -106,9 +111,9 @@ export default function EthermintFilterChainSelectBox({
   })();
 
   const handleInputClick = useCallback(() => {
+    if (disabled) return;
     setBottomSheetOpen(true);
-    inputRef.current?.blur();
-  }, []);
+  }, [disabled]);
 
   const closeBottomSheets = useCallback(() => {
     setPendingChainId(undefined);
@@ -181,36 +186,29 @@ export default function EthermintFilterChainSelectBox({
 
   return (
     <Container>
-      <StyledSelectBox
-        variant="standard"
-        inputRef={inputRef}
-        slotProps={{
-          input: {
-            readOnly: true,
-            startAdornment: currentSelectedChain && (
-              <InputAdornment position="start">
-                <ChainImageContainer src={currentSelectedChain.image || ''} />
-              </InputAdornment>
-            ),
-            endAdornment: !remainder.disabled && (
-              <InputAdornment position="end">
-                <RightAdormentConatiner>
-                  {rightAdornmentComponent}
-                  <ChevronIconContainer data-is-open={isBottomSheetOpen}>
-                    <BottomFilledChevronIcon />
-                  </ChevronIconContainer>
-                </RightAdormentConatiner>
-              </InputAdornment>
-            ),
-          },
-          inputLabel: {
-            shrink: !!currentSelectedChain,
-          },
-        }}
+      {label && <LabelText>{label}</LabelText>}
+      <StyledCardContainer 
         onClick={handleInputClick}
-        value={currentSelectedChain?.name}
-        {...remainder}
-      />
+        data-is-disabled={disabled}
+        data-is-error={error}
+      >
+        <CardContent>
+          {currentSelectedChain && (
+            <ChainImageContainer src={currentSelectedChain.image || ''} />
+          )}
+          <ChainNameText>
+            {currentSelectedChain?.name || 'Select Chain'}
+          </ChainNameText>
+          {!disabled && (
+            <RightAdormentConatiner>
+              {rightAdornmentComponent}
+              <ChevronIconContainer data-is-open={isBottomSheetOpen}>
+                <img src={ArrowRightIcon} alt="arrow" />
+              </ChevronIconContainer>
+            </RightAdormentConatiner>
+          )}
+        </CardContent>
+      </StyledCardContainer>
 
       {!!helperText && (
         <BottomWrapper>

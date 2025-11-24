@@ -11,7 +11,7 @@ export type BaseCoinImageProps = React.HTMLAttributes<HTMLDivElement> & {
 };
 
 export default function BaseCoinImage({ imageURL, badgeImageURL, isAggregatedCoin, ...remainder }: BaseCoinImageProps) {
-  const tempDisplay = false;
+  const tempDisplay = true;
   return (
     <ImageContainer {...remainder}>
       <AssetImage src={imageURL} defaultImgSrc={DefaultCoinImage} />

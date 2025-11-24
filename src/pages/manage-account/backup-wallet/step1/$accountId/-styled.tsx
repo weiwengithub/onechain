@@ -19,15 +19,29 @@ export const DescriptionContainer = styled('div')({
 });
 
 export const DescriptionTitle = styled(Typography)(({ theme }) => ({
-  color: theme.palette.color.base1300,
+  fontSize: '36px',
+  lineHeight: '40px',
+  fontWeight: 700,
+  color: '#FFFFFF',
 }));
 
 export const DescriptionSubTitle = styled(Typography)(({ theme }) => ({
-  width: '95%',
-
-  color: theme.palette.color.base1000,
+  fontSize: '16px',
+  lineHeight: '22px',
+  color: '#FFFFFF',
+  opacity: 0.6,
+  marginTop: '12px',
 }));
 
 export const MnemonicViewerContainer = styled('div')({
   marginTop: '2rem',
+  position: 'relative',
 });
+
+export const MnemonicExplain = styled('div')({
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#FFFFFF',
+  opacity: 0.6,
+  marginTop: '12px',
+})

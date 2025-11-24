@@ -10,17 +10,23 @@ export const StyledPopover = styled(Popover)({
 });
 
 export const StyledIconTextButton = styled(IconTextButton)(({ theme }) => ({
-  width: '14.2rem',
-  padding: '0.8rem 1.2rem',
+  width: '140px',
+  height: '32px',
+  padding: '0 8px',
+  display: 'flex',
+  alignItems: 'center',
+  margin: '8px',
+  cursor: 'pointer',
 
   '&:hover': {
-    backgroundColor: theme.palette.color.base200,
+    backgroundColor: '#3F4655',
+    borderRadius: '8px',
     opacity: '1',
   },
 }));
 
 export const StyledTypography = styled(Typography)(({ theme }) => ({
-  marginLeft: '0.4rem',
-
-  color: theme.palette.color.base1300,
+  marginLeft: '8px',
+  fontSize: '16px',
+  color: '#FFFFFF',
 }));

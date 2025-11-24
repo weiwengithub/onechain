@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
+ 
 import { RPC_ERROR, RPC_ERROR_MESSAGE } from '@/constants/error';
 import type { SignDirectDoc } from '@/types/cosmos/direct';
 import type { CosmosListenerType, EventDetail } from '@/types/message';

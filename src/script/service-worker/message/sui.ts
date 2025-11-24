@@ -3,6 +3,7 @@ import { SUI_METHOD_TYPE, SUI_NO_POPUP_METHOD_TYPE, SUI_POPUP_METHOD_TYPE } from
 import { getAddress, getKeypair } from '@/libs/address';
 import { getChains } from '@/libs/chain';
 import { sendMessage } from '@/libs/extension';
+import type { ZkLoginAccount } from '@/types/account';
 import type { ResponseAppMessage } from '@/types/message/content';
 import type {
   SuiRequest,
@@ -18,7 +19,7 @@ import type {
 import type { SuiRpc } from '@/types/sui/api';
 import { SuiRPCError } from '@/utils/error';
 import { refreshOriginConnectionTime } from '@/utils/origins';
-import { processRequest } from '@/utils/requestApp';
+import { handleMissingAccountRequest, processRequest } from '@/utils/requestApp';
 import { extensionLocalStorage, extensionSessionStorage, setExtensionLocalStorage } from '@/utils/storage';
 import { isEqualsIgnoringCase } from '@/utils/string';
 import { requestRPC as suiRequestRPC } from '@/utils/sui/rpc';
@@ -39,7 +40,7 @@ export async function suiProcess(message: SuiRequest) {
     selectedChainFilterId,
   } = await extensionLocalStorage();
 
-  // 选择正确的网络：如果是 "all networks" 则使用 OCT 主网，否则使用当前选中的网络
+  // 选择正确的网络：如果是 "all networks" 则使用 OCT主网，否则使用当前选中的网络
   const getChainId = (filterId?: string | null): string => {
     if (!filterId) return 'oct';
 
@@ -62,10 +63,26 @@ export async function suiProcess(message: SuiRequest) {
 
   const { currentPassword } = await extensionSessionStorage();
 
-  const currentAccountSuiPermissions =
-    approvedSuiPermissions
-      ?.filter((permission) => permission.accountId === currentAccount.id && permission.origin === origin)
-      .map((permission) => permission.permission) || [];
+  // If no account exists, return error (expected on first launch)
+  const requiresInitialUiMethods = new Set<SuiRequest['method']>(['sui_connect']);
+
+  if (!currentAccount) {
+    console.log('No account available sui');
+    if (method && requiresInitialUiMethods.has(method as SuiRequest['method'])) {
+      void processRequest(message);
+    } else {
+      await handleMissingAccountRequest({
+        origin,
+        requestId,
+        tabId,
+      });
+    }
+    return;
+  }
+
+  const currentAccountSuiPermissions = approvedSuiPermissions
+    ?.filter((permission) => permission.accountId === currentAccount.id && permission.origin === origin)
+    .map((permission) => permission.permission) || [];
 
   try {
     if (!message?.method || !suiMethods.includes(message.method)) {
@@ -115,10 +132,22 @@ export async function suiProcess(message: SuiRequest) {
             if (currentPassword) {
               void refreshOriginConnectionTime(currentAccount.id, origin);
 
-              const keyPair = getKeypair(suiChain, currentAccount, currentPassword);
-              const address = getAddress(suiChain, keyPair?.publicKey);
+              let address: string;
+              let publicKey: string;
 
-              const publicKey = `0x${keyPair?.publicKey || ''}`;
+              // Handle zklogin accounts differently
+              if (currentAccount.type === 'ZKLOGIN') {
+                const zkLoginAccount = currentAccount as ZkLoginAccount;
+                address = zkLoginAccount.address;
+                // For zklogin, we can use a placeholder public key or derive it from ephemeral key
+                // Since dapps mainly need the address, we'll use a special identifier
+                publicKey = '0x0000000000000000000000000000000000000000000000000000000000000000'; // zklogin placeholder
+              } else {
+                // Handle regular mnemonic/private key accounts
+                const keyPair = getKeypair(suiChain, currentAccount, currentPassword);
+                address = getAddress(suiChain, keyPair?.publicKey);
+                publicKey = `0x${keyPair?.publicKey || ''}`;
+              }
 
               const result: SuiRequestAccountResponse = {
                 address,
@@ -161,8 +190,17 @@ export async function suiProcess(message: SuiRequest) {
             currentAccountSuiPermissions.includes('suggestTransactions') &&
             currentPassword
           ) {
-            const keyPair = getKeypair(suiChain, currentAccount, currentPassword);
-            const address = getAddress(suiChain, keyPair?.publicKey);
+            let address: string;
+
+            // Handle zklogin accounts differently for address validation
+            if (currentAccount.type === 'ZKLOGIN') {
+              const zkLoginAccount = currentAccount as ZkLoginAccount;
+              address = zkLoginAccount.address;
+            } else {
+              // Handle regular mnemonic/private key accounts
+              const keyPair = getKeypair(suiChain, currentAccount, currentPassword);
+              address = getAddress(suiChain, keyPair?.publicKey);
+            }
 
             if (!isEqualsIgnoringCase(address, params.accountAddress)) {
               throw new SuiRPCError(RPC_ERROR.INVALID_PARAMS, 'Invalid address', requestId);
@@ -222,11 +260,14 @@ export async function suiProcess(message: SuiRequest) {
           },
         });
       } else if (method === 'sui_disconnect') {
-        const newAllowedOrigins = approvedOrigins.filter((item) => !(item.accountId === currentAccount.id && item.origin === origin));
-        await setExtensionLocalStorage('approvedOrigins', newAllowedOrigins);
+        // If no account exists, just return success (nothing to disconnect)
+        if (currentAccount) {
+          const newAllowedOrigins = approvedOrigins.filter((item) => !(item.accountId === currentAccount.id && item.origin === origin));
+          await setExtensionLocalStorage('approvedOrigins', newAllowedOrigins);
 
-        const newSuiPermissions = approvedSuiPermissions.filter((permission) => !(permission.accountId === currentAccount.id && permission.origin === origin));
-        await setExtensionLocalStorage('approvedSuiPermissions', newSuiPermissions);
+          const newSuiPermissions = approvedSuiPermissions.filter((permission) => !(permission.accountId === currentAccount.id && permission.origin === origin));
+          await setExtensionLocalStorage('approvedSuiPermissions', newSuiPermissions);
+        }
 
         const result = null;
 

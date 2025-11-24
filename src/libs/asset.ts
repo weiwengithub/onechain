@@ -71,6 +71,7 @@ import { getObjectDisplay, isKiosk } from '@/utils/sui/nft';
 
 import { getAccountAddress, getAllAccountAddress } from './account';
 import { getAddedCustomChains, getChains } from './chain';
+import { ZKLOGIN_SUPPORTED_CHAIN_ID, ZKLOGIN_SUPPORTED_CHAIN_TYPE, ZKLOGIN_ACCOUNT_TYPE } from '@/constants/zklogin';
 
 export async function getHiddenAssets(id: string) {
   const storage = await chrome.storage.local.get<ExtensionStorage>(`${id}-hidden-assetIds`);
@@ -78,6 +79,14 @@ export async function getHiddenAssets(id: string) {
   const hiddenAssetIds = storage[`${id}-hidden-assetIds`];
 
   return hiddenAssetIds ?? [];
+}
+
+export async function getUserHiddenAssets(id: string) {
+  const storage = await chrome.storage.local.get<ExtensionStorage>(`${id}-user-hidden-assetIds`);
+
+  const userHiddenAssetIds = storage[`${id}-user-hidden-assetIds`];
+
+  return userHiddenAssetIds ?? [];
 }
 
 export async function updateHiddenAssets(id: string, hiddenAssetIds: AssetId[]) {
@@ -108,7 +117,7 @@ export async function getVisibleAssets(id: string) {
   return visibleAssetIds ?? [];
 }
 
-export async function getAssets() {
+export async function getAssets(forZkLoginOnly = false) {
   const {
     assetsV11: assets,
     paramsV11: chains,
@@ -241,6 +250,24 @@ export async function getAssets() {
     };
   });
 
+  // ZkLogin 用户只返回指定链的资产
+  if (forZkLoginOnly) {
+    const zkLoginSuiAssets = suiAssets.filter(asset => asset.chainId === ZKLOGIN_SUPPORTED_CHAIN_ID);
+
+    return {
+      cosmosAssets: [],
+      evmAssets: [],
+      suiAssets: zkLoginSuiAssets,
+      aptosAssets: [],
+      bitcoinAssets: [],
+      iotaAssets: [],
+      erc20Assets: [],
+      customErc20Assets: [],
+      cw20Assets: [],
+      customCw20Assets: [],
+    };
+  }
+
   return {
     cosmosAssets,
     evmAssets,
@@ -346,7 +373,32 @@ export async function getAccountAssets(id: string, option?: GetAccountAssetsOpti
   const bitcoinAssetsWithoutHidden = filterHiddenAssets(bitcoinAssets);
   const iotaAssetsWithoutHidden = filterHiddenAssets(iotaAssets);
 
-  const accountAddress = storage[`${id}-address`] || [];
+  let accountAddress = storage[`${id}-address`] || [];
+
+  // ZkLogin 特殊处理：如果没有标准地址数据，尝试从 localStorage 获取
+  if (accountAddress.length === 0) {
+    try {
+      const { userAccounts } = await chrome.storage.local.get<ExtensionStorage>('userAccounts');
+      const currentAccount = userAccounts?.find(account => account.id === id);
+
+      if (currentAccount?.type === 'ZKLOGIN') {
+        const zkLoginAddress = localStorage.getItem('zklogin_address');
+        if (zkLoginAddress) {
+          console.log('Using ZkLogin fallback address data');
+          accountAddress = [{
+            chainId: ZKLOGIN_SUPPORTED_CHAIN_ID,
+            chainType: ZKLOGIN_SUPPORTED_CHAIN_TYPE,
+            address: zkLoginAddress,
+            publicKey: zkLoginAddress,
+            accountType: ZKLOGIN_ACCOUNT_TYPE,
+          }];
+        }
+      }
+    } catch (error) {
+      console.error('ZkLogin fallback address failed:', error);
+    }
+  }
+
   const allAccountAddress = await getAllAccountAddress(id);
 
   const cosmosBalances = storage[`${id}-balance-cosmos`] || [];
@@ -455,7 +507,7 @@ export async function getAccountAssets(id: string, option?: GetAccountAssetsOpti
               const vestingRemained = getVestingRemained(accountInfo, type);
               const delegatedVestingTotal = chain.id === KAVA_CHAINLIST_ID ? getDelegatedVestingTotal(accountInfo, type) : delegation;
 
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+               
               const [vestingRelatedAvailable, _] = (() => {
                 if (gt(vestingRemained, '0')) {
                   if (chain.id === PERSISTENCE_CHAINLIST_ID) {

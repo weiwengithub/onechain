@@ -10,9 +10,18 @@ import { fetchCosmosAccountInfo } from '@/utils/cosmos/fetch/accountInfo';
 const vestingChainIds = new Set([KAVA_CHAINLIST_ID]);
 
 export async function updateAccountInfo(id: string) {
-  console.time(`update-cosmos-account-${id}`);
+  console.time(`update-account-info-${id}`);
   try {
-    await getAccount(id);
+    // Check if account exists before proceeding
+    try {
+      await getAccount(id);
+    } catch (accountError) {
+      if ((accountError as Error).message === 'Account not found') {
+        console.log(`[updateAccountInfo] Account ${id} not found, skipping account info update`);
+        return;
+      }
+      throw accountError;
+    }
 
     await Promise.all([cosmosAccountInfo(id)]);
   } catch (error) {

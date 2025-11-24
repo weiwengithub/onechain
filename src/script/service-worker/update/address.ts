@@ -4,14 +4,24 @@ import { PromisePool } from '@supercharge/promise-pool';
 import { getAccount, getAccountAddress, getCustomAccountAddress, getPassword } from '@/libs/account';
 import { getAddress, getKeypair } from '@/libs/address';
 import { getChains } from '@/libs/chain';
-import type { AccountAddress } from '@/types/account';
+import type { AccountAddress, ZkLoginAccount } from '@/types/account';
 import type { ExtensionStorage } from '@/types/extension';
 import { getExtensionLocalStorage } from '@/utils/storage';
 
 export async function address(id: string) {
   console.time(`address-${id}`);
   try {
-    const account = await getAccount(id);
+    // Check if account exists before proceeding
+    let account;
+    try {
+      account = await getAccount(id);
+    } catch (accountError) {
+      if ((accountError as Error).message === 'Account not found') {
+        console.log(`[address] Account ${id} not found, skipping address update`);
+        return;
+      }
+      throw accountError;
+    }
     const { cosmosChains, evmChains, suiChains, aptosChains, bitcoinChains, iotaChains } = await getChains();
 
     const password = await getPassword();
@@ -57,6 +67,20 @@ export async function address(id: string) {
             }
 
             const chainItem = { ...etc, accountTypes: [accountType] };
+            
+            // 特殊处理 zklogin 账户
+            if (account.type === 'ZKLOGIN') {
+              const zkLoginAccount = account as ZkLoginAccount;
+              const result: AccountAddress = { 
+                chainId: etc.id, 
+                chainType: etc.chainType, 
+                address: zkLoginAccount.address, 
+                publicKey: zkLoginAccount.address, // zklogin 使用地址作为公钥标识
+                accountType 
+              };
+              return result;
+            }
+
             const keypair = getKeypair(chainItem, account, password);
             const address = getAddress(chainItem, keypair.publicKey);
 
@@ -84,7 +108,17 @@ export async function address(id: string) {
 export async function customChainAddress(id: string) {
   console.time(`custom-address-${id}`);
   try {
-    const account = await getAccount(id);
+    // Check if account exists before proceeding
+    let account;
+    try {
+      account = await getAccount(id);
+    } catch (accountError) {
+      if ((accountError as Error).message === 'Account not found') {
+        console.log(`[customChainAddress] Account ${id} not found, skipping custom chain address update`);
+        return;
+      }
+      throw accountError;
+    }
     const addedCustomChains = await getExtensionLocalStorage('addedCustomChainList');
 
     const password = await getPassword();
@@ -116,6 +150,20 @@ export async function customChainAddress(id: string) {
         }
 
         const chainItem = { ...etc, accountTypes: [primaryAccountType] };
+        
+        // 特殊处理 zklogin 账户
+        if (account.type === 'ZKLOGIN') {
+          const zkLoginAccount = account as ZkLoginAccount;
+          const result: AccountAddress = { 
+            chainId: etc.id, 
+            chainType: etc.chainType, 
+            address: zkLoginAccount.address, 
+            publicKey: zkLoginAccount.address, // zklogin 使用地址作为公钥标识
+            accountType: primaryAccountType 
+          };
+          return result;
+        }
+
         const keypair = getKeypair(chainItem, account, password);
         const address = getAddress(chainItem, keypair.publicKey);
 

@@ -6,23 +6,21 @@ export const Container = styled('div')({
   width: '100%',
 });
 
-export const SectionContainer = styled('div')({
-  paddingTop: '12px',
-  paddingBottom: '12px',
+export const SectionContainer = styled('div')(({ theme, ...props }) => ({
   position: 'relative',
+  paddingBottom: '24px',
 
-  // '&::after': {
-  //   content: '""',
-  //   display: 'block',
-  //   height: '1px',
-  //   backgroundColor: '#2c3039',
-  //   position: 'absolute',
-  //   left: '-24px',
-  //   right: '-24px',
-  //   bottom: 0,
-  // },
-
-});
+  '&::after': {
+    content: '""',
+    display: 'block',
+    height: '1px',
+    backgroundColor: '#2c3039',
+    position: 'absolute',
+    left: '-24px',
+    right: '-24px',
+    bottom: '24px',
+  },
+}));
 
 export const SectionTitleContainer = styled('div')({
   display: 'flex',
@@ -45,6 +43,4 @@ export const OptionButtonIconContainer = styled('div')(({ theme }) => ({
 
   width: '18px',
   height: '18px',
-
-  borderRadius: '20px',
 }));

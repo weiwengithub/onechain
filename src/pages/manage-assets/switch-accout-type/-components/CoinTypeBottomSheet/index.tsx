@@ -40,7 +40,13 @@ export default function CoinTypeBottomSheet({ chain, onClose, onClickChainType, 
     if (multipleAccountTypeWithAddress && flatChainList) {
       const multipleAccountTypes = Object.values(multipleAccountTypeWithAddress);
       const mappedAccountTypes = multipleAccountTypes.map((item) => {
-        const chain = flatChainList.find((chain) => chain.id === item[0].chainId && chain.chainType === item[0].chainType)!;
+        const chain = flatChainList.find((chain) => chain.id === item[0].chainId && chain.chainType === item[0].chainType);
+
+        // 如果找不到对应的链信息，跳过这个账户类型
+        if (!chain) {
+          console.warn(`Chain not found for chainId: ${item[0].chainId}, chainType: ${item[0].chainType}`);
+          return null;
+        }
 
         return {
           chain,
@@ -106,7 +112,8 @@ export default function CoinTypeBottomSheet({ chain, onClose, onClickChainType, 
           }),
         };
       });
-      return mappedAccountTypes;
+      // 过滤掉 null 值（找不到对应链信息的账户类型）
+      return mappedAccountTypes.filter((item): item is NonNullable<typeof item> => item !== null);
     }
     return [];
   }, [

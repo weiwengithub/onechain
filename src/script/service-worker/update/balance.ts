@@ -57,7 +57,16 @@ const defaultCoinList = [...defaultCosmosCoinList, ...defaultEvmCoinList, ...def
 export async function updateDefaultAssetsBalance(id: string) {
   console.time(`default-balance-${id}`);
   try {
-    await getAccount(id);
+    // Check if account exists before proceeding
+    try {
+      await getAccount(id);
+    } catch (accountError) {
+      if ((accountError as Error).message === 'Account not found') {
+        console.log(`[updateDefaultAssetsBalance] Account ${id} not found, skipping default balance update`);
+        return;
+      }
+      throw accountError;
+    }
 
     await Promise.all([
       cosmosBalances(id, {
@@ -86,11 +95,19 @@ export async function updateDefaultAssetsBalance(id: string) {
 export async function updateActiveAssetsBalance(id: string) {
   console.time(`balance-${id}`);
   try {
-    await getAccount(id);
+    // Check if account exists before proceeding
+    try {
+      await getAccount(id);
+    } catch (accountError) {
+      if ((accountError as Error).message === 'Account not found') {
+        console.log(`[updateActiveAssetsBalance] Account ${id} not found, skipping balance update`);
+        return;
+      }
+      throw accountError;
+    }
+
     await initAssests(id);
-
     await updateBalance(id);
-
     await initAccount(id);
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -190,7 +207,17 @@ export async function updateBalance(id: string) {
 export async function updateCustomBalance(id: string) {
   console.time(`update-custom-balance-${id}`);
   try {
-    await getAccount(id);
+    // Check if account exists before proceeding
+    try {
+      await getAccount(id);
+    } catch (accountError) {
+      if ((accountError as Error).message === 'Account not found') {
+        console.log(`[updateCustomBalance] Account ${id} not found, skipping custom balance update`);
+        return;
+      }
+      throw accountError;
+    }
+
     await Promise.all([customCosmosBalances(id), customEvmBalances(id)]);
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -238,6 +265,7 @@ export async function initAccount(id: string) {
 
     await chrome.storage.local.set<Pick<ExtensionStorage, `${string}-hidden-assetIds`>>({ [`${id}-hidden-assetIds`]: uniqueHiddenAssetIds });
     await chrome.storage.local.set<Pick<ExtensionStorage, `${string}-visible-assetIds`>>({ [`${id}-visible-assetIds`]: defaultVisibleAssetIds });
+    await chrome.storage.local.set<Pick<ExtensionStorage, `${string}-user-hidden-assetIds`>>({ [`${id}-user-hidden-assetIds`]: [] });
   }
 }
 
@@ -276,6 +304,7 @@ export async function updateHiddenAssetsExcludingDefault(id: string) {
 
     await chrome.storage.local.set<Pick<ExtensionStorage, `${string}-hidden-assetIds`>>({ [`${id}-hidden-assetIds`]: uniqueHiddenAssetIds });
     await chrome.storage.local.set<Pick<ExtensionStorage, `${string}-visible-assetIds`>>({ [`${id}-visible-assetIds`]: defaultVisibleAssetIds });
+    await chrome.storage.local.set<Pick<ExtensionStorage, `${string}-user-hidden-assetIds`>>({ [`${id}-user-hidden-assetIds`]: [] });
   }
 }
 

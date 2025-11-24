@@ -7,7 +7,12 @@ import { NATIVE_EVM_COIN_ADDRESS } from '@/constants/evm';
 import { LANGUAGE_TYPE } from '@/constants/language';
 import { getChains } from '@/libs/chain';
 import { v11 } from '@/script/service-worker/update/v11';
-import type { Account as NewAccount, AccountNamesById, MnemonicAccount as NewMnemonicAccount, PrivateAccount as NewPrivateAccount } from '@/types/account';
+import type {
+  Account as NewAccount,
+  AccountNamesById,
+  MnemonicAccount as NewMnemonicAccount,
+  PrivateAccount as NewPrivateAccount,
+} from '@/types/account';
 import type { CustomCosmosAsset, CustomEvmAsset } from '@/types/asset';
 import type { CustomCosmosChain, CustomEvmChain } from '@/types/chain';
 import type { CurrencyType as NewCurrencyType } from '@/types/currency';
@@ -16,6 +21,9 @@ import { getUniqueChainId } from '@/utils/queryParamGenerator';
 import { getExtensionLocalStorage, setExtensionLocalStorage } from '@/utils/storage';
 import { initialState, notDeleteKeys } from '@/zustand/hooks/useExtensionStorageStore';
 import { setLoadingProgressBarStore } from '@/zustand/hooks/useLoadingProgressBar';
+
+// Type for accounts that can be migrated (excludes ZkLogin since it didn't exist in v1)
+type MigratableAccount = NewPrivateAccount | NewMnemonicAccount;
 
 const ACCOUNT_TYPE = {
   MNEMONIC: 'MNEMONIC',
@@ -26,6 +34,7 @@ const ACCOUNT_TYPE = {
 type LANGUAGE_TYPE = {
   KO: 'ko';
   EN: 'en';
+  ZH: 'zh';
 };
 
 type CURRENCY_TYPE = {
@@ -443,9 +452,9 @@ async function migrateAccounts(legacyStorage: LegacyExtensionStorage) {
 
         return null;
       })
-      .filter((account): account is NewAccount => !!account);
+      .filter((account): account is MigratableAccount => !!account);
 
-    await setExtensionLocalStorage('userAccounts', transformedUserAccounts);
+    await setExtensionLocalStorage('userAccounts', transformedUserAccounts as NewAccount[]);
   }
 }
 
@@ -490,7 +499,13 @@ async function migrateAdditionalChains(legacyStorage: LegacyExtensionStorage) {
       isCosmwasm: false,
       isEvm: false,
       lcdUrls: [{ provider: 'Custom', url: legactChain.restURL }],
-      explorer: legactChain.explorerURL ? { name: 'Custom', url: legactChain.explorerURL, account: '', tx: '', proposal: '' } : null,
+      explorer: legactChain.explorerURL ? {
+        name: 'Custom',
+        url: legactChain.explorerURL,
+        account: '',
+        tx: '',
+        proposal: '',
+      } : null,
       feeInfo: {
         isSimulable: false,
         isFeemarketEnabled: false,
@@ -552,8 +567,8 @@ async function migrateAdditionalChains(legacyStorage: LegacyExtensionStorage) {
 async function migrateLanguage(legacyStorage: LegacyExtensionStorage) {
   const language = legacyStorage['language'];
   const newLanguage = (() => {
-    if (language === 'ko') {
-      return LANGUAGE_TYPE.KO;
+    if (language === 'zh') {
+      return LANGUAGE_TYPE.ZH;
     }
 
     return LANGUAGE_TYPE.EN;

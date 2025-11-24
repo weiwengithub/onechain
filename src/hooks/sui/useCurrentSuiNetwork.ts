@@ -4,6 +4,7 @@ import type { SuiChain } from '@/types/chain';
 import { emitToWeb } from '@/utils/message';
 import { getUniqueChainId, isMatchingUniqueChainId } from '@/utils/queryParamGenerator';
 import { useExtensionStorageStore } from '@/zustand/hooks/useExtensionStorageStore';
+import { ZKLOGIN_SUPPORTED_CHAIN_ID } from '@/constants/zklogin';
 
 import { useChainList } from '../useChainList';
 
@@ -20,7 +21,9 @@ export function useCurrentSuiNetwork() {
   // debugger;
 
   const currentAccountSelectedSuiNetworkId = useMemo(() => {
-    const selectedSuiChain = allSuiChains.find((network) => isMatchingUniqueChainId(network, chosenSuiNetworkId)) || allSuiChains[0];
+    const selectedSuiChain = allSuiChains.find((network) => isMatchingUniqueChainId(network, chosenSuiNetworkId)) ||
+                             allSuiChains.find((network) => network.id === ZKLOGIN_SUPPORTED_CHAIN_ID) ||
+                             allSuiChains[0];
 
     return selectedSuiChain ? getUniqueChainId(selectedSuiChain) : '';
   }, [allSuiChains, chosenSuiNetworkId]);

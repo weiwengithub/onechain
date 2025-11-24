@@ -7,7 +7,15 @@ import Base1300Text from '@/components/common/Base1300Text';
 import BaseOptionButton from '@/components/common/BaseOptionButton';
 import { extension } from '@/utils/browser';
 
-import { AppContainer, AppIconImageContainer, AppVersionText, ButtonContainer, ButtonIconContainer, Container, StickyContainer } from './-styled';
+import {
+  AppContainer,
+  AppIconImageContainer,
+  AppVersionText,
+  ButtonContainer,
+  ButtonIconContainer,
+  Container,
+  StickyContainer,
+} from './-styled';
 
 import GithubIcon from '@/assets/images/icons/Github28.svg';
 import PrivacyIcon from '@/assets/images/icons/Privacy28.svg';
@@ -16,6 +24,7 @@ import WebsiteIcon from '@/assets/images/icons/Website28.svg';
 import XIcon from '@/assets/images/icons/X28.svg';
 
 import appIconImage from '@/assets/images/logos/appIcon.png';
+import { AWS_URL } from '@/script/service-worker/update/constant.ts';
 
 export default function Entry() {
   const { t } = useTranslation();
@@ -30,21 +39,23 @@ export default function Entry() {
           <StickyContainer>
             <AppContainer>
               <AppIconImageContainer src={appIconImage} />
-              <AppVersionText variant="h2_B">{'Onechain'}</AppVersionText>
+              <AppVersionText variant="h2_B">{'OneWallet'}</AppVersionText>
               <Base1000Text variant="b3_M">{`V ${version}`}</Base1000Text>
             </AppContainer>
           </StickyContainer>
           <ButtonContainer>
             <BaseOptionButton
               onClick={() => {
-                window.open('https://onewallet2020.s3.ap-southeast-2.amazonaws.com/aggrement/index.html#/terms', '_blank');
+                window.open(`${AWS_URL}/agreement/index.html#/terms`, '_blank');
               }}
               leftContent={
                 <ButtonIconContainer>
                   <ServiceIcon />
                 </ButtonIconContainer>
               }
-              leftSecondHeader={<Base1300Text variant="b2_M">{t('pages.general-setting.about.entry.termsOfService')}</Base1300Text>}
+              leftSecondHeader={<Base1300Text
+                variant="b2_M"
+              >{t('pages.general-setting.about.entry.termsOfService')}</Base1300Text>}
               leftSecondBody={
                 <Base1000Text
                   variant="b3_R"
@@ -58,14 +69,16 @@ export default function Entry() {
             />
             <BaseOptionButton
               onClick={() => {
-                window.open('https://onewallet2020.s3.ap-southeast-2.amazonaws.com/aggrement/index.html#/privacy', '_blank');
+                window.open(`${AWS_URL}/agreement/index.html#/privacy`, '_blank');
               }}
               leftContent={
                 <ButtonIconContainer>
                   <PrivacyIcon />
                 </ButtonIconContainer>
               }
-              leftSecondHeader={<Base1300Text variant="b2_M">{t('pages.general-setting.about.entry.privacy')}</Base1300Text>}
+              leftSecondHeader={<Base1300Text
+                variant="b2_M"
+              >{t('pages.general-setting.about.entry.privacy')}</Base1300Text>}
               leftSecondBody={
                 <Base1000Text
                   variant="b3_R"

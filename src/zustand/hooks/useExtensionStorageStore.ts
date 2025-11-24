@@ -61,6 +61,8 @@ export const initialState: ExtensionStorageState = {
   pinnedDappIds: [],
   autoLockTimeInMinutes: '30',
   autoLockTimeStampAt: null,
+  isSignatureEnabled: false,
+  isDeveloperMode: false,
   migrationStatus: null,
   userPriceTrendPreference: PRICE_TREND_TYPE.GREEN_UP,
   selectedChainFilterId: null,

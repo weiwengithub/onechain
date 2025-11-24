@@ -1,9 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import Image from 'components/common/Image';
-
-import Base1000Text from '@/components/common/Base1000Text';
+import { useClipboard } from '@/hooks/useClipboard.ts';
 import Base1300Text from '@/components/common/Base1300Text';
-import CopyButton from '@/components/CopyButton';
+import CopyIcon from 'assets/images/icons/Copy16.svg';
 
 import {
   ItemLeftContainer,
@@ -28,6 +27,7 @@ type PrivateKeyAccordion = {
 
 export default function PrivateKeyAccordion({ name, image, hdPath, privateKey, arialControls, id }: PrivateKeyAccordion) {
   const { t } = useTranslation();
+  const { copyToClipboard } = useClipboard();
 
   return (
     <StyledChainAccordion>
@@ -38,19 +38,24 @@ export default function PrivateKeyAccordion({ name, image, hdPath, privateKey, a
           </ItemLeftImageContainer>
           <ItemLeftTextContainer>
             <Base1300Text variant="b2_M">{name}</Base1300Text>
-            <ItemLeftHdPathTextContainer>
-              <Base1000Text variant="b4_R">{t('pages.view.multi-chain-privateKey.components.index.hdPath')}</Base1000Text>
-              &nbsp;
-              <Base1000Text variant="h7n_M">{hdPath}</Base1000Text>
-            </ItemLeftHdPathTextContainer>
+            {/*<ItemLeftHdPathTextContainer>*/}
+            {/*  <Base1000Text variant="b4_R">{t('pages.view.multi-chain-privateKey.components.index.hdPath')}</Base1000Text>*/}
+            {/*  &nbsp;*/}
+            {/*  <Base1000Text variant="h7n_M">{hdPath}</Base1000Text>*/}
+            {/*</ItemLeftHdPathTextContainer>*/}
           </ItemLeftTextContainer>
         </ItemLeftContainer>
       </StyledChainAccordionSummary>
       <StyledChainAccordionDetails>
         <PrivateKeyViewer>
-          <PrivateKeyText variant="b3_M_Multiline">{privateKey}</PrivateKeyText>
-
-          <CopyButton sx={{ width: '2rem', height: '2rem' }} copyString={privateKey} />
+          <PrivateKeyText>{privateKey}</PrivateKeyText>
+          <div
+            className="mt-[12px] flex items-center justify-center h-[36px] rounded-[8px] bg-[#0047C4] hover:bg-[#3B82FF] cursor-pointer"
+            onClick={() => copyToClipboard(privateKey)}
+          >
+            <CopyIcon />
+            <span className="ml-[6px] text-white text-[16px]">Copy</span>
+          </div>
         </PrivateKeyViewer>
       </StyledChainAccordionDetails>
     </StyledChainAccordion>

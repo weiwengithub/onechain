@@ -14,13 +14,29 @@ import type { CosmosChain } from '@/types/chain';
 import type { ResponseAppMessage } from '@/types/message/content';
 import type { AptosAccount } from '@/types/message/inject/aptos';
 import type { BitRequestAccount } from '@/types/message/inject/bitcoin';
-import type { CosRequestAccount, CosRequestAccountResponse, CosRequestAccountsSettled, CosRequestAccountsSettledResponse } from '@/types/message/inject/cosmos';
+import type {
+  CosRequestAccount,
+  CosRequestAccountResponse,
+  CosRequestAccountsSettled,
+  CosRequestAccountsSettledResponse,
+} from '@/types/message/inject/cosmos';
 import type { EthRequestAccounts, EthRequestAccountsResponse } from '@/types/message/inject/evm';
-import type { IotaRequestAccount, IotaRequestAccountResponse, IotaRequestConnect, IotaRequestConnectResponse } from '@/types/message/inject/iota';
-import type { SuiRequestAccount, SuiRequestAccountResponse, SuiRequestConnect, SuiRequestConnectResponse } from '@/types/message/inject/sui';
+import type {
+  IotaRequestAccount,
+  IotaRequestAccountResponse,
+  IotaRequestConnect,
+  IotaRequestConnectResponse,
+} from '@/types/message/inject/iota';
+import type {
+  SuiRequestAccount,
+  SuiRequestAccountResponse,
+  SuiRequestConnect,
+  SuiRequestConnectResponse,
+} from '@/types/message/inject/sui';
 import { CosmosRPCError, EthereumRPCError, IotaRPCError, SuiRPCError } from '@/utils/error';
 import { extensionLocalStorage, getExtensionLocalStorage } from '@/utils/storage';
 import { addHexPrefix } from '@/utils/string';
+import { ZKLOGIN_SUPPORTED_CHAIN_ID } from '@/constants/zklogin';
 
 export default function Entry() {
   const { currentRequestQueue, deQueue } = useCurrentRequestQueue();
@@ -51,10 +67,10 @@ export default function Entry() {
 
             const updatedChain = inAppSelectedPreferAccountType
               ? produce(chain, (draft) => {
-                  draft.accountTypes = draft.accountTypes.filter(
-                    (item) => item.pubkeyStyle === inAppSelectedPreferAccountType?.pubkeyStyle && item.hdPath === inAppSelectedPreferAccountType?.hdPath,
-                  );
-                })
+                draft.accountTypes = draft.accountTypes.filter(
+                  (item) => item.pubkeyStyle === inAppSelectedPreferAccountType?.pubkeyStyle && item.hdPath === inAppSelectedPreferAccountType?.hdPath,
+                );
+              })
               : chain;
 
             void refreshOriginConnectionTime(origin);
@@ -111,10 +127,10 @@ export default function Entry() {
 
               const updatedChain = inAppSelectedPreferAccountType
                 ? produce(targetChain, (draft) => {
-                    draft.accountTypes = draft.accountTypes.filter(
-                      (item) => item.pubkeyStyle === inAppSelectedPreferAccountType?.pubkeyStyle && item.hdPath === inAppSelectedPreferAccountType?.hdPath,
-                    );
-                  })
+                  draft.accountTypes = draft.accountTypes.filter(
+                    (item) => item.pubkeyStyle === inAppSelectedPreferAccountType?.pubkeyStyle && item.hdPath === inAppSelectedPreferAccountType?.hdPath,
+                  );
+                })
                 : targetChain;
 
               const matchedAddressInfo = currentAccountAddressInfo.find(
@@ -239,7 +255,7 @@ export default function Entry() {
         if (currentRequestQueue?.method === 'sui_getAccount' && currentPassword) {
           const { tabId, requestId, origin } = currentRequestQueue;
           const suiChains = (await getChains()).suiChains;
-          const suiChain = suiChains?.find((item) => item.id === 'sui') || suiChains?.[0];
+          const suiChain = suiChains?.find((item) => item.id === ZKLOGIN_SUPPORTED_CHAIN_ID) || suiChains?.[0];
 
           if (suiChain) {
             void refreshOriginConnectionTime(origin);
@@ -420,6 +436,6 @@ export default function Entry() {
     };
 
     handleRequestAccount();
-  }, [chainList?.allCosmosChains, currentAccount, currentPassword, currentPreferAccountType, currentRequestQueue, deQueue, refreshOriginConnectionTime]);
+  }, [chainList.allCosmosChains, chainList.cosmosChains, currentAccount, currentPassword, currentPreferAccountType, currentRequestQueue, deQueue, refreshOriginConnectionTime]);
   return null;
 }

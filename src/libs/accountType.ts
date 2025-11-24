@@ -50,10 +50,18 @@ export async function getMultipleAccountTypesChain(id: string) {
 
   const mutlipleAccountTypesWithAddress = Object.entries(groupedAccountAddressesByChainId).reduce(
     (acc, [key, value]) => {
-      const filteredCosmosAccountAddress = value.filter((item) => item.chainType === 'cosmos' || item.chainType === 'bitcoin');
-      acc[key] = filteredCosmosAccountAddress.map((item) => {
+      // 支持 cosmos, bitcoin, 和 sui 类型的链
+      const filteredAddresses = value.filter((item) => 
+        item.chainType === 'cosmos' || 
+        item.chainType === 'bitcoin' || 
+        item.chainType === 'sui'
+      );
+      acc[key] = filteredAddresses.map((item) => {
         return produce(item, (draft) => {
-          draft.accountType.hdPath = draft.accountType.hdPath.replace('X', '${index}');
+          // 只有非 zklogin 账户才需要替换 hdPath 中的 X
+          if (draft.accountType.hdPath && draft.accountType.hdPath.includes('X')) {
+            draft.accountType.hdPath = draft.accountType.hdPath.replace('X', '${index}');
+          }
         });
       });
       return acc;

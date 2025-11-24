@@ -49,10 +49,10 @@ export function useGetCoins({ coinId, coinType, config }: UseGetCoinsProps) {
 
       returnData.push(respose);
 
-      const nextCursor = returnData?.[returnData.length - 1]?.result?.hasNextPage;
+      let nextCursor = returnData?.[returnData.length - 1]?.result?.nextCursor;
+      let hasNextPage = Boolean(returnData?.[returnData.length - 1]?.result?.hasNextPage && nextCursor);
 
-      while (nextCursor) {
-        // debugger;
+      while (hasNextPage && nextCursor) {
         const nextPageResponse = await post<SuiGetCoinsResponse>(requestURL, {
           jsonrpc: '2.0',
           method: 'suix_getCoins',
@@ -61,6 +61,9 @@ export function useGetCoins({ coinId, coinType, config }: UseGetCoinsProps) {
         });
 
         returnData.push(nextPageResponse);
+
+        nextCursor = nextPageResponse?.result?.nextCursor;
+        hasNextPage = Boolean(nextPageResponse?.result?.hasNextPage && nextCursor);
       }
 
       setIsAllRequestsFailed(false);

@@ -1,6 +1,6 @@
 import { useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import copy from 'copy-to-clipboard';
+import { useClipboard } from '@/hooks/useClipboard';
 
 import { shorterAddress } from '@/utils/string';
 import { toastDefault, toastError } from '@/utils/toast';
@@ -16,14 +16,7 @@ export type ShortAddressCopyButtonProps = TextButtonProps & {
 export default function ShortAddressCopyButton({ children, ...remainder }: ShortAddressCopyButtonProps) {
   const [shorterAddressText, setShorterAddressText] = useState(children);
   const { t } = useTranslation();
-
-  const copyToClipboard = () => {
-    if (copy(children)) {
-      toastDefault(t('components.MainBox.CoinDetailBox.index.copied'));
-    } else {
-      toastError(t('components.MainBox.CoinDetailBox.index.copyFailed'));
-    }
-  };
+  const { copyToClipboard } = useClipboard();
 
   useLayoutEffect(() => {
     const updateTruncatedText = () => {
@@ -52,7 +45,7 @@ export default function ShortAddressCopyButton({ children, ...remainder }: Short
   }, [children]);
 
   return (
-    <TextButton onClick={copyToClipboard} {...remainder}>
+    <TextButton onClick={() => copyToClipboard(children)} {...remainder}>
       <div style={{flexDirection:'row', display: "flex", alignItems: "center"}}>
         <div>{shorterAddressText}</div>
         <img

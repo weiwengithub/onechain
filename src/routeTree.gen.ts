@@ -12,6 +12,8 @@
 
 import { Route as rootRoute } from './pages/__root'
 import { Route as IndexImport } from './pages/index'
+import { Route as PrivacyPoolIndexImport } from './pages/privacy-pool/index'
+import { Route as OnetransferIndexImport } from './pages/onetransfer/index'
 import { Route as ManageDappsIndexImport } from './pages/manage-dapps/index'
 import { Route as GeneralSettingIndexImport } from './pages/general-setting/index'
 import { Route as DappListIndexImport } from './pages/dapp-list/index'
@@ -26,6 +28,7 @@ import { Route as WalletSendIndexImport } from './pages/wallet/send/index'
 import { Route as WalletReceiveIndexImport } from './pages/wallet/receive/index'
 import { Route as WalletHistoryIndexImport } from './pages/wallet/history/index'
 import { Route as PopupRequestAccountIndexImport } from './pages/popup/request-account/index'
+import { Route as OnetransferHistoryIndexImport } from './pages/onetransfer/history/index'
 import { Route as NftDetailIdIndexImport } from './pages/nft-detail/$id/index'
 import { Route as ManageAssetsSwitchAccoutTypeIndexImport } from './pages/manage-assets/switch-accout-type/index'
 import { Route as ManageAssetsCoinTypeSettingIndexImport } from './pages/manage-assets/coin-type-setting/index'
@@ -34,8 +37,12 @@ import { Route as ManageAccountResetWalletIndexImport } from './pages/manage-acc
 import { Route as ManageAccountManageWalletAndAccountIndexImport } from './pages/manage-account/manage-wallet-and-account/index'
 import { Route as GeneralSettingWalletPrioritizeIndexImport } from './pages/general-setting/wallet-prioritize/index'
 import { Route as GeneralSettingManageCustomNetworkIndexImport } from './pages/general-setting/manage-custom-network/index'
+import { Route as GeneralSettingLockIndexImport } from './pages/general-setting/lock/index'
+import { Route as GeneralSettingLanguageIndexImport } from './pages/general-setting/language/index'
+import { Route as GeneralSettingCurrencyIndexImport } from './pages/general-setting/currency/index'
 import { Route as GeneralSettingChangePasswordIndexImport } from './pages/general-setting/change-password/index'
 import { Route as GeneralSettingBackupWalletIndexImport } from './pages/general-setting/backup-wallet/index'
+import { Route as GeneralSettingAdvancedIndexImport } from './pages/general-setting/advanced/index'
 import { Route as GeneralSettingAddressBookIndexImport } from './pages/general-setting/address-book/index'
 import { Route as GeneralSettingAboutIndexImport } from './pages/general-setting/about/index'
 import { Route as CoinOverviewCoinIdIndexImport } from './pages/coin-overview/$coinId/index'
@@ -43,6 +50,14 @@ import { Route as CoinDetailCoinIdIndexImport } from './pages/coin-detail/$coinI
 import { Route as AccountSetPasswordIndexImport } from './pages/account/set-password/index'
 import { Route as AccountInitialIndexImport } from './pages/account/initial/index'
 import { Route as AccountAddWalletIndexImport } from './pages/account/add-wallet/index'
+import { Route as OnetransferVoucherVoucherListImport } from './pages/onetransfer/Voucher/VoucherList'
+import { Route as OnetransferVoucherRedeemInputImport } from './pages/onetransfer/Voucher/RedeemInput'
+import { Route as OnetransferVoucherActionButtonImport } from './pages/onetransfer/Voucher/ActionButton'
+import { Route as OnetransferRedPacketTokenSelectorImport } from './pages/onetransfer/RedPacket/TokenSelector'
+import { Route as OnetransferRedPacketSubTabsImport } from './pages/onetransfer/RedPacket/SubTabs'
+import { Route as OnetransferRedPacketReceiverInputImport } from './pages/onetransfer/RedPacket/ReceiverInput'
+import { Route as OnetransferRedPacketMainTabsImport } from './pages/onetransfer/RedPacket/MainTabs'
+import { Route as OnetransferRedPacketAmountInputImport } from './pages/onetransfer/RedPacket/AmountInput'
 import { Route as WalletUnstakeCoinIdIndexImport } from './pages/wallet/unstake/$coinId/index'
 import { Route as WalletSwapCoinIdIndexImport } from './pages/wallet/swap/$coinId/index'
 import { Route as WalletStakeCoinIdIndexImport } from './pages/wallet/stake/$coinId/index'
@@ -111,6 +126,18 @@ import { Route as ManageAccountDetailMnemonicAccountAccountIdIndexImport } from 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PrivacyPoolIndexRoute = PrivacyPoolIndexImport.update({
+  id: '/privacy-pool/',
+  path: '/privacy-pool/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const OnetransferIndexRoute = OnetransferIndexImport.update({
+  id: '/onetransfer/',
+  path: '/onetransfer/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -198,6 +225,12 @@ const PopupRequestAccountIndexRoute = PopupRequestAccountIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const OnetransferHistoryIndexRoute = OnetransferHistoryIndexImport.update({
+  id: '/onetransfer/history/',
+  path: '/onetransfer/history/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const NftDetailIdIndexRoute = NftDetailIdIndexImport.update({
   id: '/nft-detail/$id/',
   path: '/nft-detail/$id/',
@@ -253,6 +286,26 @@ const GeneralSettingManageCustomNetworkIndexRoute =
     getParentRoute: () => rootRoute,
   } as any)
 
+const GeneralSettingLockIndexRoute = GeneralSettingLockIndexImport.update({
+  id: '/general-setting/lock/',
+  path: '/general-setting/lock/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const GeneralSettingLanguageIndexRoute =
+  GeneralSettingLanguageIndexImport.update({
+    id: '/general-setting/language/',
+    path: '/general-setting/language/',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const GeneralSettingCurrencyIndexRoute =
+  GeneralSettingCurrencyIndexImport.update({
+    id: '/general-setting/currency/',
+    path: '/general-setting/currency/',
+    getParentRoute: () => rootRoute,
+  } as any)
+
 const GeneralSettingChangePasswordIndexRoute =
   GeneralSettingChangePasswordIndexImport.update({
     id: '/general-setting/change-password/',
@@ -264,6 +317,13 @@ const GeneralSettingBackupWalletIndexRoute =
   GeneralSettingBackupWalletIndexImport.update({
     id: '/general-setting/backup-wallet/',
     path: '/general-setting/backup-wallet/',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const GeneralSettingAdvancedIndexRoute =
+  GeneralSettingAdvancedIndexImport.update({
+    id: '/general-setting/advanced/',
+    path: '/general-setting/advanced/',
     getParentRoute: () => rootRoute,
   } as any)
 
@@ -309,6 +369,62 @@ const AccountAddWalletIndexRoute = AccountAddWalletIndexImport.update({
   path: '/account/add-wallet/',
   getParentRoute: () => rootRoute,
 } as any)
+
+const OnetransferVoucherVoucherListRoute =
+  OnetransferVoucherVoucherListImport.update({
+    id: '/onetransfer/Voucher/VoucherList',
+    path: '/onetransfer/Voucher/VoucherList',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const OnetransferVoucherRedeemInputRoute =
+  OnetransferVoucherRedeemInputImport.update({
+    id: '/onetransfer/Voucher/RedeemInput',
+    path: '/onetransfer/Voucher/RedeemInput',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const OnetransferVoucherActionButtonRoute =
+  OnetransferVoucherActionButtonImport.update({
+    id: '/onetransfer/Voucher/ActionButton',
+    path: '/onetransfer/Voucher/ActionButton',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const OnetransferRedPacketTokenSelectorRoute =
+  OnetransferRedPacketTokenSelectorImport.update({
+    id: '/onetransfer/RedPacket/TokenSelector',
+    path: '/onetransfer/RedPacket/TokenSelector',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const OnetransferRedPacketSubTabsRoute =
+  OnetransferRedPacketSubTabsImport.update({
+    id: '/onetransfer/RedPacket/SubTabs',
+    path: '/onetransfer/RedPacket/SubTabs',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const OnetransferRedPacketReceiverInputRoute =
+  OnetransferRedPacketReceiverInputImport.update({
+    id: '/onetransfer/RedPacket/ReceiverInput',
+    path: '/onetransfer/RedPacket/ReceiverInput',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const OnetransferRedPacketMainTabsRoute =
+  OnetransferRedPacketMainTabsImport.update({
+    id: '/onetransfer/RedPacket/MainTabs',
+    path: '/onetransfer/RedPacket/MainTabs',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const OnetransferRedPacketAmountInputRoute =
+  OnetransferRedPacketAmountInputImport.update({
+    id: '/onetransfer/RedPacket/AmountInput',
+    path: '/onetransfer/RedPacket/AmountInput',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 const WalletUnstakeCoinIdIndexRoute = WalletUnstakeCoinIdIndexImport.update({
   id: '/wallet/unstake/$coinId/',
@@ -784,6 +900,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManageDappsIndexImport
       parentRoute: typeof rootRoute
     }
+    '/onetransfer/': {
+      id: '/onetransfer/'
+      path: '/onetransfer'
+      fullPath: '/onetransfer'
+      preLoaderRoute: typeof OnetransferIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/privacy-pool/': {
+      id: '/privacy-pool/'
+      path: '/privacy-pool'
+      fullPath: '/privacy-pool'
+      preLoaderRoute: typeof PrivacyPoolIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/onetransfer/RedPacket/AmountInput': {
+      id: '/onetransfer/RedPacket/AmountInput'
+      path: '/onetransfer/RedPacket/AmountInput'
+      fullPath: '/onetransfer/RedPacket/AmountInput'
+      preLoaderRoute: typeof OnetransferRedPacketAmountInputImport
+      parentRoute: typeof rootRoute
+    }
+    '/onetransfer/RedPacket/MainTabs': {
+      id: '/onetransfer/RedPacket/MainTabs'
+      path: '/onetransfer/RedPacket/MainTabs'
+      fullPath: '/onetransfer/RedPacket/MainTabs'
+      preLoaderRoute: typeof OnetransferRedPacketMainTabsImport
+      parentRoute: typeof rootRoute
+    }
+    '/onetransfer/RedPacket/ReceiverInput': {
+      id: '/onetransfer/RedPacket/ReceiverInput'
+      path: '/onetransfer/RedPacket/ReceiverInput'
+      fullPath: '/onetransfer/RedPacket/ReceiverInput'
+      preLoaderRoute: typeof OnetransferRedPacketReceiverInputImport
+      parentRoute: typeof rootRoute
+    }
+    '/onetransfer/RedPacket/SubTabs': {
+      id: '/onetransfer/RedPacket/SubTabs'
+      path: '/onetransfer/RedPacket/SubTabs'
+      fullPath: '/onetransfer/RedPacket/SubTabs'
+      preLoaderRoute: typeof OnetransferRedPacketSubTabsImport
+      parentRoute: typeof rootRoute
+    }
+    '/onetransfer/RedPacket/TokenSelector': {
+      id: '/onetransfer/RedPacket/TokenSelector'
+      path: '/onetransfer/RedPacket/TokenSelector'
+      fullPath: '/onetransfer/RedPacket/TokenSelector'
+      preLoaderRoute: typeof OnetransferRedPacketTokenSelectorImport
+      parentRoute: typeof rootRoute
+    }
+    '/onetransfer/Voucher/ActionButton': {
+      id: '/onetransfer/Voucher/ActionButton'
+      path: '/onetransfer/Voucher/ActionButton'
+      fullPath: '/onetransfer/Voucher/ActionButton'
+      preLoaderRoute: typeof OnetransferVoucherActionButtonImport
+      parentRoute: typeof rootRoute
+    }
+    '/onetransfer/Voucher/RedeemInput': {
+      id: '/onetransfer/Voucher/RedeemInput'
+      path: '/onetransfer/Voucher/RedeemInput'
+      fullPath: '/onetransfer/Voucher/RedeemInput'
+      preLoaderRoute: typeof OnetransferVoucherRedeemInputImport
+      parentRoute: typeof rootRoute
+    }
+    '/onetransfer/Voucher/VoucherList': {
+      id: '/onetransfer/Voucher/VoucherList'
+      path: '/onetransfer/Voucher/VoucherList'
+      fullPath: '/onetransfer/Voucher/VoucherList'
+      preLoaderRoute: typeof OnetransferVoucherVoucherListImport
+      parentRoute: typeof rootRoute
+    }
     '/account/add-wallet/': {
       id: '/account/add-wallet/'
       path: '/account/add-wallet'
@@ -833,6 +1019,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GeneralSettingAddressBookIndexImport
       parentRoute: typeof rootRoute
     }
+    '/general-setting/advanced/': {
+      id: '/general-setting/advanced/'
+      path: '/general-setting/advanced'
+      fullPath: '/general-setting/advanced'
+      preLoaderRoute: typeof GeneralSettingAdvancedIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/general-setting/backup-wallet/': {
       id: '/general-setting/backup-wallet/'
       path: '/general-setting/backup-wallet'
@@ -845,6 +1038,27 @@ declare module '@tanstack/react-router' {
       path: '/general-setting/change-password'
       fullPath: '/general-setting/change-password'
       preLoaderRoute: typeof GeneralSettingChangePasswordIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/general-setting/currency/': {
+      id: '/general-setting/currency/'
+      path: '/general-setting/currency'
+      fullPath: '/general-setting/currency'
+      preLoaderRoute: typeof GeneralSettingCurrencyIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/general-setting/language/': {
+      id: '/general-setting/language/'
+      path: '/general-setting/language'
+      fullPath: '/general-setting/language'
+      preLoaderRoute: typeof GeneralSettingLanguageIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/general-setting/lock/': {
+      id: '/general-setting/lock/'
+      path: '/general-setting/lock'
+      fullPath: '/general-setting/lock'
+      preLoaderRoute: typeof GeneralSettingLockIndexImport
       parentRoute: typeof rootRoute
     }
     '/general-setting/manage-custom-network/': {
@@ -901,6 +1115,13 @@ declare module '@tanstack/react-router' {
       path: '/nft-detail/$id'
       fullPath: '/nft-detail/$id'
       preLoaderRoute: typeof NftDetailIdIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/onetransfer/history/': {
+      id: '/onetransfer/history/'
+      path: '/onetransfer/history'
+      fullPath: '/onetransfer/history'
+      preLoaderRoute: typeof OnetransferHistoryIndexImport
       parentRoute: typeof rootRoute
     }
     '/popup/request-account/': {
@@ -1406,6 +1627,16 @@ export interface FileRoutesByFullPath {
   '/dapp-list': typeof DappListIndexRoute
   '/general-setting': typeof GeneralSettingIndexRoute
   '/manage-dapps': typeof ManageDappsIndexRoute
+  '/onetransfer': typeof OnetransferIndexRoute
+  '/privacy-pool': typeof PrivacyPoolIndexRoute
+  '/onetransfer/RedPacket/AmountInput': typeof OnetransferRedPacketAmountInputRoute
+  '/onetransfer/RedPacket/MainTabs': typeof OnetransferRedPacketMainTabsRoute
+  '/onetransfer/RedPacket/ReceiverInput': typeof OnetransferRedPacketReceiverInputRoute
+  '/onetransfer/RedPacket/SubTabs': typeof OnetransferRedPacketSubTabsRoute
+  '/onetransfer/RedPacket/TokenSelector': typeof OnetransferRedPacketTokenSelectorRoute
+  '/onetransfer/Voucher/ActionButton': typeof OnetransferVoucherActionButtonRoute
+  '/onetransfer/Voucher/RedeemInput': typeof OnetransferVoucherRedeemInputRoute
+  '/onetransfer/Voucher/VoucherList': typeof OnetransferVoucherVoucherListRoute
   '/account/add-wallet': typeof AccountAddWalletIndexRoute
   '/account/initial': typeof AccountInitialIndexRoute
   '/account/set-password': typeof AccountSetPasswordIndexRoute
@@ -1413,8 +1644,12 @@ export interface FileRoutesByFullPath {
   '/coin-overview/$coinId': typeof CoinOverviewCoinIdIndexRoute
   '/general-setting/about': typeof GeneralSettingAboutIndexRoute
   '/general-setting/address-book': typeof GeneralSettingAddressBookIndexRoute
+  '/general-setting/advanced': typeof GeneralSettingAdvancedIndexRoute
   '/general-setting/backup-wallet': typeof GeneralSettingBackupWalletIndexRoute
   '/general-setting/change-password': typeof GeneralSettingChangePasswordIndexRoute
+  '/general-setting/currency': typeof GeneralSettingCurrencyIndexRoute
+  '/general-setting/language': typeof GeneralSettingLanguageIndexRoute
+  '/general-setting/lock': typeof GeneralSettingLockIndexRoute
   '/general-setting/manage-custom-network': typeof GeneralSettingManageCustomNetworkIndexRoute
   '/general-setting/wallet-prioritize': typeof GeneralSettingWalletPrioritizeIndexRoute
   '/manage-account/manage-wallet-and-account': typeof ManageAccountManageWalletAndAccountIndexRoute
@@ -1423,6 +1658,7 @@ export interface FileRoutesByFullPath {
   '/manage-assets/coin-type-setting': typeof ManageAssetsCoinTypeSettingIndexRoute
   '/manage-assets/switch-accout-type': typeof ManageAssetsSwitchAccoutTypeIndexRoute
   '/nft-detail/$id': typeof NftDetailIdIndexRoute
+  '/onetransfer/history': typeof OnetransferHistoryIndexRoute
   '/popup/request-account': typeof PopupRequestAccountIndexRoute
   '/wallet/history': typeof WalletHistoryIndexRoute
   '/wallet/receive': typeof WalletReceiveIndexRoute
@@ -1503,6 +1739,16 @@ export interface FileRoutesByTo {
   '/dapp-list': typeof DappListIndexRoute
   '/general-setting': typeof GeneralSettingIndexRoute
   '/manage-dapps': typeof ManageDappsIndexRoute
+  '/onetransfer': typeof OnetransferIndexRoute
+  '/privacy-pool': typeof PrivacyPoolIndexRoute
+  '/onetransfer/RedPacket/AmountInput': typeof OnetransferRedPacketAmountInputRoute
+  '/onetransfer/RedPacket/MainTabs': typeof OnetransferRedPacketMainTabsRoute
+  '/onetransfer/RedPacket/ReceiverInput': typeof OnetransferRedPacketReceiverInputRoute
+  '/onetransfer/RedPacket/SubTabs': typeof OnetransferRedPacketSubTabsRoute
+  '/onetransfer/RedPacket/TokenSelector': typeof OnetransferRedPacketTokenSelectorRoute
+  '/onetransfer/Voucher/ActionButton': typeof OnetransferVoucherActionButtonRoute
+  '/onetransfer/Voucher/RedeemInput': typeof OnetransferVoucherRedeemInputRoute
+  '/onetransfer/Voucher/VoucherList': typeof OnetransferVoucherVoucherListRoute
   '/account/add-wallet': typeof AccountAddWalletIndexRoute
   '/account/initial': typeof AccountInitialIndexRoute
   '/account/set-password': typeof AccountSetPasswordIndexRoute
@@ -1510,8 +1756,12 @@ export interface FileRoutesByTo {
   '/coin-overview/$coinId': typeof CoinOverviewCoinIdIndexRoute
   '/general-setting/about': typeof GeneralSettingAboutIndexRoute
   '/general-setting/address-book': typeof GeneralSettingAddressBookIndexRoute
+  '/general-setting/advanced': typeof GeneralSettingAdvancedIndexRoute
   '/general-setting/backup-wallet': typeof GeneralSettingBackupWalletIndexRoute
   '/general-setting/change-password': typeof GeneralSettingChangePasswordIndexRoute
+  '/general-setting/currency': typeof GeneralSettingCurrencyIndexRoute
+  '/general-setting/language': typeof GeneralSettingLanguageIndexRoute
+  '/general-setting/lock': typeof GeneralSettingLockIndexRoute
   '/general-setting/manage-custom-network': typeof GeneralSettingManageCustomNetworkIndexRoute
   '/general-setting/wallet-prioritize': typeof GeneralSettingWalletPrioritizeIndexRoute
   '/manage-account/manage-wallet-and-account': typeof ManageAccountManageWalletAndAccountIndexRoute
@@ -1520,6 +1770,7 @@ export interface FileRoutesByTo {
   '/manage-assets/coin-type-setting': typeof ManageAssetsCoinTypeSettingIndexRoute
   '/manage-assets/switch-accout-type': typeof ManageAssetsSwitchAccoutTypeIndexRoute
   '/nft-detail/$id': typeof NftDetailIdIndexRoute
+  '/onetransfer/history': typeof OnetransferHistoryIndexRoute
   '/popup/request-account': typeof PopupRequestAccountIndexRoute
   '/wallet/history': typeof WalletHistoryIndexRoute
   '/wallet/receive': typeof WalletReceiveIndexRoute
@@ -1601,6 +1852,16 @@ export interface FileRoutesById {
   '/dapp-list/': typeof DappListIndexRoute
   '/general-setting/': typeof GeneralSettingIndexRoute
   '/manage-dapps/': typeof ManageDappsIndexRoute
+  '/onetransfer/': typeof OnetransferIndexRoute
+  '/privacy-pool/': typeof PrivacyPoolIndexRoute
+  '/onetransfer/RedPacket/AmountInput': typeof OnetransferRedPacketAmountInputRoute
+  '/onetransfer/RedPacket/MainTabs': typeof OnetransferRedPacketMainTabsRoute
+  '/onetransfer/RedPacket/ReceiverInput': typeof OnetransferRedPacketReceiverInputRoute
+  '/onetransfer/RedPacket/SubTabs': typeof OnetransferRedPacketSubTabsRoute
+  '/onetransfer/RedPacket/TokenSelector': typeof OnetransferRedPacketTokenSelectorRoute
+  '/onetransfer/Voucher/ActionButton': typeof OnetransferVoucherActionButtonRoute
+  '/onetransfer/Voucher/RedeemInput': typeof OnetransferVoucherRedeemInputRoute
+  '/onetransfer/Voucher/VoucherList': typeof OnetransferVoucherVoucherListRoute
   '/account/add-wallet/': typeof AccountAddWalletIndexRoute
   '/account/initial/': typeof AccountInitialIndexRoute
   '/account/set-password/': typeof AccountSetPasswordIndexRoute
@@ -1608,8 +1869,12 @@ export interface FileRoutesById {
   '/coin-overview/$coinId/': typeof CoinOverviewCoinIdIndexRoute
   '/general-setting/about/': typeof GeneralSettingAboutIndexRoute
   '/general-setting/address-book/': typeof GeneralSettingAddressBookIndexRoute
+  '/general-setting/advanced/': typeof GeneralSettingAdvancedIndexRoute
   '/general-setting/backup-wallet/': typeof GeneralSettingBackupWalletIndexRoute
   '/general-setting/change-password/': typeof GeneralSettingChangePasswordIndexRoute
+  '/general-setting/currency/': typeof GeneralSettingCurrencyIndexRoute
+  '/general-setting/language/': typeof GeneralSettingLanguageIndexRoute
+  '/general-setting/lock/': typeof GeneralSettingLockIndexRoute
   '/general-setting/manage-custom-network/': typeof GeneralSettingManageCustomNetworkIndexRoute
   '/general-setting/wallet-prioritize/': typeof GeneralSettingWalletPrioritizeIndexRoute
   '/manage-account/manage-wallet-and-account/': typeof ManageAccountManageWalletAndAccountIndexRoute
@@ -1618,6 +1883,7 @@ export interface FileRoutesById {
   '/manage-assets/coin-type-setting/': typeof ManageAssetsCoinTypeSettingIndexRoute
   '/manage-assets/switch-accout-type/': typeof ManageAssetsSwitchAccoutTypeIndexRoute
   '/nft-detail/$id/': typeof NftDetailIdIndexRoute
+  '/onetransfer/history/': typeof OnetransferHistoryIndexRoute
   '/popup/request-account/': typeof PopupRequestAccountIndexRoute
   '/wallet/history/': typeof WalletHistoryIndexRoute
   '/wallet/receive/': typeof WalletReceiveIndexRoute
@@ -1700,6 +1966,16 @@ export interface FileRouteTypes {
     | '/dapp-list'
     | '/general-setting'
     | '/manage-dapps'
+    | '/onetransfer'
+    | '/privacy-pool'
+    | '/onetransfer/RedPacket/AmountInput'
+    | '/onetransfer/RedPacket/MainTabs'
+    | '/onetransfer/RedPacket/ReceiverInput'
+    | '/onetransfer/RedPacket/SubTabs'
+    | '/onetransfer/RedPacket/TokenSelector'
+    | '/onetransfer/Voucher/ActionButton'
+    | '/onetransfer/Voucher/RedeemInput'
+    | '/onetransfer/Voucher/VoucherList'
     | '/account/add-wallet'
     | '/account/initial'
     | '/account/set-password'
@@ -1707,8 +1983,12 @@ export interface FileRouteTypes {
     | '/coin-overview/$coinId'
     | '/general-setting/about'
     | '/general-setting/address-book'
+    | '/general-setting/advanced'
     | '/general-setting/backup-wallet'
     | '/general-setting/change-password'
+    | '/general-setting/currency'
+    | '/general-setting/language'
+    | '/general-setting/lock'
     | '/general-setting/manage-custom-network'
     | '/general-setting/wallet-prioritize'
     | '/manage-account/manage-wallet-and-account'
@@ -1717,6 +1997,7 @@ export interface FileRouteTypes {
     | '/manage-assets/coin-type-setting'
     | '/manage-assets/switch-accout-type'
     | '/nft-detail/$id'
+    | '/onetransfer/history'
     | '/popup/request-account'
     | '/wallet/history'
     | '/wallet/receive'
@@ -1796,6 +2077,16 @@ export interface FileRouteTypes {
     | '/dapp-list'
     | '/general-setting'
     | '/manage-dapps'
+    | '/onetransfer'
+    | '/privacy-pool'
+    | '/onetransfer/RedPacket/AmountInput'
+    | '/onetransfer/RedPacket/MainTabs'
+    | '/onetransfer/RedPacket/ReceiverInput'
+    | '/onetransfer/RedPacket/SubTabs'
+    | '/onetransfer/RedPacket/TokenSelector'
+    | '/onetransfer/Voucher/ActionButton'
+    | '/onetransfer/Voucher/RedeemInput'
+    | '/onetransfer/Voucher/VoucherList'
     | '/account/add-wallet'
     | '/account/initial'
     | '/account/set-password'
@@ -1803,8 +2094,12 @@ export interface FileRouteTypes {
     | '/coin-overview/$coinId'
     | '/general-setting/about'
     | '/general-setting/address-book'
+    | '/general-setting/advanced'
     | '/general-setting/backup-wallet'
     | '/general-setting/change-password'
+    | '/general-setting/currency'
+    | '/general-setting/language'
+    | '/general-setting/lock'
     | '/general-setting/manage-custom-network'
     | '/general-setting/wallet-prioritize'
     | '/manage-account/manage-wallet-and-account'
@@ -1813,6 +2108,7 @@ export interface FileRouteTypes {
     | '/manage-assets/coin-type-setting'
     | '/manage-assets/switch-accout-type'
     | '/nft-detail/$id'
+    | '/onetransfer/history'
     | '/popup/request-account'
     | '/wallet/history'
     | '/wallet/receive'
@@ -1892,6 +2188,16 @@ export interface FileRouteTypes {
     | '/dapp-list/'
     | '/general-setting/'
     | '/manage-dapps/'
+    | '/onetransfer/'
+    | '/privacy-pool/'
+    | '/onetransfer/RedPacket/AmountInput'
+    | '/onetransfer/RedPacket/MainTabs'
+    | '/onetransfer/RedPacket/ReceiverInput'
+    | '/onetransfer/RedPacket/SubTabs'
+    | '/onetransfer/RedPacket/TokenSelector'
+    | '/onetransfer/Voucher/ActionButton'
+    | '/onetransfer/Voucher/RedeemInput'
+    | '/onetransfer/Voucher/VoucherList'
     | '/account/add-wallet/'
     | '/account/initial/'
     | '/account/set-password/'
@@ -1899,8 +2205,12 @@ export interface FileRouteTypes {
     | '/coin-overview/$coinId/'
     | '/general-setting/about/'
     | '/general-setting/address-book/'
+    | '/general-setting/advanced/'
     | '/general-setting/backup-wallet/'
     | '/general-setting/change-password/'
+    | '/general-setting/currency/'
+    | '/general-setting/language/'
+    | '/general-setting/lock/'
     | '/general-setting/manage-custom-network/'
     | '/general-setting/wallet-prioritize/'
     | '/manage-account/manage-wallet-and-account/'
@@ -1909,6 +2219,7 @@ export interface FileRouteTypes {
     | '/manage-assets/coin-type-setting/'
     | '/manage-assets/switch-accout-type/'
     | '/nft-detail/$id/'
+    | '/onetransfer/history/'
     | '/popup/request-account/'
     | '/wallet/history/'
     | '/wallet/receive/'
@@ -1990,6 +2301,16 @@ export interface RootRouteChildren {
   DappListIndexRoute: typeof DappListIndexRoute
   GeneralSettingIndexRoute: typeof GeneralSettingIndexRoute
   ManageDappsIndexRoute: typeof ManageDappsIndexRoute
+  OnetransferIndexRoute: typeof OnetransferIndexRoute
+  PrivacyPoolIndexRoute: typeof PrivacyPoolIndexRoute
+  OnetransferRedPacketAmountInputRoute: typeof OnetransferRedPacketAmountInputRoute
+  OnetransferRedPacketMainTabsRoute: typeof OnetransferRedPacketMainTabsRoute
+  OnetransferRedPacketReceiverInputRoute: typeof OnetransferRedPacketReceiverInputRoute
+  OnetransferRedPacketSubTabsRoute: typeof OnetransferRedPacketSubTabsRoute
+  OnetransferRedPacketTokenSelectorRoute: typeof OnetransferRedPacketTokenSelectorRoute
+  OnetransferVoucherActionButtonRoute: typeof OnetransferVoucherActionButtonRoute
+  OnetransferVoucherRedeemInputRoute: typeof OnetransferVoucherRedeemInputRoute
+  OnetransferVoucherVoucherListRoute: typeof OnetransferVoucherVoucherListRoute
   AccountAddWalletIndexRoute: typeof AccountAddWalletIndexRoute
   AccountInitialIndexRoute: typeof AccountInitialIndexRoute
   AccountSetPasswordIndexRoute: typeof AccountSetPasswordIndexRoute
@@ -1997,8 +2318,12 @@ export interface RootRouteChildren {
   CoinOverviewCoinIdIndexRoute: typeof CoinOverviewCoinIdIndexRoute
   GeneralSettingAboutIndexRoute: typeof GeneralSettingAboutIndexRoute
   GeneralSettingAddressBookIndexRoute: typeof GeneralSettingAddressBookIndexRoute
+  GeneralSettingAdvancedIndexRoute: typeof GeneralSettingAdvancedIndexRoute
   GeneralSettingBackupWalletIndexRoute: typeof GeneralSettingBackupWalletIndexRoute
   GeneralSettingChangePasswordIndexRoute: typeof GeneralSettingChangePasswordIndexRoute
+  GeneralSettingCurrencyIndexRoute: typeof GeneralSettingCurrencyIndexRoute
+  GeneralSettingLanguageIndexRoute: typeof GeneralSettingLanguageIndexRoute
+  GeneralSettingLockIndexRoute: typeof GeneralSettingLockIndexRoute
   GeneralSettingManageCustomNetworkIndexRoute: typeof GeneralSettingManageCustomNetworkIndexRoute
   GeneralSettingWalletPrioritizeIndexRoute: typeof GeneralSettingWalletPrioritizeIndexRoute
   ManageAccountManageWalletAndAccountIndexRoute: typeof ManageAccountManageWalletAndAccountIndexRoute
@@ -2007,6 +2332,7 @@ export interface RootRouteChildren {
   ManageAssetsCoinTypeSettingIndexRoute: typeof ManageAssetsCoinTypeSettingIndexRoute
   ManageAssetsSwitchAccoutTypeIndexRoute: typeof ManageAssetsSwitchAccoutTypeIndexRoute
   NftDetailIdIndexRoute: typeof NftDetailIdIndexRoute
+  OnetransferHistoryIndexRoute: typeof OnetransferHistoryIndexRoute
   PopupRequestAccountIndexRoute: typeof PopupRequestAccountIndexRoute
   WalletHistoryIndexRoute: typeof WalletHistoryIndexRoute
   WalletReceiveIndexRoute: typeof WalletReceiveIndexRoute
@@ -2087,6 +2413,18 @@ const rootRouteChildren: RootRouteChildren = {
   DappListIndexRoute: DappListIndexRoute,
   GeneralSettingIndexRoute: GeneralSettingIndexRoute,
   ManageDappsIndexRoute: ManageDappsIndexRoute,
+  OnetransferIndexRoute: OnetransferIndexRoute,
+  PrivacyPoolIndexRoute: PrivacyPoolIndexRoute,
+  OnetransferRedPacketAmountInputRoute: OnetransferRedPacketAmountInputRoute,
+  OnetransferRedPacketMainTabsRoute: OnetransferRedPacketMainTabsRoute,
+  OnetransferRedPacketReceiverInputRoute:
+    OnetransferRedPacketReceiverInputRoute,
+  OnetransferRedPacketSubTabsRoute: OnetransferRedPacketSubTabsRoute,
+  OnetransferRedPacketTokenSelectorRoute:
+    OnetransferRedPacketTokenSelectorRoute,
+  OnetransferVoucherActionButtonRoute: OnetransferVoucherActionButtonRoute,
+  OnetransferVoucherRedeemInputRoute: OnetransferVoucherRedeemInputRoute,
+  OnetransferVoucherVoucherListRoute: OnetransferVoucherVoucherListRoute,
   AccountAddWalletIndexRoute: AccountAddWalletIndexRoute,
   AccountInitialIndexRoute: AccountInitialIndexRoute,
   AccountSetPasswordIndexRoute: AccountSetPasswordIndexRoute,
@@ -2094,9 +2432,13 @@ const rootRouteChildren: RootRouteChildren = {
   CoinOverviewCoinIdIndexRoute: CoinOverviewCoinIdIndexRoute,
   GeneralSettingAboutIndexRoute: GeneralSettingAboutIndexRoute,
   GeneralSettingAddressBookIndexRoute: GeneralSettingAddressBookIndexRoute,
+  GeneralSettingAdvancedIndexRoute: GeneralSettingAdvancedIndexRoute,
   GeneralSettingBackupWalletIndexRoute: GeneralSettingBackupWalletIndexRoute,
   GeneralSettingChangePasswordIndexRoute:
     GeneralSettingChangePasswordIndexRoute,
+  GeneralSettingCurrencyIndexRoute: GeneralSettingCurrencyIndexRoute,
+  GeneralSettingLanguageIndexRoute: GeneralSettingLanguageIndexRoute,
+  GeneralSettingLockIndexRoute: GeneralSettingLockIndexRoute,
   GeneralSettingManageCustomNetworkIndexRoute:
     GeneralSettingManageCustomNetworkIndexRoute,
   GeneralSettingWalletPrioritizeIndexRoute:
@@ -2109,6 +2451,7 @@ const rootRouteChildren: RootRouteChildren = {
   ManageAssetsSwitchAccoutTypeIndexRoute:
     ManageAssetsSwitchAccoutTypeIndexRoute,
   NftDetailIdIndexRoute: NftDetailIdIndexRoute,
+  OnetransferHistoryIndexRoute: OnetransferHistoryIndexRoute,
   PopupRequestAccountIndexRoute: PopupRequestAccountIndexRoute,
   WalletHistoryIndexRoute: WalletHistoryIndexRoute,
   WalletReceiveIndexRoute: WalletReceiveIndexRoute,
@@ -2217,6 +2560,16 @@ export const routeTree = rootRoute
         "/dapp-list/",
         "/general-setting/",
         "/manage-dapps/",
+        "/onetransfer/",
+        "/privacy-pool/",
+        "/onetransfer/RedPacket/AmountInput",
+        "/onetransfer/RedPacket/MainTabs",
+        "/onetransfer/RedPacket/ReceiverInput",
+        "/onetransfer/RedPacket/SubTabs",
+        "/onetransfer/RedPacket/TokenSelector",
+        "/onetransfer/Voucher/ActionButton",
+        "/onetransfer/Voucher/RedeemInput",
+        "/onetransfer/Voucher/VoucherList",
         "/account/add-wallet/",
         "/account/initial/",
         "/account/set-password/",
@@ -2224,8 +2577,12 @@ export const routeTree = rootRoute
         "/coin-overview/$coinId/",
         "/general-setting/about/",
         "/general-setting/address-book/",
+        "/general-setting/advanced/",
         "/general-setting/backup-wallet/",
         "/general-setting/change-password/",
+        "/general-setting/currency/",
+        "/general-setting/language/",
+        "/general-setting/lock/",
         "/general-setting/manage-custom-network/",
         "/general-setting/wallet-prioritize/",
         "/manage-account/manage-wallet-and-account/",
@@ -2234,6 +2591,7 @@ export const routeTree = rootRoute
         "/manage-assets/coin-type-setting/",
         "/manage-assets/switch-accout-type/",
         "/nft-detail/$id/",
+        "/onetransfer/history/",
         "/popup/request-account/",
         "/wallet/history/",
         "/wallet/receive/",
@@ -2327,6 +2685,36 @@ export const routeTree = rootRoute
     "/manage-dapps/": {
       "filePath": "manage-dapps/index.tsx"
     },
+    "/onetransfer/": {
+      "filePath": "onetransfer/index.tsx"
+    },
+    "/privacy-pool/": {
+      "filePath": "privacy-pool/index.tsx"
+    },
+    "/onetransfer/RedPacket/AmountInput": {
+      "filePath": "onetransfer/RedPacket/AmountInput.tsx"
+    },
+    "/onetransfer/RedPacket/MainTabs": {
+      "filePath": "onetransfer/RedPacket/MainTabs.tsx"
+    },
+    "/onetransfer/RedPacket/ReceiverInput": {
+      "filePath": "onetransfer/RedPacket/ReceiverInput.tsx"
+    },
+    "/onetransfer/RedPacket/SubTabs": {
+      "filePath": "onetransfer/RedPacket/SubTabs.tsx"
+    },
+    "/onetransfer/RedPacket/TokenSelector": {
+      "filePath": "onetransfer/RedPacket/TokenSelector.tsx"
+    },
+    "/onetransfer/Voucher/ActionButton": {
+      "filePath": "onetransfer/Voucher/ActionButton.tsx"
+    },
+    "/onetransfer/Voucher/RedeemInput": {
+      "filePath": "onetransfer/Voucher/RedeemInput.tsx"
+    },
+    "/onetransfer/Voucher/VoucherList": {
+      "filePath": "onetransfer/Voucher/VoucherList.tsx"
+    },
     "/account/add-wallet/": {
       "filePath": "account/add-wallet/index.tsx"
     },
@@ -2348,11 +2736,23 @@ export const routeTree = rootRoute
     "/general-setting/address-book/": {
       "filePath": "general-setting/address-book/index.tsx"
     },
+    "/general-setting/advanced/": {
+      "filePath": "general-setting/advanced/index.tsx"
+    },
     "/general-setting/backup-wallet/": {
       "filePath": "general-setting/backup-wallet/index.tsx"
     },
     "/general-setting/change-password/": {
       "filePath": "general-setting/change-password/index.tsx"
+    },
+    "/general-setting/currency/": {
+      "filePath": "general-setting/currency/index.tsx"
+    },
+    "/general-setting/language/": {
+      "filePath": "general-setting/language/index.tsx"
+    },
+    "/general-setting/lock/": {
+      "filePath": "general-setting/lock/index.tsx"
     },
     "/general-setting/manage-custom-network/": {
       "filePath": "general-setting/manage-custom-network/index.tsx"
@@ -2377,6 +2777,9 @@ export const routeTree = rootRoute
     },
     "/nft-detail/$id/": {
       "filePath": "nft-detail/$id/index.tsx"
+    },
+    "/onetransfer/history/": {
+      "filePath": "onetransfer/history/index.tsx"
     },
     "/popup/request-account/": {
       "filePath": "popup/request-account/index.tsx"

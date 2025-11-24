@@ -2,7 +2,7 @@ import { forwardRef } from 'react';
 
 import { ActiveLabel, LeftContainer, MiddleContainer, RightContainer, StyledButton } from './styled';
 
-import RightChevronIcon from '@/assets/images/icons/RightChevron30.svg';
+import RightChevronIcon from '@/assets/images/icons/RightChevron16.svg';
 
 export type BaseOptionButtonProps = React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> & {
   leftContent?: JSX.Element;

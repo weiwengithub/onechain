@@ -38,7 +38,7 @@ export const useTxTrackerStore = create<TxTrackerState>()(
         const tx = state.txs.find((tx) => tx.txHash === txHash);
         if (!tx) return;
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+         
         const { txHash: _, ...rest } = partial;
         Object.assign(tx, rest);
       }),

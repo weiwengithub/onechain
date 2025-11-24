@@ -8,28 +8,25 @@ import BottomChevronIcon from '@/assets/images/icons/BottomChevron18.svg';
 
 export const StyledChainAccordion = styled(Accordion)(({ theme }) => ({
   border: '0',
-  borderTop: `0.06rem solid ${theme.palette.color.base100}`,
   borderRadius: '0',
 }));
 
 export const StyledChainAccordionSummary = styled((props: AccordionSummaryProps) => <AccordionSummary expandIcon={<BottomChevronIcon />} {...props} />)(
   ({ theme }) => ({
-    padding: '1.2rem 0.4rem',
-
     '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
       transform: 'rotate(180deg)',
     },
 
     '& .MuiAccordionSummary-expandIconWrapper': {
       '& > svg > path': {
-        stroke: theme.palette.color.base600,
+        stroke: "#FFFFFF",
       },
     },
   }),
 );
 
 export const StyledChainAccordionDetails = styled(AccordionDetails)({
-  paddingBottom: '1.2rem',
+  marginTop: '12px',
 });
 
 export const ItemLeftContainer = styled('div')({
@@ -53,7 +50,7 @@ export const ItemLeftTextContainer = styled('div')({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
-  marginLeft: '0.4rem',
+  marginLeft: '12px',
 });
 
 export const ItemLeftHdPathTextContainer = styled('div')({
@@ -62,15 +59,18 @@ export const ItemLeftHdPathTextContainer = styled('div')({
 });
 
 export const PrivateKeyViewer = styled('div')(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'space-between',
-  borderRadius: '0.6rem',
+  borderRadius: '12px',
   border: `0.1rem solid ${theme.palette.color.base200}`,
-  padding: '1.2rem',
+  padding: '12px',
   backgroundColor: theme.palette.color.base100,
 }));
 
-export const PrivateKeyText = styled(Base1300Text)({
-  width: '90%',
+export const PrivateKeyText = styled('div')({
+  width: '100%',
+  fontSize: '16px',
+  lineHeight: '20px',
   wordBreak: 'break-all',
+  backgroundColor: '#101011',
+  padding: '12px',
+  borderRadius: '8px',
 });

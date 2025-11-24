@@ -35,8 +35,8 @@ export default function EpochIndicator({ coinId }: EpochIndicatorProps) {
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-        if (i18n.resolvedLanguage === 'ko') {
-          setRemainingTime(`${String(hours).padStart(2, '0')}시 :${String(minutes).padStart(2, '0')}분 :${String(seconds).padStart(2, '0')}초 후,`);
+        if (i18n.resolvedLanguage === 'zh') {
+          setRemainingTime(`${String(hours).padStart(2, '0')}小时 :${String(minutes).padStart(2, '0')}分钟 :${String(seconds).padStart(2, '0')}秒后,`);
         } else {
           setRemainingTime(`After ${String(hours).padStart(2, '0')}h :${String(minutes).padStart(2, '0')}m :${String(seconds).padStart(2, '0')}s,`);
         }
@@ -55,11 +55,15 @@ export default function EpochIndicator({ coinId }: EpochIndicatorProps) {
     <Container>
       <DistributionCountContainer>
         <Base1300Text variant="b2_B">{remainingTime}</Base1300Text>
-        <Base1000Text variant="b3_R">{t('pages.coin-detail.$coinId.manage-stake.entry.Iota.components.EpochIndicator.index.nextRewardShare')}</Base1000Text>
+        <Base1000Text
+          variant="b3_R"
+        >{t('pages.coin-detail.$coinId.manage-stake.entry.Iota.components.EpochIndicator.index.nextRewardShare')}</Base1000Text>
       </DistributionCountContainer>
 
       <EpochContainer>
-        <Base1000Text variant="b4_R">{t('pages.coin-detail.$coinId.manage-stake.entry.Iota.components.EpochIndicator.index.currentEpoch')}</Base1000Text>
+        <Base1000Text
+          variant="b4_R"
+        >{t('pages.coin-detail.$coinId.manage-stake.entry.Iota.components.EpochIndicator.index.currentEpoch')}</Base1000Text>
         <Base1300Text variant="b2_B">{`#${currentEpoch}`}</Base1300Text>
       </EpochContainer>
     </Container>

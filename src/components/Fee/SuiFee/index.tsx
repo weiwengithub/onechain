@@ -56,8 +56,10 @@ export default function SuiFee({
   return (
     <Container>
       <div className="mb-[8px] flex h-[24px] justify-between text-[14px] text-white leading-[24px]">
-        <div className="opacity-40">Estimated Gas Fee</div>
-        <div>{displayFeeAmount ? parseFloat(displayFeeAmount) : ''} {coinSymbol}</div>
+        <div className="opacity-40">{t('components.Fee.SuiFee.index.estimatedGasFee')}</div>
+        <div>
+          {displayFeeAmount ? parseFloat(displayFeeAmount) : ''} {coinSymbol}
+        </div>
       </div>
       <Tooltip title={errorMessage} varient="error" placement="top">
         <div>

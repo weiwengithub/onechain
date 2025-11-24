@@ -6,19 +6,21 @@ import IconTextButton from '@/components/common/IconTextButton';
 import OutlinedInput from '@/components/common/OutlinedInput';
 
 export const Body = styled('div')({
-  paddingTop: '1.2rem',
-});
-
-export const DescriptionContainer = styled('div')({
+  height: '100%',
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'flex-start',
-  justifyContent: 'flex-start',
+});
 
-  width: '100%',
-  padding: '0.4rem 0.4rem 0',
+export const MnemonicContainer = styled('div')({
+  flex: 1,
+  overflowX: 'hidden',
+  overflowY: 'auto',
+  msOverflowStyle: 'none',
+  scrollbarWidth: 'none',
 
-  rowGap: '0.6rem',
+  '&::-webkit-scrollbar': {
+    display: 'none',
+  },
 });
 
 export const TopContainer = styled('div')({
@@ -62,6 +64,7 @@ export const DescriptionSubTitle = styled(Typography)(({ theme }) => ({
 
 export const MnemonicInputWrapper = styled('div')({
   marginTop: '24px',
+  marginBottom: '24px',
 });
 
 export const MnemonicInputController = styled('div')({

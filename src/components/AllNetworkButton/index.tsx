@@ -19,6 +19,7 @@ type AllNetworkButtonprops = IconTextButtonProps & {
   isWithValue?: boolean;
   sizeVariant?: 'small' | 'medium' | 'large';
   selectChainOption?: (id?: UniqueChainId) => void;
+  isZkLoginSingleNetwork?: boolean;
 };
 
 export default function AllNetworkButton({
@@ -30,6 +31,7 @@ export default function AllNetworkButton({
   isWithValue = false,
   sizeVariant,
   selectChainOption,
+  isZkLoginSingleNetwork = false,
   ...remainder
 }: AllNetworkButtonprops) {
   const [isOpenChainListBottomSheet, setIsOpenChainListBottomSheet] = useState(false);
@@ -49,11 +51,12 @@ export default function AllNetworkButton({
           )
         }
         onClick={() => {
-          setIsOpenChainListBottomSheet(true);
+          if (!isZkLoginSingleNetwork) {
+            setIsOpenChainListBottomSheet(true);
+          }
         }}
         {...remainder}
-      >
-      </StyledIconButton>
+       />
       <ChainListBottomSheet
         currentChainId={currentChainId}
         chainList={chainList || []}

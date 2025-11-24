@@ -26,12 +26,12 @@ export function useSmartBalanceRefresh() {
 
   const refreshWithThrottle = useCallback(async () => {
     if (!shouldRefresh()) {
-      console.log('⏰ 刷新频率限制，跳过此次刷新');
+      // console.log('刷新频率限制，跳过此次刷新');
       return;
     }
 
     lastRefreshTime.current = Date.now();
-    console.log('🔄 智能刷新余额...');
+    // console.log('智能刷新余额...');
     await forceRefresh();
   }, [forceRefresh, shouldRefresh]);
 
@@ -39,20 +39,20 @@ export function useSmartBalanceRefresh() {
     // 页面可见性变化监听
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        console.log('👁️ 页面变为可见，触发余额刷新');
+        // console.log('页面变为可见，触发余额刷新');
         void refreshWithThrottle();
       }
     };
 
     // 窗口焦点变化监听
     const handleFocus = () => {
-      console.log('🎯 窗口获得焦点，触发余额刷新');
+      // console.log('窗口获得焦点，触发余额刷新');
       void refreshWithThrottle();
     };
 
     // 网络状态变化监听
     const handleOnline = () => {
-      console.log('🌐 网络恢复连接，触发余额刷新');
+      // console.log('网络恢复连接，触发余额刷新');
       void refreshWithThrottle();
     };
 
@@ -71,7 +71,7 @@ export function useSmartBalanceRefresh() {
 
   // 监听账户切换，自动刷新新账户的余额
   useEffect(() => {
-    console.log('👤 账户切换，刷新余额');
+    // console.log('账户切换，刷新余额');
     void refreshWithThrottle();
   }, [currentAccount.id, refreshWithThrottle]);
 

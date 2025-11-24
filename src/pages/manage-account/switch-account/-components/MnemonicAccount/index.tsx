@@ -106,7 +106,7 @@ export default function MnemonicAccount({ search }: MnemonicAccountProps) {
     );
   }
 
-  const handleClickAddAccount = async (mnemonicId: string, index: number = 0) => {
+  const handleClickAddAccount = async (mnemonicId: string, index = 0) => {
     const mnemonicAccount = userAccounts.find((account) => account.type === 'MNEMONIC' && account.encryptedRestoreString === mnemonicId);
     if (!mnemonicAccount) {
       toastError(t('pages.manage-account.create-account.entry.failToFindMnemonic'));

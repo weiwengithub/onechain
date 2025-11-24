@@ -36,30 +36,18 @@ export default function DraggableMnemonicAccountList({ uniqueMnemonicRestoreStri
   const { menmonicRestoreStrings, updatedNewSortedMnemonicAccounts } = useNewSortedAccountStore((state) => state);
   const { userAccounts, accountNamesById, mnemonicNamesByHashedMnemonic } = useExtensionStorageStore((state) => state);
 
-  const [indexedAccounts, setIndexedAccounts] = useState(
-    menmonicRestoreStrings.length > 0
-      ? menmonicRestoreStrings.map((item, idx) => ({
-          index: idx,
-          mnemonicRestoreString: item,
-          mnemonicName: mnemonicNamesByHashedMnemonic[item] || '',
-          accounts: userAccounts
-            .filter((account) => account.type === 'MNEMONIC' && account.encryptedRestoreString === item)
-            .map((item) => ({
-              ...item,
-              accountName: accountNamesById[item.id],
-            })),
-        }))
-      : uniqueMnemonicRestoreStrings.map((item, idx) => ({
-          index: idx,
-          mnemonicRestoreString: item,
-          mnemonicName: mnemonicNamesByHashedMnemonic[item] || '',
-          accounts: userAccounts
-            .filter((account) => account.type === 'MNEMONIC' && account.encryptedRestoreString === item)
-            .map((item) => ({
-              ...item,
-              accountName: accountNamesById[item.id],
-            })),
+  const [indexedAccounts, setIndexedAccounts] = useState(() =>
+    uniqueMnemonicRestoreStrings.map((item, idx) => ({
+      index: idx,
+      mnemonicRestoreString: item,
+      mnemonicName: mnemonicNamesByHashedMnemonic[item] || '',
+      accounts: userAccounts
+        .filter((account) => account.type === 'MNEMONIC' && account.encryptedRestoreString === item)
+        .map((item) => ({
+          ...item,
+          accountName: accountNamesById[item.id],
         })),
+    }))
   );
 
   const findAccountItem = useCallback(
@@ -112,6 +100,23 @@ export default function DraggableMnemonicAccountList({ uniqueMnemonicRestoreStri
       })
       .filter((item): item is NonNullable<typeof item> => item !== null);
   }, [indexedAccounts, search]);
+
+  // Sync indexed accounts when uniqueMnemonicRestoreStrings or related data changes
+  useEffect(() => {
+    const newIndexedAccounts = uniqueMnemonicRestoreStrings.map((item, idx) => ({
+      index: idx,
+      mnemonicRestoreString: item,
+      mnemonicName: mnemonicNamesByHashedMnemonic[item] || '',
+      accounts: userAccounts
+        .filter((account) => account.type === 'MNEMONIC' && account.encryptedRestoreString === item)
+        .map((item) => ({
+          ...item,
+          accountName: accountNamesById[item.id],
+        })),
+    }));
+
+    setIndexedAccounts(newIndexedAccounts);
+  }, [uniqueMnemonicRestoreStrings, userAccounts, accountNamesById, mnemonicNamesByHashedMnemonic]);
 
   useEffect(() => {
     if (

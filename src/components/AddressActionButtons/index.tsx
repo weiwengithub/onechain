@@ -4,19 +4,20 @@ import { useNavigate } from '@tanstack/react-router';
 import { NATIVE_EVM_COIN_ADDRESS } from '@/constants/evm';
 import { useAccountAllAssets } from '@/hooks/useAccountAllAssets';
 import { useGetAccountAsset } from '@/hooks/useGetAccountAsset';
-import { isEqualsIgnoringCase } from '@/utils/string';
+import { useClipboard } from '@/hooks/useClipboard';
+import { isEqualsIgnoringCase, getShortAddress } from '@/utils/string';
 
 import type { ShortAddressCopyButtonProps } from '../ShortAddressCopyButton';
-import Avatar from "boring-avatars";
+import Avatar from 'boring-avatars';
+import GoogleLogo from '@/assets/images/logos/g.webp';
+import AppleLogo from '@/assets/images/logos/apple.png';
 
 import { useCurrentAccount } from '@/hooks/useCurrentAccount.ts';
+import type { ZkLoginAccount } from '@/types/account';
 import { Route as SwithAccount } from '@/pages/manage-account/switch-account';
-import copy from 'copy-to-clipboard';
-import { toastDefault, toastError } from '@/utils/toast.tsx';
-import { getShortAddress } from '@/utils/string';
 import { useTranslation } from 'react-i18next';
-import CopyIcon from "@/assets/img/icon/wallet_home_copy.png";
-import ArrowDownIcon from "@/assets/img/icon/arrow_down.png";
+import CopyIcon from '@/assets/img/icon/wallet_home_copy.png';
+import ArrowDownIcon from '@/assets/img/icon/arrow_down.png';
 
 type AddressActionButtonsProps = Omit<ShortAddressCopyButtonProps, 'children'> & {
   coinId: string;
@@ -26,6 +27,7 @@ export default function AddressActionButtons({ coinId }: AddressActionButtonsPro
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { currentAccount } = useCurrentAccount();
+  const { copyToClipboard } = useClipboard();
 
   const [isShowCosmosStyleAddress] = useState(false);
 
@@ -58,26 +60,35 @@ export default function AddressActionButtons({ coinId }: AddressActionButtonsPro
 
   const address = isShowCosmosStyleAddress ? cosmosStyleCoin?.address.address || '' : currentCoin?.address.address || '';
 
-  const copyToClipboard = () => {
-    if (copy(address)) {
-      toastDefault(t('components.MainBox.CoinDetailBox.index.copied'));
-    } else {
-      toastError(t('components.MainBox.CoinDetailBox.index.copyFailed'));
-    }
-  };
-
   return (
     <div
       className="flex w-full h-[70px] items-center border-b border-solid"
     >
-      <Avatar
-        size={26}
-        name={currentAccount.id}
-        variant={"marble"}
-      />
-      <div className="ml-[12px] flex-1">
+      {currentAccount.type === 'ZKLOGIN' ? (
         <div
-          className="flex items-center"
+          onClick={() => {
+            navigate({
+              to: SwithAccount.to,
+            });
+          }}
+          className="flex size-[26px] rounded-full bg-white items-center justify-center cursor-pointer"
+        >
+          <img
+            className={'size-[18px]'}
+            src={(currentAccount as ZkLoginAccount).provider === 'apple' ? AppleLogo : GoogleLogo}
+            alt={(currentAccount as ZkLoginAccount).provider}
+          />
+        </div>
+      ) : (
+        <Avatar
+          size={26}
+          name={currentAccount.id}
+          variant={'marble'}
+        />
+      )}
+      <div className="ml-[8px] flex-1">
+        <div
+          className="flex items-center cursor-pointer"
           onClick={() => {
             navigate({
               to: SwithAccount.to,
@@ -86,7 +97,7 @@ export default function AddressActionButtons({ coinId }: AddressActionButtonsPro
         >
           <div className="h-[24px] text-[16px] leading-[24px] text-white font-semibold">{currentAccount.name}</div>
           <img
-            className="ml-[4px] cursor-pointer"
+            className="ml-[4px]"
             src={ArrowDownIcon}
             alt="ArrowDown"
           />
@@ -97,7 +108,7 @@ export default function AddressActionButtons({ coinId }: AddressActionButtonsPro
             className="ml-[4px] cursor-pointer"
             src={CopyIcon}
             alt="CopyIcon"
-            onClick={copyToClipboard}
+            onClick={() => copyToClipboard(address)}
           />
         </div>
       </div>

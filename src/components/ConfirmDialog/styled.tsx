@@ -5,7 +5,7 @@ import Dialog from '../common/Dialog';
 export const StyledDialog = styled(Dialog)({
   '& .MuiPaper-root': {
     width: '280px',
-    height: '330px',
+    height: '370px',
     borderRadius: '12px',
     backgroundColor: '#1e2025',
   },

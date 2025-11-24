@@ -172,7 +172,7 @@ export default function Entry({ id }: EntryProps) {
         </Container>
         <InputWrapper>
           <StandardInput
-            label={t('pages.general-setting.address-book.edit-address.$id.entry.label')}
+            placeholder={t('pages.general-setting.address-book.edit-address.$id.entry.label')}
             error={!!errors.label}
             helperText={errors.label?.message}
             slotProps={{
@@ -183,7 +183,7 @@ export default function Entry({ id }: EntryProps) {
           />
 
           <StandardInput
-            label={t('pages.general-setting.address-book.edit-address.$id.entry.address')}
+            placeholder={t('pages.general-setting.address-book.edit-address.$id.entry.address')}
             error={!!errors.address}
             helperText={errors.address?.message}
             slotProps={{
@@ -194,7 +194,7 @@ export default function Entry({ id }: EntryProps) {
           />
           {isDisplayMemo && (
             <StandardInput
-              label={t('pages.general-setting.address-book.edit-address.$id.entry.memo')}
+              placeholder={t('pages.general-setting.address-book.edit-address.$id.entry.memo')}
               error={!!errors.memo}
               helperText={errors.memo?.message}
               multiline

@@ -17,9 +17,6 @@ export const StickyContainer = styled('div')(({ theme }) => ({
   top: '3rem',
 
   zIndex: 1,
-  backgroundColor: theme.palette.color.base50,
-  padding: '0.8rem 0 1.2rem',
-  borderBottom: `0.06rem solid ${theme.palette.color.base100}`,
 }));
 
 export const StyledInput = styled(OutlinedInput)({
@@ -34,9 +31,10 @@ export const ContentsContainer = styled('div')({
 });
 
 export const PrivateAccordionContainer = styled('div')(({ theme }) => ({
-  '&:last-child': {
-    borderBottom: `0.06rem solid ${theme.palette.color.base100}`,
-  },
+  marginTop: '24px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '24px',
 }));
 
 export const EmptyAssetContainer = styled('div')({

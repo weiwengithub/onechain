@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -7,7 +8,17 @@ import StandardInput from '@/components/common/StandardInput';
 
 import type { NameForm } from './-useSchema';
 import { useSchema } from './-useSchema';
-import { Body, ConfirmButton, Container, DescriptionText, FormContainer, Header, HeaderTitle, StyledBottomSheet, StyledButton } from './styled';
+import {
+  Body,
+  ConfirmButton,
+  Container,
+  DescriptionText,
+  FormContainer,
+  Header,
+  HeaderTitle,
+  StyledBottomSheet,
+  StyledButton,
+} from './styled';
 
 import Close24Icon from 'assets/images/icons/Close24.svg';
 
@@ -19,15 +30,16 @@ type SetNameBottomSheetProps = Omit<React.ComponentProps<typeof StyledBottomShee
   setName?: (name: string) => void;
 };
 
-export default function SetNameBottomSheet({
-  currentName,
-  headerTitleText,
-  descriptionText,
-  inputPlaceholder,
-  setName,
-  onClose,
-  ...remainder
-}: SetNameBottomSheetProps) {
+export default function SetNameBottomSheet(
+  {
+    currentName,
+    headerTitleText,
+    descriptionText,
+    inputPlaceholder,
+    setName,
+    onClose,
+    ...remainder
+  }: SetNameBottomSheetProps) {
   const { t } = useTranslation();
 
   const { nameForm } = useSchema();
@@ -51,6 +63,15 @@ export default function SetNameBottomSheet({
   // console.log("      name", name);
   const isButtonEnabled = !!name?.trim();
 
+  // Update form when currentName changes
+  useEffect(() => {
+    if (currentName && currentName !== name) {
+      reset({
+        name: currentName,
+      });
+    }
+  }, [currentName, name, reset]);
+
   const onHandleClose = () => {
     reset({
       name: '',
@@ -72,14 +93,18 @@ export default function SetNameBottomSheet({
         <Container>
           <Header>
             <HeaderTitle>
-              <Typography variant="h2_B">{headerTitleText || t('components.SetNameBottomSheet.index.header')}</Typography>
+              <Typography
+                variant="h2_B"
+              >{headerTitleText || t('components.SetNameBottomSheet.index.header')}</Typography>
             </HeaderTitle>
             <StyledButton onClick={onHandleClose}>
               <Close24Icon />
             </StyledButton>
           </Header>
           <Body>
-            <DescriptionText variant="b3_R_Multiline">{descriptionText || t('components.SetNameBottomSheet.index.description')}</DescriptionText>
+            <DescriptionText
+              variant="b3_R_Multiline"
+            >{descriptionText || t('components.SetNameBottomSheet.index.description')}</DescriptionText>
             <StandardInput
               placeholder={inputPlaceholder || t('components.SetNameBottomSheet.index.accountName')}
               error={!!errors.name}

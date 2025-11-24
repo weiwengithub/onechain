@@ -44,7 +44,9 @@ export default function Entry({ accountId }: EntryProps) {
       };
     });
 
-    return resolvedPKs?.filter(({ chain }) => chain.name.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1) || [];
+    const filteredList = resolvedPKs?.filter((item) => item.chain.chainType === 'sui')
+
+    return filteredList?.filter(({ chain }) => chain.name.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1) || [];
   }, [debouncedSearch, hdPathIndex, mappedPrivateKeys]);
 
   return (

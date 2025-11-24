@@ -5,6 +5,7 @@ import SuiDefaultTxItem from './components/SuiDefaultTxItem';
 import SuiFailedTxItem from './components/SuiFailedTxItem';
 import SuiFaucetTxItem from './components/SuiFaucetTxItem';
 import SuiMoveCallsTxItem from './components/SuiMoveCallsTxItem';
+import SuiPublishTxItem from './components/SuiPublishTxItem';
 import SuiSendingTxItem from './components/SuiSendingTxItem';
 import SuiStakingTxItem from './components/SuiStakingTxItem';
 
@@ -29,8 +30,15 @@ export default function SuiTxItem({ tx, coinId }: SuiTxItemProps) {
   }
 
   if (tx.important.moveCalls) {
+    const moveCall = tx.important.moveCalls[0];
+    const isRwaTransaction = moveCall.moduleName === 'rwa';
+    
     return <SuiMoveCallsTxItem
-      tx={tx.important.moveCalls[0]} digest={tx.digest} timestampMs={tx.timestampMs} coinId={coinId}
+      tx={moveCall} 
+      digest={tx.digest} 
+      timestampMs={tx.timestampMs} 
+      coinId={coinId}
+      originalTransaction={isRwaTransaction ? tx : undefined}
     />;
   }
 
@@ -41,6 +49,10 @@ export default function SuiTxItem({ tx, coinId }: SuiTxItemProps) {
   }
 
   if (tx.important.basic) {
+    // Check if this is a Publish transaction
+    if (tx.important.basic.commands?.includes('Publish')) {
+      return <SuiPublishTxItem tx={tx.important.basic} digest={tx.digest} timestampMs={tx.timestampMs} coinId={coinId} />;
+    }
     return <SuiBasicTxItem tx={tx.important.basic} digest={tx.digest} timestampMs={tx.timestampMs} coinId={coinId} />;
   }
 

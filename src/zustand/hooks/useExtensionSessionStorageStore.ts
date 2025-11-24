@@ -7,6 +7,7 @@ import { getAllExtensionSessionStorage, setExtensionSessionStorage } from '@/uti
 
 const initialState: ExtensionSessionStorageState = {
   sessionPassword: null,
+  lastActivityTimestamp: null,
 };
 
 export const useExtensionSessionStorageStore = create<ExtensionSessionStorageStore>()((set) => {

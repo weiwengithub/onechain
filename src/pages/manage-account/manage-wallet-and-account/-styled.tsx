@@ -3,11 +3,24 @@ import { styled } from '@mui/material/styles';
 import { FilledTabPanel } from '@/components/common/FilledTab';
 import TextButton from '@/components/common/TextButton';
 
+export const ManageWalletAndAccountBody = styled('div')({
+  flex: 1,
+  paddingBottom: '24px',
+  overflowX: 'hidden',
+  overflowY: 'auto',
+  msOverflowStyle: 'none',
+  scrollbarWidth: 'none',
+
+  '&::-webkit-scrollbar': {
+    display: 'none'
+  }
+});
+
 export const CoinContainer = styled('div')({
+  height: 'calc(100vh - 176px)',
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
+  overflow: 'hidden',
 });
 
 export const Divider = styled('div')(({ theme }) => ({
@@ -22,9 +35,8 @@ export const SaveButton = styled(TextButton)(({ theme }) => ({
 export const StickyTabContainer = styled('div')(() => ({
   width: '100%',
   height: 'fit-content',
-  position: 'sticky',
-  top: '3rem',
   paddingBottom: '24px',
+  position: 'relative',
   zIndex: 1,
 
   '&::after': {

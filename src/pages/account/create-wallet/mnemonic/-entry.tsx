@@ -11,6 +11,7 @@ import MnemonicViewer from '@/components/MnemonicViewer';
 import SetAccountNameBottomSheet from '@/components/SetNameBottomSheet';
 import { useCurrentAccount } from '@/hooks/useCurrentAccount';
 import { useCurrentPassword } from '@/hooks/useCurrentPassword';
+import { useClipboard } from '@/hooks/useClipboard';
 import { Route as BackUpCheck } from '@/pages/account/backup-check/$accountId';
 import { Route as Init } from '@/pages/account/initial';
 import { Route as Dashboard } from '@/pages/index';
@@ -24,6 +25,7 @@ import { useExtensionStorageStore } from '@/zustand/hooks/useExtensionStorageSto
 import { useNewAccountStore } from '@/zustand/hooks/useNewAccountStore';
 
 import { Body } from './-styled';
+import EyeOffIcon from '@/assets/images/icons/EyeOff20.svg';
 
 const mnemonicBits = {
   12: 128,
@@ -36,7 +38,9 @@ export type MnemonicBits = ValueOf<typeof mnemonicBits>;
 export default function Entry() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { copyToClipboard } = useClipboard();
 
+  const [showPhrase, setShowPhrase] = useState(false);
   const { userAccounts, comparisonPasswordHash, updateExtensionStorageStore } = useExtensionStorageStore((state) => state);
   const { updateNewAccount } = useNewAccountStore();
   const { currentPassword } = useCurrentPassword();
@@ -81,6 +85,7 @@ export default function Entry() {
         const comparisonPasswordHash = sha512(currentPassword!);
         await updateExtensionStorageStore('comparisonPasswordHash', comparisonPasswordHash);
       }
+
 
       await addAccountWithName(newAccount);
 
@@ -144,16 +149,41 @@ export default function Entry() {
     <>
       <BaseBody>
         <Body>
-          <div className="w-[312px] text-[36px] leading-[40px] font-bold text-white">Save your recovery phrase</div>
-          <div className="mt-[12px] text-[16px] leading-[19px] font-normal text-white opacity-60">
-            Protect your phrase because anyone in possession of it can take control of the account.
+          <div className="w-[312px] text-[36px] leading-[40px] font-bold text-white">
+            {t('pages.account.create-mnemonic.mnemonic.entry.saveTitle')}
           </div>
-          <MnemonicViewer
-            rawMnemonic={mnemonic}
-            onClickMnemonicBits={(val) => {
-              setBits(val);
-            }}
-          />
+          <div className="mt-[12px] text-[16px] leading-[19px] font-normal text-white opacity-60">
+            {t('pages.account.create-mnemonic.mnemonic.entry.saveDescription')}
+          </div>
+          <div className="relative">
+            <MnemonicViewer
+              rawMnemonic={mnemonic}
+              onClickMnemonicBits={(val) => {
+                setBits(val);
+              }}
+            />
+            {!showPhrase && (
+              <div
+                className="flex items-center justify-center w-full h-full absolute top-0 left-0 rounded-[12px] bg-[rgba(30,32,37,0.9)] backdrop-blur-[9px]"
+                onClick={() => setShowPhrase(true)}
+              >
+                <EyeOffIcon />
+              </div>
+            )}
+          </div>
+
+          {showPhrase ? (
+            <div
+              className="mt-[24px] w-full h-[50px] bg-[#0047C4] rounded-[12px] text-center leading-[50px] text-white text-[16px] font-bold hover:bg-[#3B82FF] cursor-pointer"
+              onClick={() => copyToClipboard(mnemonic)}
+            >
+              {t('pages.account.create-mnemonic.mnemonic.entry.copy')}
+            </div>
+          ) : (
+            <div className="mt-[12px] leading-[18px] text-[14px] text-white opacity-60">
+              {t('pages.manage-account.backup-wallet.step1.entry.explain')}
+            </div>
+          )}
         </Body>
       </BaseBody>
       <BaseFooter>
@@ -162,7 +192,7 @@ export default function Entry() {
             onClick={() => {
               setUpWithCheck();
             }}
-            disabled={isLoadingWithoutBackup}
+            disabled={!showPhrase && isLoadingWithoutBackup}
             isProgress={isLoadingBackup}
           >
             {t('pages.account.create-mnemonic.mnemonic.index.backup')}

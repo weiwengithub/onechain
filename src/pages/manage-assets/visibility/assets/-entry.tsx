@@ -28,11 +28,18 @@ import { useCurrentVisibleAssetIds } from '@/hooks/useCurrentVisibleAssetIds';
 import { useCustomAssets } from '@/hooks/useCustomAssets';
 import { Route as ImportToken } from '@/pages/manage-assets/import/assets';
 import type { FlatAccountAssets } from '@/types/accountAssets';
-import type { UniqueChainId } from '@/types/chain';
+import type { ChainType, UniqueChainId } from '@/types/chain';
 import type { CommonSortKeyType } from '@/types/sortKey';
 import { getFilteredAssetsByChainId, getFilteredChainsByChainId } from '@/utils/asset';
 import { gt, minus, times, toDisplayDenomAmount } from '@/utils/numbers';
-import { getCoinId, getCoinIdWithManual, isMatchingCoinId, isMatchingUniqueChainId, isSameCoin, parseCoinId } from '@/utils/queryParamGenerator';
+import {
+  getCoinId,
+  getCoinIdWithManual,
+  isMatchingCoinId,
+  isMatchingUniqueChainId,
+  isSameCoin,
+  parseCoinId,
+} from '@/utils/queryParamGenerator';
 import { isEqualsIgnoringCase, shorterAddress } from '@/utils/string';
 import { toastError } from '@/utils/toast';
 import { useExtensionStorageStore } from '@/zustand/hooks/useExtensionStorageStore';
@@ -56,10 +63,13 @@ import {
 import AddIcon from '@/assets/images/icons/Add20.svg';
 import PlusIcon from '@/assets/images/icons/Plus12.svg';
 import RemoveIcon from '@/assets/images/icons/Remove20.svg';
+import RightArrowIcon from '@/assets/img/icon/arrow_right_16.png';
 
 type FlatAccountAssetsWithValue = FlatAccountAssets & {
   value: string;
 };
+
+const SUPPORTED_CHAIN_TYPES: ChainType[] = ['sui', 'evm'];
 
 export default function Entry() {
   const { t } = useTranslation();
@@ -71,16 +81,23 @@ export default function Entry() {
 
   const { currentHiddenAssetIds, hideAsset, showAsset } = useCurrentHiddenAssetIds();
 
-  const { currentVisibleAssetIds, removeVisibleAsset, addVisibleAsset } = useCurrentVisibleAssetIds();
+  const {
+    currentVisibleAssetIds,
+    removeVisibleAsset,
+    addVisibleAsset,
+    currentUserHiddenAssetIds,
+  } = useCurrentVisibleAssetIds();
 
   const { customHiddenAssetIds, hideCustomAsset, showCustomAsset } = useCustomAssets();
 
   const { currentCustomERC20Tokens, removeCustomERC20Token } = useCurrentCustomERC20Tokens();
   const { currentCustomCW20Tokens, removeCustomCW20Token } = useCurrentCustomCW20Tokens();
 
-  const currentCustomTokens = [...currentCustomERC20Tokens, ...currentCustomCW20Tokens];
+  const currentCustomTokens = useMemo(() => {
+    return [...currentCustomERC20Tokens, ...currentCustomCW20Tokens];
+  }, [currentCustomCW20Tokens, currentCustomERC20Tokens]);
 
-  const { data: currentAccountAllAssets } = useAccountAllAssets({
+  const { data: currentAccountAllAssets, refetch: refetchAccountAllAssets } = useAccountAllAssets({
     filterByPreferAccountType: true,
   });
 
@@ -106,6 +123,7 @@ export default function Entry() {
   }, [selectedChainFilterId, userSelectedChainId]);
 
   const visibleAssetCoinIds = useMemo(() => currentVisibleAssetIds?.map((item) => getCoinIdWithManual(item)), [currentVisibleAssetIds]);
+  const userHiddenAssetCoinIds = useMemo(() => currentUserHiddenAssetIds?.map((item) => getCoinIdWithManual(item)), [currentUserHiddenAssetIds]);
 
   const [initVisibleAssetCoinIds, setInitVisibleAssetCoinIds] = useState<string[] | undefined>(undefined);
 
@@ -121,9 +139,13 @@ export default function Entry() {
 
   const chainList = useMemo(() => getFilteredChainsByChainId(baseCoinList), [baseCoinList]);
 
+  const filteredChainList = useMemo(() => {
+    return chainList.filter((item) => SUPPORTED_CHAIN_TYPES.includes(item.chainType));
+  }, [chainList]);
+
   const currentSelectedChain = useMemo(
-    () => chainList.find((item) => isMatchingUniqueChainId(item, currentSelectedChainId)),
-    [chainList, currentSelectedChainId],
+    () => filteredChainList.find((item) => isMatchingUniqueChainId(item, currentSelectedChainId)),
+    [filteredChainList, currentSelectedChainId],
   );
 
   const isShowAssetId = useMemo(() => !!currentSelectedChain || !!debouncedSearch, [currentSelectedChain, debouncedSearch]);
@@ -186,8 +208,7 @@ export default function Entry() {
     const mergedHiddenCoinIds = [...(initHiddenAssetCoinIds || []), ...(initHiddenCustomAssetCoinIds || [])];
 
     const visibleAssets = filteredCoinListBySearch.filter((item) => {
-      // 只展示 oct, oct测试网, sui, sui测试网
-      if (item.chain.chainType !== 'sui') {
+      if (!SUPPORTED_CHAIN_TYPES.includes(item.chain.chainType)) {
         return false;
       }
       const isCustomERC20Token = currentCustomERC20Tokens.some((token) => isMatchingCoinId(token, getCoinId(item.asset)));
@@ -209,23 +230,22 @@ export default function Entry() {
     });
 
     const hiddenAssets = filteredCoinListBySearch.filter((item) => {
-      // 只展示 oct, oct测试网, sui, sui测试网
-      if (item.chain.chainType !== 'sui') {
+      if (!SUPPORTED_CHAIN_TYPES.includes(item.chain.chainType)) {
         return false;
       }
-      return !visibleAssets.some((visibleAsset) => isSameCoin(visibleAsset.asset, item.asset))
+      return !visibleAssets.some((visibleAsset) => isSameCoin(visibleAsset.asset, item.asset));
     });
 
     const displayAssets = [...visibleAssets, ...hiddenAssets];
 
     return currentSelectedChainId
       ? displayAssets.sort((a, b) => {
-          const denoms = a.chain.chainDefaultCoinDenoms ?? [];
-          const idxA = denoms.findIndex((d) => isEqualsIgnoringCase(d, a.asset.id));
-          const idxB = denoms.findIndex((d) => isEqualsIgnoringCase(d, b.asset.id));
+        const denoms = a.chain.chainDefaultCoinDenoms ?? [];
+        const idxA = denoms.findIndex((d) => isEqualsIgnoringCase(d, a.asset.id));
+        const idxB = denoms.findIndex((d) => isEqualsIgnoringCase(d, b.asset.id));
 
-          return (idxA < 0 ? Number.MAX_SAFE_INTEGER : idxA) - (idxB < 0 ? Number.MAX_SAFE_INTEGER : idxB);
-        })
+        return (idxA < 0 ? Number.MAX_SAFE_INTEGER : idxA) - (idxB < 0 ? Number.MAX_SAFE_INTEGER : idxB);
+      })
       : displayAssets;
   }, [
     currentCustomCW20Tokens,
@@ -257,7 +277,9 @@ export default function Entry() {
     [baseCoinList, hiddenAssetCoinIds, hiddenCustomAssetCoinIds, visibleAssetCoinIds],
   );
 
-  const handleAssetVisibility = async (assetId: string, isBalanceZero: boolean) => {
+  const handleAssetVisibility = async (assetId: string, isBalanceZero: boolean, isAcquiescent: boolean) => {
+    const userHiddenAssetIds = currentUserHiddenAssetIds.map(item => `${item.id}__${item.chainId}__${item.chainType}`);
+
     const isCustomERC20Token = currentCustomERC20Tokens.some((item) => isMatchingCoinId(item, assetId));
     const isCustomCW20Token = currentCustomCW20Tokens.some((item) => isMatchingCoinId(item, assetId));
 
@@ -269,7 +291,7 @@ export default function Entry() {
 
     const isHiddenAsset = isCustomAsset ? isHiddenCustomAsset : isHiddenManagedAsset;
 
-    const isVisibleAsset = visibleAssetCoinIds?.includes(assetId);
+    const isVisibleAsset = isAcquiescent ? !userHiddenAssetIds.includes(assetId) : visibleAssetCoinIds?.includes(assetId);
 
     const isHiddenState = (() => {
       if (isCustomCW20Token || isCustomERC20Token || isVisibleAsset) {
@@ -366,6 +388,10 @@ export default function Entry() {
   }, [customHiddenAssetIds, initHiddenCustomAssetCoinIds]);
 
   useEffect(() => {
+    void refetchAccountAllAssets();
+  }, [refetchAccountAllAssets]);
+
+  useEffect(() => {
     if (search.length > 1 || search.length === 0 || currentSelectedChainId) {
       scrollToTop();
     }
@@ -396,33 +422,48 @@ export default function Entry() {
                 }}
               />
 
-              {/*<RowContainer>*/}
-              {/*  <AllNetworkButton*/}
-              {/*    currentChainId={currentSelectedChainId}*/}
-              {/*    chainList={chainList}*/}
-              {/*    disabled={!!selectedChainFilterId}*/}
-              {/*    selectChainOption={(id) => {*/}
-              {/*      setUserSelectedChainId(id);*/}
-              {/*    }}*/}
-              {/*  />*/}
+              <RowContainer>
+                <div
+                  className={'flex flex-1 flex-row justify-between items-center py-5'}
+                  onClick={() => {
+                    navigate({
+                      to: ImportToken.to,
+                    });
+                  }}
+                >
+                  <div className={'text-white text-[16px]'}>
+                    {t('pages.manage-assets.visibility.assets.entry.importCrypto')}
+                  </div>
+                  <img
+                    src={RightArrowIcon}
+                    alt="edit"
+                    className="size-[16px] ml-[8px]"
+                  />
+                </div>
 
-              {/*  <IconTextButton*/}
-              {/*    onClick={() => {*/}
-              {/*      navigate({*/}
-              {/*        to: ImportToken.to,*/}
-              {/*      });*/}
-              {/*    }}*/}
-              {/*    leadingIcon={*/}
-              {/*      <PurpleContainer>*/}
-              {/*        <PlusIcon />*/}
-              {/*      </PurpleContainer>*/}
-              {/*    }*/}
-              {/*  >*/}
-              {/*    <ImportTextContainer>*/}
-              {/*      <Typography variant="b3_M">{t('pages.manage-assets.visibility.assets.entry.importCrypto')}</Typography>*/}
-              {/*    </ImportTextContainer>*/}
-              {/*  </IconTextButton>*/}
-              {/*</RowContainer>*/}
+                {/*<AllNetworkButton*/}
+                {/*  currentChainId={currentSelectedChainId}*/}
+                {/*  chainList={filteredChainList}*/}
+                {/*  disabled={!!selectedChainFilterId}*/}
+                {/*  selectChainOption={(id) => {*/}
+                {/*    setUserSelectedChainId(id);*/}
+                {/*  }}*/}
+                {/*/>*/}
+
+                {/*<IconTextButton*/}
+                {/*  onClick={() => {*/}
+                {/*    navigate({*/}
+                {/*      to: ImportToken.to,*/}
+                {/*    });*/}
+                {/*  }}*/}
+
+                {/*>*/}
+                {/*  <div className={'text-white text-[16px]'}>*/}
+                {/*    {t('pages.manage-assets.visibility.assets.entry.importCrypto')}*/}
+                {/*  </div>*/}
+                {/*</IconTextButton>*/}
+              </RowContainer>
+              <div className={'bg-white/10 h-[1px] flex flex-1'} />
             </StickyContainer>
             {sortedCoinListByHidden && sortedCoinListByHidden.length > 0 ? (
               <CoinButtonWrapper>
@@ -441,7 +482,7 @@ export default function Entry() {
                       const isHiddenAsset = isCustomAsset ? isHiddenCustomAsset : isHiddenManagedAsset;
                       const isBalanceZero = coin.balance === '0';
 
-                      const isVisibleAsset = visibleAssetCoinIds?.includes(getCoinId(coin.asset));
+                      const isVisibleAsset = coin.asset.category === 1 ? !userHiddenAssetCoinIds?.includes(getCoinId(coin.asset)) : visibleAssetCoinIds?.includes(getCoinId(coin.asset));
 
                       const isHiddenState = (() => {
                         if (customToken || isVisibleAsset) {
@@ -461,6 +502,7 @@ export default function Entry() {
                           : coin.asset.id.length > 15
                             ? shorterAddress(coin.asset.id, 16)
                             : coin.asset.id;
+
                       return (
                         <>
                           <CoinWithChainNameButton
@@ -490,7 +532,7 @@ export default function Entry() {
                               if (customToken) {
                                 setTokenToDelete(coin);
                               } else {
-                                handleAssetVisibility(getCoinId(coin.asset), isBalanceZero);
+                                handleAssetVisibility(getCoinId(coin.asset), isBalanceZero, coin.asset.category === 1);
                               }
                             }}
                           />
@@ -508,7 +550,8 @@ export default function Entry() {
                   alt="empty"
                   className="w-[52px] h-[70px] mt-[82px]"
                 />
-                <div className="mt-[26px] h-[16px] leading-[16px] text-[16px] text-white opacity-80">No records found</div>
+                <div className="mt-[26px] h-[16px] leading-[16px] text-[16px] text-white opacity-80">No records found
+                </div>
                 {/*<div*/}
                 {/*  className="mt-[24px] w-[166px] h-[36px] rounded-[8px] border-1 border-solid border-[#1e2025] flex items-center justify-center"*/}
                 {/*>*/}
@@ -523,11 +566,15 @@ export default function Entry() {
         optionButtonProps={[
           {
             sortKey: DASHBOARD_COIN_SORT_KEY.VALUE_HIGH_ORDER,
-            children: <Typography variant="b2_M">{t('pages.manage-assets.visibility.assets.entry.valueHighOrder')}</Typography>,
+            children: <Typography
+              variant="b2_M"
+            >{t('pages.manage-assets.visibility.assets.entry.valueHighOrder')}</Typography>,
           },
           {
             sortKey: DASHBOARD_COIN_SORT_KEY.ALPHABETICAL_ASC,
-            children: <Typography variant="b2_M">{t('pages.manage-assets.visibility.assets.entry.alphabeticalAsc')}</Typography>,
+            children: <Typography
+              variant="b2_M"
+            >{t('pages.manage-assets.visibility.assets.entry.alphabeticalAsc')}</Typography>,
           },
         ]}
         currentSortOption={DASHBOARD_COIN_SORT_KEY.VALUE_HIGH_ORDER}
@@ -555,7 +602,7 @@ export default function Entry() {
         }
         descriptionText={t('pages.manage-assets.visibility.assets.entry.deleteDescription')}
         onClickConfirm={() => {
-          handleAssetVisibility(tokenToDelete?.asset ? getCoinId(tokenToDelete?.asset) : '', tokenToDelete?.balance === '0');
+          handleAssetVisibility(tokenToDelete?.asset ? getCoinId(tokenToDelete?.asset) : '', tokenToDelete?.balance === '0', tokenToDelete?.asset?.category === 1);
           setTokenToDelete(undefined);
         }}
       />

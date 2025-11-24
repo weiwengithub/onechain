@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
+ 
 
 import type { EthereumListenerType, EventDetail } from '@/types/message';
 import type { BaseRequest } from '@/types/message/inject';

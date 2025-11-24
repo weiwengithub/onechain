@@ -12,7 +12,9 @@ export const FormContainer = styled('form')({
 });
 
 export const Body = styled('div')({
-  paddingTop: '1.2rem',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
 });
 
 export const TopContainer = styled('div')({

@@ -4,6 +4,7 @@ import { AD_POPOVER_IDS } from '@/constants/adPopover';
 import { CURRENCY_TYPE } from '@/constants/currency';
 import { DefaultSortKey } from '@/constants/initialStorage';
 import { PRICE_TREND_TYPE } from '@/constants/price';
+import { ZKLOGIN_SUPPORTED_CHAIN_ID } from '@/constants/zklogin';
 import { getAddedCustomChains, getChains } from '@/libs/chain';
 import { v11 } from '@/script/service-worker/update/v11';
 import type { AccountNamesById, ChainToAccountTypeMap, PreferAccountType } from '@/types/account';
@@ -15,11 +16,178 @@ import type {
   ExtensionStorageKeys,
   PrioritizedProvider,
 } from '@/types/extension';
+import type { AptosChain, BitcoinChain, EvmChain, IotaChain, SuiChain } from '@/types/chain';
 import { initialState } from '@/zustand/hooks/useExtensionStorageStore';
 
 import { extension } from './browser';
 import { aesDecrypt } from './crypto';
 import { getUniqueChainId, isMatchingUniqueChainId } from './queryParamGenerator';
+
+// Default network configurations to prevent null returns
+const DEFAULT_ETHEREUM_NETWORK: EvmChain = {
+  id: 'ethereum',
+  chainType: 'evm',
+  name: 'Ethereum',
+  image: null,
+  chainId: '1',
+  mainAssetDenom: 'ETH',
+  chainDefaultCoinDenoms: ['ETH'],
+  isCosmos: false,
+  feeInfo: {
+    isEip1559: true,
+    gasCoefficient: 1.2,
+  },
+  rpcUrls: [
+    {
+      provider: 'default',
+      url: 'https://eth.llamarpc.com',
+    },
+  ],
+  accountTypes: [
+    {
+      hdPath: "m/44'/60'/0'/0/0",
+      pubkeyStyle: 'secp256k1',
+      isDefault: true,
+      pubkeyType: null,
+    },
+  ],
+  explorer: {
+    name: 'Etherscan',
+    url: 'https://etherscan.io',
+    account: 'https://etherscan.io/address/{address}',
+    tx: 'https://etherscan.io/tx/{tx}',
+    proposal: '',
+  },
+};
+
+const DEFAULT_SUI_NETWORK: SuiChain = {
+  id: 'oct-testnet',
+  chainType: 'sui',
+  name: 'Oct Testnet',
+  image: null,
+  chainId: '35834a8a',
+  mainAssetDenom: 'SUI',
+  chainDefaultCoinDenoms: ['0x2::sui::SUI'],
+  rpcUrls: [
+    {
+      provider: 'default',
+      url: 'https://sui-testnet-endpoint.blockvision.org',
+    },
+  ],
+  accountTypes: [
+    {
+      hdPath: "m/44'/784'/0'/0'/0'",
+      pubkeyStyle: 'ed25519',
+      isDefault: true,
+      pubkeyType: null,
+    },
+  ],
+  explorer: {
+    name: 'Oct Explorer',
+    url: 'https://explorer.oct.network',
+    account: 'https://explorer.oct.network/address/{address}',
+    tx: 'https://explorer.oct.network/txblock/{tx}',
+    proposal: '',
+  },
+  isTestnet: true,
+};
+
+const DEFAULT_APTOS_NETWORK: AptosChain = {
+  id: 'aptos-testnet',
+  chainType: 'aptos',
+  name: 'Aptos Testnet',
+  image: null,
+  chainId: 2,
+  mainAssetDenom: 'APT',
+  chainDefaultCoinDenoms: ['0x1::aptos_coin::AptosCoin'],
+  rpcUrls: [
+    {
+      provider: 'default',
+      url: 'https://fullnode.testnet.aptoslabs.com/v1',
+    },
+  ],
+  accountTypes: [
+    {
+      hdPath: "m/44'/637'/0'/0'/0'",
+      pubkeyStyle: 'ed25519',
+      isDefault: true,
+      pubkeyType: null,
+    },
+  ],
+  explorer: {
+    name: 'Aptos Explorer',
+    url: 'https://explorer.aptoslabs.com',
+    account: 'https://explorer.aptoslabs.com/account/{address}?network=testnet',
+    tx: 'https://explorer.aptoslabs.com/txn/{tx}?network=testnet',
+    proposal: '',
+  },
+  isTestnet: true,
+};
+
+const DEFAULT_BITCOIN_NETWORK: BitcoinChain = {
+  id: 'bitcoin-testnet',
+  chainType: 'bitcoin',
+  name: 'Bitcoin Testnet',
+  image: null,
+  chainId: 'testnet',
+  mainAssetDenom: 'BTC',
+  chainDefaultCoinDenoms: ['BTC'],
+  rpcUrls: [
+    {
+      provider: 'default',
+      url: 'https://blockstream.info/testnet/api',
+    },
+  ],
+  mempoolURL: 'https://blockstream.info/testnet/api',
+  accountTypes: [
+    {
+      hdPath: "m/44'/1'/0'/0/0",
+      pubkeyStyle: 'secp256k1',
+      isDefault: true,
+      pubkeyType: 'legacy',
+    },
+  ],
+  explorer: {
+    name: 'Blockstream',
+    url: 'https://blockstream.info/testnet',
+    account: 'https://blockstream.info/testnet/address/{address}',
+    tx: 'https://blockstream.info/testnet/tx/{tx}',
+    proposal: '',
+  },
+  isTestnet: true,
+};
+
+const DEFAULT_IOTA_NETWORK: IotaChain = {
+  id: 'iota-testnet',
+  chainType: 'iota',
+  name: 'IOTA Testnet',
+  image: null,
+  chainId: 'testnet',
+  mainAssetDenom: 'IOTA',
+  chainDefaultCoinDenoms: ['0x2::iota::IOTA'],
+  rpcUrls: [
+    {
+      provider: 'default',
+      url: 'https://api.testnet.iota.org',
+    },
+  ],
+  accountTypes: [
+    {
+      hdPath: "m/44'/4218'/0'/0'/0'",
+      pubkeyStyle: 'ed25519',
+      isDefault: true,
+      pubkeyType: null,
+    },
+  ],
+  explorer: {
+    name: 'IOTA Explorer',
+    url: 'https://explorer.iota.org',
+    account: 'https://explorer.iota.org/testnet/address/{address}',
+    tx: 'https://explorer.iota.org/testnet/transaction/{tx}',
+    proposal: '',
+  },
+  isTestnet: true,
+};
 
 export async function initExtensionLocalStorage() {
   await initializeStorageDefaults();
@@ -109,7 +277,23 @@ export async function extensionLocalStorage() {
     chosenIotaNetworkId,
   } = storageWithDefault;
 
-  const currentAccount = (() => userAccounts.find((account) => account.id === currentAccountId)!)();
+  const currentAccount = (() => {
+    // If no accounts exist, return null (this is expected on first launch)
+    if (userAccounts.length === 0) {
+      return null;
+    }
+
+    const account = userAccounts.find((account) => account.id === currentAccountId);
+    if (!account) {
+      console.error('extensionLocalStorage: Account not found', {
+        currentAccountId,
+        userAccountIds: userAccounts.map(acc => acc.id),
+        userAccountsLength: userAccounts.length,
+      });
+      throw new Error(`Account with id ${currentAccountId} not found in userAccounts. Available accounts: ${userAccounts.map(acc => acc.id).join(', ')}`);
+    }
+    return account;
+  })();
   const currentAccountName = accountNamesById[currentAccountId];
 
   const { evmChains, aptosChains, suiChains, bitcoinChains, iotaChains } = await getChains();
@@ -117,6 +301,10 @@ export async function extensionLocalStorage() {
 
   const currentEthereumNetwork = (() => {
     const ethereumNetworks = [...evmChains, ...addedCustomChains.filter((chain) => chain.chainType === 'evm')];
+
+    if (ethereumNetworks.length === 0) {
+      return DEFAULT_ETHEREUM_NETWORK;
+    }
 
     const networkId = chosenEthereumNetworkId ?? getUniqueChainId(ethereumNetworks[0]);
 
@@ -126,6 +314,10 @@ export async function extensionLocalStorage() {
   const currentAptosNetwork = (() => {
     const aptosNetworks = [...aptosChains];
 
+    if (aptosNetworks.length === 0) {
+      return DEFAULT_APTOS_NETWORK;
+    }
+
     const networkId = chosenAptosNetworkId ?? getUniqueChainId(aptosNetworks[0]);
 
     return aptosNetworks.find((network) => isMatchingUniqueChainId(network, networkId)) ?? aptosNetworks[0];
@@ -134,19 +326,34 @@ export async function extensionLocalStorage() {
   const currentSuiNetwork = (() => {
     const suiNetworks = [...suiChains];
 
-    const networkId = chosenSuiNetworkId ?? getUniqueChainId(suiNetworks[0]);
+    if (suiNetworks.length === 0) {
+      return DEFAULT_SUI_NETWORK;
+    }
 
-    return suiNetworks.find((network) => isMatchingUniqueChainId(network, networkId)) ?? suiNetworks[0];
+    // 优先选择 oct 网络作为默认网络
+    const defaultSuiNetwork = suiNetworks.find(network => network.id === ZKLOGIN_SUPPORTED_CHAIN_ID) || suiNetworks[0];
+    const networkId = chosenSuiNetworkId ?? getUniqueChainId(defaultSuiNetwork);
+
+    return suiNetworks.find((network) => isMatchingUniqueChainId(network, networkId)) ?? defaultSuiNetwork;
   })();
 
   const currentBitcoinNetwork = (() => {
     const bitcoinNetworks = [...bitcoinChains];
 
+    if (bitcoinNetworks.length === 0) {
+      return DEFAULT_BITCOIN_NETWORK;
+    }
+
     const networkId = chosenBitcoinNetworkId ?? getUniqueChainId(bitcoinNetworks[0]);
 
     const network = bitcoinNetworks.find((network) => isMatchingUniqueChainId(network, networkId)) ?? bitcoinNetworks[0];
 
-    const inAppSelectedPubkeyStyle = preferAccountType[currentAccount.id]?.[network.id].pubkeyStyle;
+    // If no account exists, return the network as-is
+    if (!currentAccount) {
+      return network;
+    }
+
+    const inAppSelectedPubkeyStyle = preferAccountType[currentAccount.id]?.[network.id]?.pubkeyStyle;
 
     const response = produce(network, (draft) => {
       draft.accountTypes = draft.accountTypes.filter((item) => item.pubkeyStyle === inAppSelectedPubkeyStyle);
@@ -158,16 +365,24 @@ export async function extensionLocalStorage() {
   const currentIotaNetwork = (() => {
     const iotaNetworks = [...iotaChains];
 
+    if (iotaNetworks.length === 0) {
+      return DEFAULT_IOTA_NETWORK;
+    }
+
     const networkId = chosenIotaNetworkId ?? getUniqueChainId(iotaNetworks[0]);
 
     return iotaNetworks.find((network) => isMatchingUniqueChainId(network, networkId)) ?? iotaNetworks[0];
   })();
 
-  const currentAccountAllowedOrigins = approvedOrigins
-    .filter((allowedOrigin) => allowedOrigin.accountId === currentAccountId)
-    .map((allowedOrigin) => allowedOrigin.origin);
+  const currentAccountAllowedOrigins = currentAccount
+    ? approvedOrigins
+        .filter((allowedOrigin) => allowedOrigin.accountId === currentAccountId)
+        .map((allowedOrigin) => allowedOrigin.origin)
+    : [];
 
-  const currentAccountAddressInfo = storageWithDefault[`${currentAccount.id}-address`];
+  const currentAccountAddressInfo = currentAccount
+    ? storageWithDefault[`${currentAccount.id}-address`]
+    : undefined;
 
   return {
     ...storageWithDefault,
@@ -367,7 +582,7 @@ async function initializeChosenNetworks() {
   }
 
   if (!storedChosenSuiNetworkId) {
-    const defaultSuiNetwork = suiChains.find((item) => item.id === 'sui') || suiChains[0];
+    const defaultSuiNetwork = suiChains.find((item) => item.id === ZKLOGIN_SUPPORTED_CHAIN_ID) || suiChains[0];
 
     const defaultSuiNetworkId = getUniqueChainId(defaultSuiNetwork);
 

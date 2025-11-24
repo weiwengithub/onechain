@@ -35,6 +35,7 @@ import { type IndexedMnemonicAccount, MNEMONIC_ACCOUNT_DND_ITEM_TYPE } from '../
 
 import RightArrowIcon from '@/assets/images/icons/RightArrow14.svg';
 import OrderIcon from 'assets/images/icons/Order20.svg';
+import RightChevronIcon from '@/assets/images/icons/RightChevron30.svg';
 import Avatar from 'boring-avatars';
 import { getShortAddress } from '@/utils/string.ts';
 import MainContentsLayout from '@/pages/manage-account/detail/-components/MainContentsLayout';
@@ -48,6 +49,7 @@ import { toastSuccess } from '@/utils/toast.tsx';
 import { Route as SwitchWallet } from '@/pages/manage-account/switch-account';
 import { Route as ViewMnemonic } from '@/pages/manage-account/view/mnemonic/$mnemonicId';
 import { useCurrentAccount } from '@/hooks/useCurrentAccount.ts';
+import { useNewSortedAccountStore } from '@/zustand/hooks/useNewSortedAccountStore';
 import { Route as ViewPrivateKey } from '@/pages/manage-account/view/privateKey/$accountId';
 import ArrowRightIcon from '@/assets/img/icon/arrow_right_16.png';
 import EditIcon from '@/assets/img/icon/edit.png';
@@ -136,6 +138,7 @@ export default function DraggableMnemonicAccountItem({
 
   const { removeMnemonic } = useCurrentAccount();
   const { removeAccount } = useCurrentAccount();
+  const { updatedNewSortedMnemonicAccounts } = useNewSortedAccountStore((state) => state);
   const { userAccounts, accountNamesById, mnemonicNamesByHashedMnemonic } = useExtensionStorageStore((state) => state);
   const filteredAccounts = userAccounts.filter((item) => item.type === 'MNEMONIC' && item.encryptedRestoreString === mnemonicId);
 
@@ -146,6 +149,13 @@ export default function DraggableMnemonicAccountItem({
     if (type === 'removeMnemonic') {
       await removeMnemonic(mnemonicId);
       const accounts = await useExtensionStorageStore.getState().userAccounts;
+
+      // Update sorted account store to remove deleted mnemonic from cache
+      const remainingMnemonicStrings = accounts
+        .filter((account) => account.type === 'MNEMONIC')
+        .map((account) => account.encryptedRestoreString)
+        .filter((value, index, self) => self.indexOf(value) === index);
+      await updatedNewSortedMnemonicAccounts(remainingMnemonicStrings);
 
       if (accounts && accounts.length > 0) {
         toastSuccess(t('pages.manage-account.detail.mnemonic.entry.successDeleteMnemonic'));
@@ -223,7 +233,9 @@ export default function DraggableMnemonicAccountItem({
               setIsOpenDeleteAccountConfirmDialog(true);
             }}
           />
-          <div className="h-[20px] text-[14px] text-white leading-[20px]">{mnemonicNamesByHashedMnemonic[draggableItem.mnemonicRestoreString] || draggableItem.mnemonicName}</div>
+          <div
+            className="h-[20px] text-[14px] text-white leading-[20px]"
+          >{mnemonicNamesByHashedMnemonic[draggableItem.mnemonicRestoreString] || draggableItem.mnemonicName}</div>
           <div
             className="ml-[16px]"
             onClick={() => {
@@ -253,20 +265,28 @@ export default function DraggableMnemonicAccountItem({
             <AccountButton
               key={i}
             >
-              {/*<img*/}
-              {/*  src={subtractIcon}*/}
-              {/*  alt="delete"*/}
-              {/*  className="size-[20px] mr-[8px]"*/}
-              {/*  onClick={(e: React.MouseEvent) => {*/}
-              {/*    e.stopPropagation();*/}
-              {/*    setMnemonicId('')*/}
-              {/*    setMnemonicName('')*/}
-              {/*    setAccountId(item.id)*/}
-              {/*    setAccountName(accountName)*/}
-              {/*    setIsOpenDeleteAccountConfirmDialog(true);*/}
-              {/*  }}*/}
-              {/*/>*/}
-              <div className="flex-1 h-[46px] flex items-center rounded-[16px] bg-[#1E2025] pl-[12px]">
+              <img
+                src={subtractIcon}
+                alt="delete"
+                className="size-[20px] mr-[8px]"
+                onClick={(e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  setMnemonicId('');
+                  setMnemonicName('');
+                  setAccountId(item.id);
+                  setAccountName(accountName);
+                  setIsOpenDeleteAccountConfirmDialog(true);
+                }}
+              />
+              <div
+                className="flex-1 h-[46px] flex items-center rounded-[16px] bg-[#1E2025] pl-[12px]"
+                onClick={() => {
+                  navigate({
+                    to: MnemonicAccountDetail.to,
+                    params: { accountId: item.id },
+                  });
+                }}
+              >
                 <Avatar
                   size={26}
                   name={item.id}
@@ -280,16 +300,13 @@ export default function DraggableMnemonicAccountItem({
                 </div>
                 <div
                   className="mr-[16px]"
-                  onClick={() => {
-                    setAccountId(item.id);
-                    setIsOpenSetAccountNameBottomSheet(true);
-                    // navigate({
-                    //   to: MnemonicAccountDetail.to,
-                    //   params: { accountId: item.id },
-                    // });
-                  }}
+                  // onClick={() => {
+                  //   setAccountId(item.id);
+                  //   setIsOpenSetAccountNameBottomSheet(true);
+                  // }}
                 >
-                  <img src={EditIcon} alt="" className="size-[16px]" />
+                  <RightChevronIcon />
+                  {/*<img src={EditIcon} alt="" className="size-[16px]" />*/}
                 </div>
               </div>
               {tempDisplay && (
@@ -364,9 +381,10 @@ export default function DraggableMnemonicAccountItem({
         }}
       />
       <DeleteConfirmDialog
-        title="Are you sure you want to delete this wallet?"
-        descriptionText="After deletion, you can restore this wallet byimporting its seed phrase. Make sure it'sbacked up before deletion, or you'llpermanently lose access to this wallet."
-        confirmText="Delete"
+        title={t('pages.manage-account.manage-wallet-and-account.components.MnemonicAccount.DraggableMnemonicAccountItem.deleteTitle')}
+        descriptionText={t('pages.manage-account.manage-wallet-and-account.components.MnemonicAccount.DraggableMnemonicAccountItem.deleteDescription')}
+        confirmText={t('pages.manage-account.manage-wallet-and-account.components.MnemonicAccount.DraggableMnemonicAccountItem.deleteConfirm')}
+        cancelText={t('pages.manage-account.manage-wallet-and-account.components.MnemonicAccount.DraggableMnemonicAccountItem.cancel')}
         open={isOpenDeleteAccountConfirmDialog}
         onClose={() => {
           setIsOpenDeleteAccountConfirmDialog(false);

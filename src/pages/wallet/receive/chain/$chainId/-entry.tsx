@@ -4,8 +4,13 @@ import BaseBody from '@/components/BaseLayout/components/BaseBody';
 import { useChainList } from '@/hooks/useChainList.ts';
 import { useCurrentAccountAddresses } from '@/hooks/useCurrentAccountAddresses.ts';
 import { useCurrentPreferAccountTypes } from '@/hooks/useCurrentPreferAccountTypes.ts';
+import { useClipboard } from '@/hooks/useClipboard';
 import type { UniqueChainId } from '@/types/chain.ts';
-import { getUniqueChainIdWithManual, isMatchingUniqueChainId, parseUniqueChainId } from '@/utils/queryParamGenerator.ts';
+import {
+  getUniqueChainIdWithManual,
+  isMatchingUniqueChainId,
+  parseUniqueChainId,
+} from '@/utils/queryParamGenerator.ts';
 
 import {
   Container,
@@ -13,8 +18,7 @@ import {
 
 import { QRCode } from '@components/onechain/QRCode.tsx';
 import { toastDefault, toastError } from '@/utils/toast.tsx';
-import { useTranslation } from 'react-i18next';
-import copy from 'copy-to-clipboard';
+import { Trans, useTranslation } from 'react-i18next';
 
 type EntryProps = {
   chainId: UniqueChainId;
@@ -22,6 +26,7 @@ type EntryProps = {
 
 export default function Entry({ chainId }: EntryProps) {
   const { t } = useTranslation();
+  const { copyToClipboard } = useClipboard();
   const [tabValue] = useState(0);
 
   const { currentPreferAccountType } = useCurrentPreferAccountTypes();
@@ -86,14 +91,6 @@ export default function Entry({ chainId }: EntryProps) {
     });
   })();
 
-  const copyToClipboard = () => {
-    if (chainAddress?.address && copy(chainAddress.address)) {
-      toastDefault(t('components.MainBox.CoinDetailBox.index.copied'));
-    } else {
-      toastError(t('components.MainBox.CoinDetailBox.index.copyFailed'));
-    }
-  };
-
   return (
     <BaseBody>
       <Container>
@@ -106,16 +103,27 @@ export default function Entry({ chainId }: EntryProps) {
             />
           </div>
         </div>
-        <div className="m-auto mt-[12px] w-[208px] px-[4px] text-center text-[14px] leading-[16px] text-[rgba(255,255,255,0.6)]">
-          Send only <span className="mr-[4px] ml-[4px] text-white">{selectedChain?.name || ''} testnet</span>
-          assets to this address
-        </div>
-        <div className="m-auto mt-[40px] w-[240px] px-[12px] text-center text-[14px] leading-[16px] text-white break-all">{chainAddress?.address || ''}</div>
         <div
-          className="m-auto mt-[14px] w-[288px] h-[36px] rounded-lg border border-solid border-[#1E2025] text-center leading-[36px] text-[#0047C4]"
-          onClick={copyToClipboard}
+          className="m-auto mt-[12px] w-[208px] px-[4px] text-center text-[14px] leading-[16px] text-[rgba(255,255,255,0.6)]"
         >
-          Copy Address
+          <Trans
+            i18nKey="pages.wallet.receive.chain.index.networkWarning"
+            values={{
+              network: selectedChain?.name || '',
+            }}
+            components={{
+              network: <span className="mr-[4px] ml-[4px] text-white" />,
+            }}
+          />
+        </div>
+        <div
+          className="m-auto mt-[40px] w-[240px] px-[12px] text-center text-[14px] leading-[16px] text-white break-all"
+        >{chainAddress?.address || ''}</div>
+        <div
+          className="mt-[24px] w-full h-[50px] bg-[#0047C4] rounded-[12px] text-center leading-[50px] text-white text-[16px] font-bold hover:bg-[#3B82FF] cursor-pointer"
+          onClick={() => chainAddress?.address && copyToClipboard(chainAddress.address)}
+        >
+          {t('pages.wallet.receive.chain.index.copyAddress')}
         </div>
       </Container>
     </BaseBody>

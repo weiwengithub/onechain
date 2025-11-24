@@ -16,7 +16,7 @@ export default function Layout({ children }: LayoutProps) {
     <BaseLayout
       header={
         <Header
-          leftContent={<NavigationPanel />}
+          leftContent={<NavigationPanel isHideHomeButton />}
           middleContent={<Base1300Text variant="h4_B">{t('pages.general-setting.address-book.add-address.header')}</Base1300Text>}
         />
       }

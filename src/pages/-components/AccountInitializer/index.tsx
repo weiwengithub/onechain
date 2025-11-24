@@ -11,6 +11,7 @@ import {
   useExtensionStorageStore,
 } from '@/zustand/hooks/useExtensionStorageStore';
 import { useLoadingOverlayStore } from '@/zustand/hooks/useLoadingOverlayStore';
+import { ZKLOGIN_SUPPORTED_CHAIN_ID, ZKLOGIN_SUPPORTED_CHAIN_TYPE, ZKLOGIN_ACCOUNT_TYPE } from '@/constants/zklogin';
 
 type AccountInitializerProps = {
   children: JSX.Element;
@@ -49,8 +50,11 @@ export default function AccountInitializer({ children }: AccountInitializerProps
       const isNeedFetchBalance = !cosmosBalances && !evmBalances && !bitcoinBalances;
       const isNeedFetchAddres = !address;
       const isNeedAddNewMnemonicName = currentAccount.type === 'MNEMONIC' && !mnemonicNamesByHashedMnemonic[currentAccount.encryptedRestoreString];
+      
+      // 检查 ZkLogin 账户是否缺少地址数据
+      const isZkLoginWithoutAddress = currentAccount.type === 'ZKLOGIN' && !address;
 
-      if (isNeedFetchBalance || isNeedFetchAddres || isNeedAddNewMnemonicName) {
+      if (isNeedFetchBalance || isNeedFetchAddres || isNeedAddNewMnemonicName || isZkLoginWithoutAddress) {
         try {
           startLoadingOverlay(
             t('pages.components.AccountInitializer.index.loadingOverlayTitle'),
@@ -70,6 +74,32 @@ export default function AccountInitializer({ children }: AccountInitializerProps
               ...storedMnemonicNames,
               [currentAccount.encryptedRestoreString]: `Mnemonic ${Object.keys(storedMnemonicNames).length + 1}`,
             });
+          }
+          
+          // 修复 ZkLogin 账户的地址数据
+          if (isZkLoginWithoutAddress) {
+            try {
+              // 从 localStorage 获取 ZkLogin 地址
+              const zkLoginAddress = localStorage.getItem('zklogin_address');
+              if (zkLoginAddress) {
+                // 生成标准地址数据
+                const standardAddress = {
+                  chainId: ZKLOGIN_SUPPORTED_CHAIN_ID,
+                  chainType: ZKLOGIN_SUPPORTED_CHAIN_TYPE,
+                  address: zkLoginAddress,
+                  publicKey: zkLoginAddress, // ZkLogin 使用地址作为 publicKey
+                  accountType: ZKLOGIN_ACCOUNT_TYPE
+                };
+                
+                // 存储到标准位置
+                await chrome.storage.local.set({
+                  [`${currentAccountId}-address`]: [standardAddress]
+                });
+                console.log('Fixed ZkLogin address data for existing account');
+              }
+            } catch (error) {
+              console.error('Failed to fix ZkLogin address:', error);
+            }
           }
 
           await loadExtensionStorageStoreFromStorage();

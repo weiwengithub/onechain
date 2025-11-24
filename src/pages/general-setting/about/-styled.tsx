@@ -42,6 +42,21 @@ export const AppVersionText = styled(Base1300Text)({
 export const ButtonContainer = styled('div')({
   display: 'flex',
   flexDirection: 'column',
+  gap: '2px',
+  paddingTop: '24px',
+  marginTop: '24px',
+  position: 'relative',
+
+  '&::after': {
+    content: '""',
+    display: 'block',
+    height: '1px',
+    background: 'linear-gradient(90deg, #121315 0%, #2C3039 51.32%, #121315 100%)',
+    position: 'absolute',
+    left: '-24px',
+    right: '-24px',
+    top: 0,
+  }
 });
 
 export const ButtonIconContainer = styled('div')({

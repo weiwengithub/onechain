@@ -25,7 +25,8 @@ import { AccountImgContainer, MainContentBody, MainContentsContainer, MainConten
 import MainContentsLayout from '../../../-components/MainContentsLayout';
 
 import EditIcon from '@/assets/images/icons/Edit18.svg';
-import PrivateViewIcon from '@/assets/images/icons/PrivateKeyView28.svg';
+import PrivateViewIcon from '@/assets/images/icons/PrivateKey18.svg';
+import Avatar from 'boring-avatars';
 
 type EntryProps = {
   accountId: string;
@@ -83,7 +84,11 @@ export default function Entry({ accountId }: EntryProps) {
             <MainContentsLayout
               top={
                 <AccountImgContainer>
-                  <AccountImage accountId={accountId} />
+                  <Avatar
+                    size={80}
+                    name={accountId}
+                    variant={'marble'}
+                  />
                 </AccountImgContainer>
               }
               body={

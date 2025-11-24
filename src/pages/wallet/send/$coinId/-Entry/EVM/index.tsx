@@ -1,22 +1,16 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isValidAddress } from 'ethereumjs-util';
 import { ethers } from 'ethers';
 import { useDebounce, useDebouncedCallback } from 'use-debounce';
-import { InputAdornment, Typography } from '@mui/material';
 import { useNavigate } from '@tanstack/react-router';
 
 import AddressBottomSheet from '@/components/AddressBottomSheet/index.tsx';
 import BaseBody from '@/components/BaseLayout/components/BaseBody';
 import BaseFooter from '@/components/BaseLayout/components/BaseFooter';
-import EdgeAligner from '@/components/BaseLayout/components/EdgeAligner/index.tsx';
-import ChainSelectBox from '@/components/ChainSelectBox/index.tsx';
-import NumberTypo from '@/components/common/NumberTypo/index.tsx';
-import BalanceButton from '@/components/common/StandardInput/components/BalanceButton/index.tsx';
-import StandardInput from '@/components/common/StandardInput/index.tsx';
 import type { BasicFeeOption, EIP1559FeeOption, FeeOption } from '@/components/Fee/EVMFee/components/FeeSettingBottomSheet/index.tsx';
 import EVMFee from '@/components/Fee/EVMFee/index.tsx';
-import ReviewBottomSheet from '@/components/ReviewBottomSheet/index.tsx';
+import AutoResizeTextarea from '@/components/AutoResizeTextarea';
 import { NATIVE_EVM_COIN_ADDRESS } from '@/constants/evm.ts';
 import { ERC20_ABI } from '@/constants/evm/abi.ts';
 import { DEFAULT_GAS_MULTIPLY, EVM_DEFAULT_GAS } from '@/constants/evm/fee.ts';
@@ -25,34 +19,35 @@ import { useEstimateGas } from '@/hooks/evm/useEstimateGas.ts';
 import { useFee } from '@/hooks/evm/useFee.ts';
 import { useAccountAllAssets } from '@/hooks/useAccountAllAssets.ts';
 import { useCoinGeckoPrice } from '@/hooks/useCoinGeckoPrice.ts';
-import { useCurrentAccount } from '@/hooks/useCurrentAccount.ts';
-import { useCurrentPassword } from '@/hooks/useCurrentPassword.ts';
 import { useGetAccountAsset } from '@/hooks/useGetAccountAsset.ts';
-import { getKeypair } from '@/libs/address.ts';
-import { Route as TxResult } from '@/pages/wallet/tx-result';
+import { Route as TxConfirm } from '@/pages/wallet/tx-confirm';
 import { isTestnetChain } from '@/utils/chain.ts';
 import { ethersProvider } from '@/utils/ethereum/ethers.ts';
-import { signAndExecuteTxSequentially } from '@/utils/ethereum/sign.ts';
-import { ceil, gt, minus, plus, times, toBaseDenomAmount, toDisplayDenomAmount } from '@/utils/numbers.ts';
-import { getCoinId, getUniqueChainId, getUniqueChainIdWithManual, isMatchingUniqueChainId, parseCoinId } from '@/utils/queryParamGenerator.ts';
-import { isDecimal, isEqualsIgnoringCase, safeStringify, shorterAddress, toHex } from '@/utils/string.ts';
-import { useExtensionStorageStore } from '@/zustand/hooks/useExtensionStorageStore.ts';
-import { useTxTrackerStore } from '@/zustand/hooks/useTxTrackerStore.ts';
-
 import {
-  AddressBookButton,
-  CoinContainer,
-  CoinDenomContainer,
-  CoinImage,
-  CoinSymbolText,
-  DescriptionContainer,
-  Divider,
-  EstimatedValueTextContainer,
-  InputWrapper,
-} from './styled.tsx';
-import TxProcessingOverlay from '../components/TxProcessingOverlay/index.tsx';
+  ceil,
+  formatDecimal,
+  formatNumberWithSeparator,
+  gt,
+  minus,
+  plus,
+  times,
+  toBaseDenomAmount,
+  toDisplayDenomAmount,
+} from '@/utils/numbers.ts';
+import {
+  getCoinId,
+  getUniqueChainId,
+  isMatchingUniqueChainId,
+  parseCoinId,
+} from '@/utils/queryParamGenerator.ts';
+import { isDecimal, isEqualsIgnoringCase, toHex } from '@/utils/string.ts';
+import { useExtensionStorageStore } from '@/zustand/hooks/useExtensionStorageStore.ts';
+import { cn } from '@/utils/date.ts';
 
 import AddressBookIcon from '@/assets/images/icons/AddressBook20.svg';
+import ArrowRightIcon from '@/assets/img/icon/arrow_right_12.png';
+import CurrencyBalanceIcon from '@/assets/img/icon/currency_balance.png';
+import WarningIcon from '@/assets/img/icon/warning.png';
 
 type EVMProps = {
   coinId: string;
@@ -61,13 +56,9 @@ type EVMProps = {
 export default function EVM({ coinId }: EVMProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { addTx } = useTxTrackerStore();
 
   const { userCurrencyPreference } = useExtensionStorageStore((state) => state);
   const { data: coinGeckoPrice } = useCoinGeckoPrice();
-
-  const { currentAccount } = useCurrentAccount();
-  const { currentPassword } = useCurrentPassword();
 
   const [isDisabled, setIsDisabled] = useState(false);
 
@@ -77,10 +68,7 @@ export default function EVM({ coinId }: EVMProps) {
   const [customMaxBaseFeeAmount, setCustomMaxBaseFeeAmount] = useState('');
   const [customPriorityFeeAmount, setCustomPriorityFeeAmount] = useState('');
 
-  const [isOpenTxProcessingOverlay, setIsOpenTxProcessingOverlay] = useState(false);
-
   const [isOpenAddressBottomSheet, setIsOpenAddressBottomSheet] = useState(false);
-  const [isOpenReviewBottomSheet, setIsOpenReviewBottomSheet] = useState(false);
 
   const { getEVMAccountAsset } = useGetAccountAsset({ coinId });
 
@@ -109,24 +97,11 @@ export default function EVM({ coinId }: EVMProps) {
   const nativeAccountAssetCoinId = useMemo(() => (nativeAccountAsset ? getCoinId(nativeAccountAsset.asset) : ''), [nativeAccountAsset]);
 
   const coinImageURL = selectedCoinToSend?.asset.image || '';
-  const coinBadgeImageURL = selectedCoinToSend?.asset.type === 'native' ? '' : selectedCoinToSend?.chain.image || '';
 
   const coinSymbol = selectedCoinToSend?.asset.symbol
     ? selectedCoinToSend.asset.symbol + `${isTestnetChain(selectedCoinToSend.chain.id) ? ' (Testnet)' : ''}`
     : '';
-  const coinDenom = selectedCoinToSend?.asset.id || '';
-  const shortCoinDenom = shorterAddress(coinDenom, 16);
   const coinDecimals = selectedCoinToSend?.asset.decimals || 0;
-
-  const coinType = (() => {
-    if (selectedCoinToSend?.asset.type === 'erc20') {
-      return t('pages.wallet.send.$coinId.Entry.EVM.index.contract');
-    }
-
-    return '';
-  })();
-
-  const coinDescription = selectedCoinToSend?.asset.description;
 
   const coinGeckoId = selectedCoinToSend?.asset.coinGeckoId || '';
   const coinPrice = (coinGeckoId && coinGeckoPrice?.[coinGeckoId]?.[userCurrencyPreference]) || 0;
@@ -151,7 +126,10 @@ export default function EVM({ coinId }: EVMProps) {
   const sendTx = useMemo(() => {
     if (!gt(sendDisplayAmount || '0', '0') || !recipientAddress) return undefined;
 
-    const amount = toHex(toBaseDenomAmount(sendDisplayAmount || '0', coinDecimals), { addPrefix: true, isStringNumber: true });
+    const amount = toHex(toBaseDenomAmount(sendDisplayAmount || '0', coinDecimals), {
+      addPrefix: true,
+      isStringNumber: true,
+    });
 
     const senderAddress = selectedCoinToSend?.address.address || '';
 
@@ -190,7 +168,10 @@ export default function EVM({ coinId }: EVMProps) {
 
   const fee = useFee({ coinId });
 
-  const estimateGas = useEstimateGas({ coinId: nativeAccountAssetCoinId, bodyParams: debouncedSendTx && [debouncedSendTx] });
+  const estimateGas = useEstimateGas({
+    coinId: nativeAccountAssetCoinId,
+    bodyParams: debouncedSendTx && [debouncedSendTx],
+  });
 
   const alternativeGas = useMemo(() => {
     const gasCoefficient = nativeAccountAsset?.chain.feeInfo.gasCoefficient || DEFAULT_GAS_MULTIPLY;
@@ -297,33 +278,13 @@ export default function EVM({ coinId }: EVMProps) {
     return '0';
   }, [currentFeeOption]);
 
-  const finalizedTransaction = useMemo(() => {
-    if (!debouncedSendTx || !selectedCoinToSend || !currentFeeOption || !gt(currentFeeOption.gas || '0', '0')) {
-      return null;
+  const displayFeeAmount = useMemo(() => {
+    if (!currentFeeOption) {
+      return '0';
     }
 
-    if (currentFeeOption.type === 'BASIC' && (!currentFeeOption.gasPrice || !gt(currentFeeOption.gasPrice, '0'))) {
-      return null;
-    }
-
-    if (currentFeeOption.type === 'EIP-1559' && (!currentFeeOption || !currentFeeOption.maxBaseFeePerGas || !currentFeeOption.maxPriorityFeePerGas)) {
-      return null;
-    }
-    return {
-      from: debouncedSendTx.from,
-      to: debouncedSendTx.to,
-      data: debouncedSendTx.data,
-      value: BigInt(debouncedSendTx.value || '0').toString(10),
-      gasLimit: currentFeeOption.gas,
-      chainId: BigInt(selectedCoinToSend.chain.chainId).toString(10),
-      type: currentFeeOption.type === 'EIP-1559' ? 2 : undefined,
-      gasPrice: currentFeeOption?.type === 'BASIC' ? currentFeeOption.gasPrice : undefined,
-      maxFeePerGas: currentFeeOption?.type === 'EIP-1559' ? currentFeeOption.maxBaseFeePerGas : undefined,
-      maxPriorityFeePerGas: currentFeeOption?.type === 'EIP-1559' ? currentFeeOption.maxPriorityFeePerGas : undefined,
-    };
-  }, [currentFeeOption, debouncedSendTx, selectedCoinToSend]);
-
-  const displayTx = useMemo(() => safeStringify(finalizedTransaction), [finalizedTransaction]);
+    return toDisplayDenomAmount(estimatedFeeBaseAmount, currentFeeOption.decimals || 0);
+  }, [currentFeeOption, estimatedFeeBaseAmount]);
 
   const addressInputErrorMessage = useMemo(() => {
     if (recipientAddress) {
@@ -419,67 +380,6 @@ export default function EVM({ coinId }: EVMProps) {
     }
   };
 
-  const handleOnClickConfirm = useCallback(async () => {
-    try {
-      setIsOpenTxProcessingOverlay(true);
-
-      if (!selectedCoinToSend?.chain) {
-        throw new Error('Chain not found');
-      }
-
-      if (!finalizedTransaction) {
-        throw new Error('Failed to calculate final transaction');
-      }
-
-      const keyPair = getKeypair(selectedCoinToSend.chain, currentAccount, currentPassword);
-      const privateKey = keyPair.privateKey;
-
-      const rpcURLs = selectedCoinToSend?.chain.rpcUrls.map((item) => item.url) || [];
-
-      if (!rpcURLs.length) {
-        throw new Error('RPC URLs not found');
-      }
-
-      const response = await signAndExecuteTxSequentially(privateKey, finalizedTransaction, rpcURLs);
-
-      if (!response) {
-        throw new Error('Failed to send transaction');
-      }
-
-      const { chainId, chainType } = parseCoinId(coinId);
-      const uniqueChainId = getUniqueChainIdWithManual(chainId, chainType);
-      addTx({ txHash: response.hash, chainId: uniqueChainId, address: selectedCoinToSend.address.address, addedAt: Date.now(), retryCount: 0 });
-
-      navigate({
-        to: TxResult.to,
-        search: {
-          address: recipientAddress,
-          coinId,
-          txHash: response.hash,
-        },
-      });
-    } catch {
-      navigate({
-        to: TxResult.to,
-        search: {
-          coinId,
-        },
-      });
-    } finally {
-      setIsOpenTxProcessingOverlay(false);
-    }
-  }, [
-    addTx,
-    coinId,
-    currentAccount,
-    currentPassword,
-    finalizedTransaction,
-    navigate,
-    recipientAddress,
-    selectedCoinToSend?.address.address,
-    selectedCoinToSend?.chain,
-  ]);
-
   const debouncedEnabled = useDebouncedCallback(() => {
     setTimeout(() => {
       setIsDisabled(false);
@@ -496,87 +396,118 @@ export default function EVM({ coinId }: EVMProps) {
     <>
       <BaseBody>
         <>
-          <CoinContainer>
-            <CoinImage imageURL={coinImageURL} badgeImageURL={coinBadgeImageURL} />
-            <CoinSymbolText variant="h2_B">{`${coinSymbol} ${t('pages.wallet.send.$coinId.Entry.EVM.index.send')}`}</CoinSymbolText>
-            {coinType ? (
-              <CoinDenomContainer>
-                <Typography variant="b4_R">{`${coinType} :`}</Typography>
-                &nbsp;
-                <Typography variant="b3_M">{shortCoinDenom}</Typography>
-              </CoinDenomContainer>
-            ) : (
-              <DescriptionContainer>
-                <Typography variant="b3_M">{coinDescription}</Typography>
-              </DescriptionContainer>
-            )}
-          </CoinContainer>
-
-          <InputWrapper>
-            <ChainSelectBox
-              chainList={selectedCoinToSend?.chain ? [selectedCoinToSend?.chain] : []}
-              currentChainId={selectedCoinToSend?.chain && getUniqueChainId(selectedCoinToSend?.chain)}
-              disableSortChain
-              label={t('pages.wallet.send.$coinId.Entry.EVM.index.recipientNetwork')}
-              disabled
-            />
-            <StandardInput
-              label={t('pages.wallet.send.$coinId.Entry.EVM.index.recipientAddress')}
-              error={!!addressInputErrorMessage}
-              helperText={addressInputErrorMessage || nameResolvedAddress || ''}
-              isLoadingHelperText={ens.isLoading}
-              value={inputRecipientAddress}
-              onChange={(e) => setInputRecipientAddress(e.target.value)}
-              inputVarient="address"
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <AddressBookButton onClick={() => setIsOpenAddressBottomSheet(true)}>
-                        <AddressBookIcon />
-                      </AddressBookButton>
-                    </InputAdornment>
-                  ),
-                },
-              }}
-            />
-            <StandardInput
-              label={t('pages.wallet.send.$coinId.Entry.EVM.index.amount')}
-              error={!!sendAmountInputErrorMessage}
-              helperText={sendAmountInputErrorMessage}
+          <div className="flex items-center justify-between">
+            <div className="flex h-[28px] items-center rounded-[52px] bg-[#1E2025] p-[4px]">
+              {coinImageURL && (
+                <img
+                  src={coinImageURL}
+                  alt={t('pages.wallet.send.$coinId.Entry.Sui.index.coinImageAlt')}
+                  className="size-[20px]"
+                />
+              )}
+              <div className="ml-[4px] h-[18px] text-[14px] leading-[18px] text-white font-medium">
+                {coinSymbol}
+              </div>
+              <img
+                src={ArrowRightIcon}
+                alt={t('pages.wallet.send.$coinId.Entry.Sui.index.selectAlt')}
+                className="mr-[6px] ml-[8px] size-[12px]"
+              />
+            </div>
+            <div
+              className="flex items-center cursor-pointer"
+              onClick={handleOnClickMax}
+            >
+              <img
+                src={CurrencyBalanceIcon}
+                alt={t('pages.wallet.send.$coinId.Entry.Sui.index.balanceAlt')}
+                className="size-[12px]"
+              />
+              <div className="ml-[6px] h-[20px] text-[14px] leading-[20px] text-white font-medium opacity-60">
+                {formatNumberWithSeparator(formatDecimal(toDisplayDenomAmount(baseAvailableAmount, coinDecimals)))}
+              </div>
+            </div>
+          </div>
+          <div className="mt-[24px] overflow-hidden text-[32px] leading-[20px] font-bold">
+            <input
+              placeholder="0"
+              className="flex h-full border-none bg-transparent text-[32px] text-white outline-none focus:outline-none"
+              autoFocus
               value={sendDisplayAmount}
               onChange={(e) => {
-                if (!isDecimal(e.currentTarget.value, coinDecimals || 0) && e.currentTarget.value) {
-                  return;
+                const oldValue = e.target.value;
+                let newValue;
+
+                if ((coinDecimals || 0) === 0) {
+                  newValue = oldValue.replace(/[^\d]/g, '');
+                } else {
+                  newValue = oldValue.replace(/[^\d.]/g, '');
+                  const firstDotIndex = newValue.indexOf('.');
+                  if (firstDotIndex !== -1) {
+                    const parts = newValue.split('.');
+                    newValue = (parts[0] || 0) + '.' + parts.slice(1).join('').replace(/\./g, '');
+                  }
                 }
 
-                setSendDisplayAmount(e.currentTarget.value);
+                if (newValue === '' || isDecimal(newValue, coinDecimals || 0)) {
+                  setSendDisplayAmount(newValue);
+                }
               }}
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <EstimatedValueTextContainer>
-                        <NumberTypo typoOfIntegers="h6n_M" typoOfDecimals="h8n_R" currency={userCurrencyPreference} isApporximation>
-                          {displaySendAmountPrice}
-                        </NumberTypo>
-                      </EstimatedValueTextContainer>
-                    </InputAdornment>
-                  ),
-                },
-              }}
-              rightBottomAdornment={
-                selectedCoinToSend && <BalanceButton onClick={handleOnClickMax} coin={selectedCoinToSend?.asset} balance={baseAvailableAmount} />
-              }
             />
-          </InputWrapper>
+          </div>
+          <div
+            className={cn(
+              'mt-[18px] h-[20px] text-[18px] leading-[20px] text-white font-medium',
+              parseFloat(displaySendAmountPrice) > 0 ? '' : 'opacity-40',
+            )}
+          >
+            ${displaySendAmountPrice}
+          </div>
+          <div className="mt-[48px] h-[20px] text-[16px] leading-[20px] text-white font-medium">
+            {t('pages.wallet.send.$coinId.Entry.Sui.index.toLabel')}
+          </div>
+          <div className="relative mt-[9px] rounded-[12px] pt-[100px]">
+            <div className="absolute inset-0 h-[100px] w-full rounded-[12px] bg-[#1E2025]">
+              <div className="absolute top-1/2 right-[44px] left-[44px] -translate-y-1/2">
+                <AutoResizeTextarea
+                  value={inputRecipientAddress}
+                  onChange={(value) => setInputRecipientAddress(value)}
+                  placeholder={t('pages.wallet.send.$coinId.Entry.Sui.index.recipientPlaceholder')}
+                  maxHeight={72}
+                />
+              </div>
+              {/*<button*/}
+              {/*  type="button"*/}
+              {/*  className="absolute top-[12px] right-[12px] flex size-[32px] items-center justify-center rounded-full bg-white/5 hover:bg-white/10"*/}
+              {/*  onClick={() => setIsOpenAddressBottomSheet(true)}*/}
+              {/*>*/}
+              {/*  <AddressBookIcon />*/}
+              {/*</button>*/}
+            </div>
+            {addressInputErrorMessage && (
+              <div className="mt-[-10px] h-[46px] bg-[#e04646] pt-[10px]">
+                <div className="flex h-[36px] items-center">
+                  <img
+                    src={WarningIcon}
+                    alt={t('pages.wallet.send.$coinId.Entry.Sui.index.warningAlt')}
+                    className="ml-[16px] h-[16px]"
+                  />
+                  <div
+                    className="ml-[8px] h-[22px] text-[14px] leading-[22px] opacity-80"
+                  >{addressInputErrorMessage}</div>
+                </div>
+              </div>
+            )}
+            {!addressInputErrorMessage && nameResolvedAddress && !ens.isLoading && (
+              <div className="mt-2 px-2 text-[14px] leading-[20px] text-white/60">
+                {nameResolvedAddress}
+              </div>
+            )}
+          </div>
         </>
       </BaseBody>
       <BaseFooter>
-        <>
-          <EdgeAligner>
-            <Divider />
-          </EdgeAligner>
+        <div className="pt-4">
           <EVMFee
             feeOptionDatas={feeOptions}
             currentSelectedFeeOptionKey={currentFeeStepKey}
@@ -597,12 +528,37 @@ export default function EVM({ coinId }: EVMProps) {
               setCurrentFeeStepKey(val);
             }}
             onClickConfirm={() => {
-              setIsOpenReviewBottomSheet(true);
+              if (
+                !selectedCoinToSend ||
+                !currentFeeOption ||
+                !sendDisplayAmount ||
+                !recipientAddress ||
+                !currentFeeOption.gas ||
+                !sendTx
+              ) {
+                return;
+              }
+
+              navigate({
+                to: TxConfirm.to,
+                search: {
+                  coinId,
+                  sendAmount: sendDisplayAmount,
+                  sendAmountPrice: displaySendAmountPrice,
+                  recipientAddress,
+                  feeAmount: displayFeeAmount,
+                  feeType: currentFeeOption.type === 'EIP-1559' ? 'EIP-1559' : 'BASIC',
+                  gas: currentFeeOption.gas,
+                  gasPrice: currentFeeOption.type === 'BASIC' ? currentFeeOption.gasPrice : undefined,
+                  maxBaseFeePerGas: currentFeeOption.type === 'EIP-1559' ? currentFeeOption.maxBaseFeePerGas : undefined,
+                  maxPriorityFeePerGas: currentFeeOption.type === 'EIP-1559' ? currentFeeOption.maxPriorityFeePerGas : undefined,
+                },
+              });
             }}
             disableConfirm={isDisabled || !!errorMessage}
             isLoading={isDisabled}
           />
-        </>
+        </div>
       </BaseFooter>
 
       {selectedCoinToSend?.chain && (
@@ -617,27 +573,6 @@ export default function EVM({ coinId }: EVMProps) {
           }}
         />
       )}
-      <ReviewBottomSheet
-        rawTxString={displayTx}
-        open={isOpenReviewBottomSheet}
-        onClose={() => setIsOpenReviewBottomSheet(false)}
-        contentsTitle={
-          selectedCoinToSend?.asset.symbol
-            ? t('pages.wallet.send.$coinId.Entry.EVM.index.sendReviewWithSymbol', {
-                symbol: selectedCoinToSend.asset.symbol,
-              })
-            : t('pages.wallet.send.$coinId.Entry.EVM.index.sendReview')
-        }
-        contentsSubTitle={t('pages.wallet.send.$coinId.Entry.EVM.index.sendReviewSub')}
-        confirmButtonText={t('pages.wallet.send.$coinId.Entry.EVM.index.send')}
-        onClickConfirm={handleOnClickConfirm}
-      />
-
-      <TxProcessingOverlay
-        open={isOpenTxProcessingOverlay}
-        title={t('pages.wallet.send.$coinId.Entry.EVM.index.txProcessing')}
-        message={t('pages.wallet.send.$coinId.Entry.EVM.index.txProcessingSub')}
-      />
     </>
   );
 }

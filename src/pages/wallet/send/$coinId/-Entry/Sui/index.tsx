@@ -19,6 +19,7 @@ import {
   formatDecimal,
   formatNumberWithSeparator,
   gt,
+  isDecimal,
   minus,
   plus,
   times,
@@ -298,13 +299,13 @@ export default function Sui({ coinId }: SuiProps) {
             <div className="flex h-[28px] items-center rounded-[52px] bg-[#1E2025] p-[4px]">
               <img
                 src={coinImageURL}
-                alt="sui"
+                alt={t('pages.wallet.send.$coinId.Entry.Sui.index.coinImageAlt')}
                 className="size-[20px]"
               />
               <div className="ml-[4px] h-[18px] text-[14px] leading-[18px] text-white font-medium">{coinSymbol}</div>
               <img
                 src={ArrowRightIcon}
-                alt="select"
+                alt={t('pages.wallet.send.$coinId.Entry.Sui.index.selectAlt')}
                 className="mr-[6px] ml-[8px] size-[12px] cursor-pointer"
               />
             </div>
@@ -314,11 +315,11 @@ export default function Sui({ coinId }: SuiProps) {
             >
               <img
                 src={CurrencyBalanceIcon}
-                alt="balance"
+                alt={t('pages.wallet.send.$coinId.Entry.Sui.index.balanceAlt')}
                 className="size-[12px]"
               />
               <div className="ml-[6px] h-[20px] text-[14px] leading-[20px] text-white font-medium opacity-60">
-                {formatNumberWithSeparator(formatDecimal(toDisplayDenomAmount(baseAvailableAmount, feeCoinDecimals)))}
+                {formatNumberWithSeparator(formatDecimal(toDisplayDenomAmount(baseAvailableAmount, coinDecimal)))}
               </div>
             </div>
           </div>
@@ -330,15 +331,26 @@ export default function Sui({ coinId }: SuiProps) {
               value={sendDisplayAmount}
               onChange={(e) => {
                 const oldValue = e.target.value;
-                // 只保留数字和小数点
-                let newValue = oldValue.replace(/[^\d.]/g, '');
-                // 如果有多个小数点，只保留第一个
-                const firstDotIndex = newValue.indexOf('.');
-                if (firstDotIndex !== -1) {
-                  const parts = newValue.split('.');
-                  newValue = (parts[0] || 0) + '.' + parts.slice(1).join('').replace(/\./g, '');
+                let newValue;
+
+                if (coinDecimal === 0) {
+                  // decimals为0时，只保留数字，不允许小数点
+                  newValue = oldValue.replace(/[^\d]/g, '');
+                } else {
+                  // decimals大于0时，保留数字和小数点
+                  newValue = oldValue.replace(/[^\d.]/g, '');
+                  // 如果有多个小数点，只保留第一个
+                  const firstDotIndex = newValue.indexOf('.');
+                  if (firstDotIndex !== -1) {
+                    const parts = newValue.split('.');
+                    newValue = (parts[0] || 0) + '.' + parts.slice(1).join('').replace(/\./g, '');
+                  }
                 }
-                setSendDisplayAmount(newValue);
+
+                // 根据token的decimals限制小数位数
+                if (newValue === '' || isDecimal(newValue, coinDecimal)) {
+                  setSendDisplayAmount(newValue);
+                }
               }}
             />
           </div>
@@ -347,14 +359,16 @@ export default function Sui({ coinId }: SuiProps) {
           >
             ${displaySendAmountPrice}
           </div>
-          <div className="mt-[48px] h-[20px] text-[16px] leading-[20px] text-white font-medium">TO</div>
+          <div className="mt-[48px] h-[20px] text-[16px] leading-[20px] text-white font-medium">
+            {t('pages.wallet.send.$coinId.Entry.Sui.index.toLabel')}
+          </div>
           <div className="relative mt-[9px] rounded-[12px] pt-[100px]">
             <div className="absolute top-0 left-0 h-[100px] w-full rounded-[12px] bg-[#1E2025]">
               <div className="absolute top-[50%] right-[44px] left-[44px] transform-[translateY(-50%)]">
                 <AutoResizeTextarea
                   value={recipientAddress}
                   onChange={(value) => setRecipientAddress(value)}
-                  placeholder="Enter Recipient"
+                  placeholder={t('pages.wallet.send.$coinId.Entry.Sui.index.recipientPlaceholder')}
                   maxHeight={72}
                 />
               </div>
@@ -364,7 +378,7 @@ export default function Sui({ coinId }: SuiProps) {
                 <div className="flex h-[36px] items-center">
                   <img
                     src={WarningIcon}
-                    alt="warning"
+                    alt={t('pages.wallet.send.$coinId.Entry.Sui.index.warningAlt')}
                     className="ml-[16px] h-[16px]"
                   />
                   <div

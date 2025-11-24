@@ -74,21 +74,22 @@ export default function Layout({ children, coinId }: LayoutProps) {
   return (
     <BaseLayout
       header={
-      <Header
-        leftContent={<NavigationPanel />}
-        middleContent={
-          <div className="flex h-[22px] text-[18px] leading-[22px] text-white font-medium">
-            <div className="mt-[-1px] mr-[8px] size-[24px]">
-              <img
-                src={coinImage}
-                alt={chainName}
-                className="h-full w-full"
-              />
+        <Header
+          leftContent={<NavigationPanel isHideHomeButton />}
+          middleContent={
+            <div className="flex h-[22px] text-[18px] leading-[22px] text-white font-medium">
+              <div className="mt-[-1px] mr-[8px] size-[24px]">
+                <img
+                  src={coinImage}
+                  alt={chainName}
+                  className="h-full w-full shrink-0"
+                />
+
+              </div>
+              <div className={'text-[14px] whitespace-nowrap'}>{chainName}</div>
             </div>
-            <div>{chainName}</div>
-          </div>
-        }
-      />}
+          }
+        />}
       footer={
         <FooterContainer>
           <FloatingButtonContainer>

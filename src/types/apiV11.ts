@@ -146,6 +146,8 @@ export type V11Asset = {
       denom: string;
     };
   };
+  isCustom?: boolean;
+  category?: number;
 };
 
 export type V11Erc20 = {

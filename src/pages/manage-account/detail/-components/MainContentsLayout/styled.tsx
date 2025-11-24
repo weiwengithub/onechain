@@ -5,8 +5,19 @@ export const Container = styled('div')({
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
+  position: 'relative',
+  paddingBottom: '25px',
 
-  rowGap: '1rem',
+  '&::after': {
+    content: '""',
+    display: 'block',
+    height: '1px',
+    background: '#2C3039',
+    position: 'absolute',
+    left: '-24px',
+    right: '-24px',
+    bottom: 0,
+  }
 });
 
 export const TopContainer = styled('div')({});

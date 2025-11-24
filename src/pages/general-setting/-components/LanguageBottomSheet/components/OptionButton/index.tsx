@@ -18,7 +18,7 @@ export default function OptionButton({ language, isActive, onClickButton, ...rem
 
   const text = (() => {
     if (language === 'en') return t('pages.general-setting.components.LanguageBottomSheet.components.OptionButton.index.english');
-    if (language === 'ko') return t('pages.general-setting.components.LanguageBottomSheet.components.OptionButton.index.korean');
+    if (language === 'zh') return t('pages.general-setting.components.LanguageBottomSheet.components.OptionButton.index.chinese');
   })();
 
   return (

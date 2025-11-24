@@ -13,7 +13,7 @@ import { AlertContainer, CautionIconContainer, CautionText, EmptyAssetContainer,
 
 import CautionIcon from '@/assets/images/icons/Caution16.svg';
 import ImportMnemonicIcon from '@/assets/images/icons/ImportMnemonic70.svg';
-import MnemonicIcon from '@/assets/images/icons/Mnemonics14.svg';
+import MnemonicIcon from '@/assets/images/icons/Mnemonic18.svg';
 
 export default function MnemonicAccountList() {
   const { t } = useTranslation();
@@ -57,9 +57,6 @@ export default function MnemonicAccountList() {
                   </AlertContainer>
                 ) : undefined
               }
-              style={{
-                padding: '1.6rem',
-              }}
             />
           );
         })

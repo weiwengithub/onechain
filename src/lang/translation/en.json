@@ -13,7 +13,9 @@
           "buy": "Buy",
           "dapp": "Dapp",
           "more": "More",
-          "receiveWithSymbol": "{{symbol}} Receive"
+          "receiveWithSymbol": "{{symbol}} Receive",
+          "vault": "Vault",
+          "faucet": "Faucet"
         },
         "components": {
           "MoreOptionBottomSheet": {
@@ -139,9 +141,14 @@
     },
     "Lock": {
       "index": {
+        "title": "Unlock wallet",
         "enterPassword": "Enter Password",
         "unlock": "Unlock",
-        "forgotPassword": "Forgot Password?"
+        "forgotPassword": "Forgot Password?",
+        "loading": "It may take a while...",
+        "zkSessionExpired": "Your zkLogin session has expired. Starting re-authentication...",
+        "reAuthSuccess": "Re-authentication successful! Please enter your password again to unlock.",
+        "reAuthFailed": "Re-authentication failed: {{message}}. Please try again."
       }
     },
     "FeeSettingBottomSheet": {
@@ -171,7 +178,7 @@
                 "networkFee": "Network Fee",
                 "gasAmount": "Gas Amount",
                 "inform": "How Network Fees are paid",
-                "informDescription": "Network fees are paid to the blockchain network, not to the Cosmostation wallet app",
+                "informDescription": "Network fees are paid to the blockchain network, not to the OneWallet wallet app",
                 "done": "Done",
                 "feeToken": "Fee Token",
                 "selectFeeToken": "Select Fee Token"
@@ -182,6 +189,7 @@
       },
       "SuiFee": {
         "index": {
+          "estimatedGasFee": "Estimated Gas Fee",
           "networkFee": "Network Fee",
           "continue": "Continue"
         }
@@ -201,7 +209,7 @@
                   "maxbaseFee": "Max base fee per gas (GWEI)",
                   "priorityFee": "Max priority fee per gas (GWEI)",
                   "inform": "How Network Fees are paid",
-                  "informDescription": "Network fees are paid to the blockchain network, not to the Cosmostation wallet app",
+                  "informDescription": "Network fees are paid to the blockchain network, not to the OneWallet wallet app",
                   "done": "Setup Complete"
                 }
               },
@@ -214,7 +222,7 @@
                   "gasAmount": "Gas Amount",
                   "maxbaseFee": "Max base fee per gas (GWEI)",
                   "inform": "How Network Fees are paid",
-                  "informDescription": "Network fees are paid to the blockchain network, not to the Cosmostation wallet app",
+                  "informDescription": "Network fees are paid to the blockchain network, not to the OneWallet wallet app",
                   "done": "Setup Complete",
                   "gasPrice": "Gas Price"
                 }
@@ -262,7 +270,7 @@
                   "gasAmount": "Gas Amount",
                   "gasRate": "Gas Rate",
                   "inform": "How Network Fees are paid",
-                  "informDescription": "Network fees are paid to the blockchain network, not to the Cosmostation wallet app",
+                  "informDescription": "Network fees are paid to the blockchain network, not to the OneWallet wallet app",
                   "done": "Setup Complete",
                   "inputGasAmountError": "invalid gas amount",
                   "inputGasRateError": "invalid gas rate"
@@ -320,9 +328,9 @@
         "setUpComplete": "Set Up Complete"
       }
     },
-    "SetttingPopover": {
+    "SettingPopover": {
       "index": {
-        "setting": "Setting",
+        "setting": "Settings",
         "manageDapps": "Manage Dapps",
         "lockWallet": "Lock Wallet"
       }
@@ -586,7 +594,8 @@
             "NoHistorySubTitle": "Your transaction history will be displayed here",
             "LoadingTitle": "Loading",
             "LoadingSubTitle": "Please wait a moment",
-            "goToExplorer": "Go to Explorer"
+            "goToExplorer": "Go to Explorer",
+            "noTransactionsFound": "No transactions found"
           }
         },
         "EVM": {
@@ -616,7 +625,9 @@
                     "sent": "Sent {{object}}",
                     "received": "Received {{object}}",
                     "to": "To: {{address}}",
-                    "from": "From: {{address}}"
+                    "from": "From: {{address}}",
+                    "typeSend": "Send",
+                    "typeReceive": "Receive"
                   }
                 },
                 "SuiFaucetTxItem": {
@@ -649,7 +660,8 @@
             "NoHistorySubTitle": "Your transaction history will be displayed here",
             "LoadingTitle": "Loading",
             "LoadingSubTitle": "Please wait a moment",
-            "goToExplorer": "Go to Explorer"
+            "goToExplorer": "Go to Explorer",
+            "noTransactionsFound": "No transactions found"
           }
         },
         "Bitcoin": {
@@ -760,7 +772,7 @@
           "index": {
             "migration": "Migration",
             "migrationInProgress": "Migration in Progress",
-            "migrationDescription": "We are updating the Cosmostation extension!\nPlease wait while we safely transfer your data.\n\n Do not close the browser or exit the extension\nuntil the migration is complete.",
+            "migrationDescription": "We are updating the OneWallet extension!\nPlease wait while we safely transfer your data.\n\n Do not close the browser or exit the extension\nuntil the migration is complete.",
             "completed": "{{percent}}% Completed",
             "migrationError": "Migration Error, Please try again",
             "retry": "Restart now?",
@@ -786,10 +798,14 @@
     },
     "JsonPopover": {
       "title": "Data"
+    },
+    "Search": {
+      "placeholder": "Search crypto or contract address"
     }
   },
   "pages": {
     "index": {
+      "tokens": "Tokens",
       "hideSmallBalance": "Hide Small Balance",
       "manageCrypto": "Manage Crypto",
       "valueHighOrder": "Value High Order",
@@ -798,16 +814,120 @@
       "noTokensDescription": "Try adjusting your search or filters",
       "noTokens": "No Assets Found"
     },
+    "onetransfer": {
+      "title": "Voucher",
+      "tabs": {
+        "issue": "Issue",
+        "redeem": "Redeem"
+      },
+      "mainTabs": {
+        "voucher": "Voucher",
+        "redPacket": "Red Packet"
+      },
+      "fields": {
+        "currency": "Currency",
+        "amount": "Amount",
+        "recipient": "Recipient"
+      },
+      "labels": {
+        "balance": "Balance: {{value}} {{symbol}}",
+        "issueFee": "Network Fee: {{fee}}%",
+        "issueFee2": "Gas Fee: 1 {{currency}}",
+        "redeemFee": "Network fee: 1 {{currency}}"
+      },
+      "placeholders": {
+        "recipientAddress": "Enter recipient address",
+        "voucherCode": "Enter voucher code"
+      },
+      "messages": {
+        "processing": "Processing...",
+        "generatingProof": "Generating zero-knowledge proof, this may take 10-30 seconds..."
+      },
+      "sections": {
+        "issued": "Issued vouchers",
+        "redeemed": "Redeemed vouchers"
+      },
+      "empty": {
+        "issued": "No issued vouchers yet",
+        "redeemed": "No redeemed vouchers"
+      },
+      "toasts": {
+        "issueSuccess": "Voucher issued successfully!",
+        "redeemSuccess": "Voucher redeemed successfully! Amount: {{amount}} {{currency}}",
+        "redPacketSuccess": "Red packet sent successfully! Amount: {{amount}} {{currency}}",
+        "copied": "Copied to clipboard"
+      },
+      "errors": {
+        "copyFailed": "Copy failed",
+        "noCurrencySelected": "Please select a currency first",
+        "amountNotSupported": "Amount {{amount}} {{currency}} is not supported",
+        "insufficientBalance": "Insufficient balance",
+        "noCoinObjects": "No available coin objects. Please acquire assets first",
+        "tooManyCoins": "Too many coin objects (>{{max}}). Please merge assets in the wallet before issuing a voucher",
+        "recipientUnavailable": "Failed to obtain recipient address",
+        "operationFailed": "Operation failed: {{message}}",
+        "invalidAddress": "Invalid address format",
+        "invalidAmount": "Please enter a valid amount",
+        "invalidVoucherCode": "Please enter a voucher code",
+        "voucherErrors": {
+          "gasInsufficient": "Insufficient gas, please recharge OCT and try again",
+          "gasObjectInvalid": "Invalid gas object, please contact technical support",
+          "gasExceedsMaximum": "Transaction gas fee is too high, please reduce the amount and try again",
+          "coinBalanceInsufficient": "Insufficient balance, please check your account balance",
+          "transactionValidationFailed": "Transaction validation failed, please check network and contract status",
+          "transactionBuildFailed": "Transaction build failed, please try again",
+          "networkError": "Network error, please check your network connection",
+          "rpcError": "Unable to connect to blockchain node, please check your network",
+          "signerNotAvailable": "Please unlock your wallet first",
+          "walletNotConnected": "Wallet not connected, please connect your wallet first",
+          "voucherAlreadyRedeemed": "Voucher has already been redeemed",
+          "voucherNotFound": "Voucher does not exist or was not found",
+          "invalidVoucherCode": "Invalid voucher code format",
+          "merkleProofFailed": "Merkle proof generation failed",
+          "merkleTreeSyncFailed": "Indexer is still syncing. Please retry in a moment.",
+          "zkProofGenerationFailed": "Zero-knowledge proof generation failed, please try again",
+          "zkProofVerificationFailed": "Zero-knowledge proof verification failed",
+          "unknownError": "Operation failed, please try again"
+        }
+      },
+      "buttons": {
+        "processing": "Processing",
+        "sendRedPacket": "Send Red Packet"
+      },
+      "history": {
+        "layout": {
+          "header": "History"
+        }
+      },
+      "voucher": {
+        "errors": {
+          "syncFailed": "Unable to synchronize voucher status: {{message}}"
+        },
+        "altText": {
+          "used": "Used voucher",
+          "unused": "Unused voucher"
+        }
+      }
+    },
     "account": {
       "initial": {
         "index": {
           "termsNotice": "I have read and agree to the",
           "termsOfUse": "Terms of Use",
           "start": "Start",
-          "slogan": "Web3 entry one is enough.",
+          "slogan": "Your Gateway to Future Finance",
           "createWallet": "Create Wallet",
           "importWallet": "Import Wallet",
-          "welcome": "Welcome to OneWallet"
+          "welcome": "Welcome to OneWallet",
+          "googleLogin": "Sign in with Google",
+          "appleLogin": "Sign in with Apple"
+        },
+        "entry": {
+          "languageOptions": {
+            "english": "English",
+            "chinese": "简体中文"
+          },
+          "termsNotice": "By continuing, you agree to our <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>"
         }
       },
       "set-password": {
@@ -818,10 +938,15 @@
           "verifyPassword": "Verify Password",
           "passwordLength": "Password must be at least 8 characters",
           "passwordNotMatch": "Passwords do not match",
+          "veryWeak": "Very weak",
+          "weak": "Weak",
+          "moderate": "Moderate",
+          "strong": "Strong",
+          "veryStrong": "Very strong",
           "caution": "Caution",
           "cautionDescription": "If you forget your password, you will not be able to access your wallet. Please write down your password and keep it in a safe place.",
           "protectWallet": "Protect your wallet",
-          "passwordTip": "Use to unlock your password",
+          "passwordTip": "Use it to unlock your wallet.",
           "confirmPassword": "Confirm Password",
           "next": "Next",
           "nextStep": "Next Step"
@@ -846,6 +971,29 @@
         },
         "layout": {
           "header": "Add Wallet"
+        },
+        "entry": {
+          "toastGoogleDataMissing": "Failed to complete Google authentication - missing required data",
+          "toastGoogleAuthFailed": "Failed to authenticate with Google: {{message}}",
+          "toastAppleDataMissing": "Failed to complete Apple authentication - missing required data",
+          "toastAppleAuthFailed": "Failed to authenticate with Apple: {{message}}",
+          "toastPasswordMissing": "Password not set. Please set up password first.",
+          "toastDuplicateZkLogin": "This {{provider}} account is already imported in the wallet.",
+          "toastDataIncomplete": "ZkLogin data incomplete. Please authenticate again.",
+          "toastProofMissing": "ZkLogin proof missing. Please authenticate again.",
+          "toastEphemeralMissing": "Ephemeral key pair not available. Please try again.",
+          "toastMaxEpochMissing": "Max epoch not available. Please try again.",
+          "toastCreateSuccess": "ZkLogin account \"{{name}}\" created successfully!",
+          "toastCreateFailed": "Failed to create ZkLogin account: {{message}}",
+          "languageOptions": {
+            "english": "English",
+            "chinese": "简体中文"
+          },
+          "providers": {
+            "google": "Google",
+            "apple": "Apple"
+          },
+          "unknownError": "Unknown error"
         }
       },
       "restore-wallet": {
@@ -873,6 +1021,7 @@
             "pasteFromClipboard": "Paste from Clipboard",
             "passwordNotSet": "Password not set",
             "invalidMnemonicPhrase": "Invalid mnemonic phrase",
+            "mnemonicAlreadyExists": "This mnemonic phrase has already been imported",
             "accountCreated": "Account created",
             "addressAndBalanceFetchingError": "Failed to fetch address and balance",
             "importAllAssets": "Import Assets",
@@ -885,6 +1034,11 @@
           },
           "layout": {
             "header": "Restore With Mnemonic"
+          },
+          "entry": {
+            "description": "Directly from your existing wallet.",
+            "mnemonicTab": "Mnemonic",
+            "privateKeyTab": "Private Key"
           }
         },
         "privatekey": {
@@ -893,7 +1047,7 @@
             "subTitle": "Your private key is sensitive; don't share it. Anyone can access your account with it, so be cautious",
             "clearAll": "Clear All",
             "pasteFromClipboard": "Paste from Clipboard",
-            "next": "Next",
+            "next": "Confirm and Import",
             "privateKey": "Private Key",
             "enterPrivateKey": "Enter Private Key",
             "setUpError": "Failed to set up",
@@ -929,6 +1083,11 @@
                 "eighteenWords": "18 words"
               }
             }
+          },
+          "entry": {
+            "saveTitle": "Save your recovery phrase",
+            "saveDescription": "The recovery phrase is the key to your wallet. Never share it with anyone.",
+            "copy": "Copy to Clipboard"
           }
         }
       },
@@ -948,7 +1107,9 @@
           "incorrect": "Mnemonic does not match",
           "setupError": "Fail to set up",
           "loadingOverlayTitle": "Syncing your wallet assets...",
-          "loadingOverlayMessage": "Checking your assets. This process may take some time.\nPlease wait a moment."
+          "loadingOverlayMessage": "Checking your assets. This process may take some time.\nPlease wait a moment.",
+          "confirmTitle": "Confirm recovery Phrase",
+          "confirmDescription": "Confirm your recovery phrase to complete setup."
         },
         "layout": {
           "header": "Back Up Wallet"
@@ -1115,14 +1276,14 @@
               "index": {
                 "emptyPending": "No Pending",
                 "emptyPendingDescription": "There are no pending objects.",
-                "startStaking": "Start Staking with COSMOSTATION",
+                "startStaking": "Start Staking with OneWallet",
                 "startStakingDescription": "Start earning staking rewards and\ncontribute to the network ecosystem",
                 "goToStake": "Go to Stake"
               }
             },
             "Cosmos": {
               "index": {
-                "startStaking": "Start Staking with COSMOSTATION",
+                "startStaking": "Start Staking with OneWallet",
                 "startStakingDescription": "Start earning staking rewards and\ncontribute to the network ecosystem",
                 "goToStake": "Go to Stake",
                 "emptyStaking": "No Unstaking",
@@ -1141,7 +1302,7 @@
               "index": {
                 "emptyPending": "No Pending",
                 "emptyPendingDescription": "There are no pending objects.",
-                "startStaking": "Start Staking with COSMOSTATION",
+                "startStaking": "Start Staking with OneWallet",
                 "startStakingDescription": "Start earning staking rewards and\ncontribute to the network ecosystem",
                 "goToStake": "Go to Stake"
               }
@@ -1221,10 +1382,10 @@
           "account": {
             "entry": {
               "lastHdPath": "Last HD Path",
-              "viewMyMnemonic": "View My Mnemonic",
+              "viewMyMnemonic": "Mnemonic",
               "viewMyMnemonicDescription": "View Recovery Phrase",
               "deleteAccount": "Delete Account",
-              "viewPrivateKey": "View Private Key (Each Chain)",
+              "viewPrivateKey": "Private Key (EachChain）",
               "viewPrivateKeyDescription": "Access private keys for each chain",
               "notBackedUp": "Not Backed Up",
               "accountNameUpdated": "Account name updated",
@@ -1249,6 +1410,19 @@
               "header": "Wallet Detail"
             }
           }
+        },
+        "zklogin": {
+          "account": {
+            "entry": {
+              "delete": "Delete",
+              "deleteAccountTitle": "Delete Account",
+              "successDeleteAccount": "Delete Account Success",
+              "deleteAccountDescription": "Are you sure you want to delete this account?"
+            },
+            "layout": {
+              "header": "Wallet Detail"
+            }
+          }
         }
       },
       "switch-account": {
@@ -1257,7 +1431,12 @@
           "createNewWallet": "Create New Account",
           "backUpNow": "Back Up Now",
           "switchAccountSuccess": "Switched to Account {{accountName}}",
-          "notBackedUp": "(Not Backed Up)"
+          "notBackedUp": "(Not Backed Up)",
+          "googleAccounts": "Google Accounts",
+          "appleAccounts": "Apple Accounts",
+          "addAccount": "Add account",
+          "privateKeyAccounts": "Private Key Accounts",
+          "accountName": "Account {{index}}"
         },
         "layout": {
           "header": "Switch Account",
@@ -1270,7 +1449,9 @@
           "importPrivateKeyDescription": "Account will be displayed after importing with a private key",
           "importMnemonic": "Import Mnemonic",
           "importMnemonicDescription": "Account will be displayed after importing with a mnemonic",
-          "searchPlaceholder": "Search Wallet, Account"
+          "searchPlaceholder": "Search Wallet, Account",
+          "totalAssets": "Total assets",
+          "totalAssetsValue": "${{value}}"
         }
       },
       "view": {
@@ -1296,6 +1477,12 @@
             "index": {
               "notBackedUp": "(Not Backed Up)",
               "backUpNow": "Back Up Now"
+            },
+            "DraggableMnemonicAccountItem": {
+              "deleteTitle": "Are you sure you want to delete this wallet?",
+              "deleteDescription": "Deleting this wallet will remove it from your app. - You can restore it anytime by importing the recovery phrase. - Make sure you've securely backed up your recovery phrase, if not, you will permanently lose access to this wallet.",
+              "deleteConfirm": "Delete",
+              "cancel": "Cancel"
             }
           }
         },
@@ -1304,7 +1491,12 @@
           "importPrivateKeyDescription": "Account will be displayed after importing with a private key",
           "importPrivateKey": "Import Private Key",
           "importMnemonicDescription": "Account will be displayed after importing with a mnemonic",
-          "searchPlaceholder": "Search Wallet, Account"
+          "searchPlaceholder": "Search Wallet, Account",
+          "totalAssets": "Total assets",
+          "totalAssetsValue": "${{value}}",
+          "mnemonicTab": "Mnemonic",
+          "zkLoginTab": "ZkLogin",
+          "privateKeyTab": "Private Key"
         },
         "layout": {
           "header": "Manage Wallet",
@@ -1316,6 +1508,7 @@
       },
       "create-account": {
         "entry": {
+          "success": "Add account success",
           "failToFindMnemonic": "Failed to find mnemonic",
           "setupSuccess": "Set up success",
           "setupFail": "Set up fail",
@@ -1335,8 +1528,9 @@
       "backup-wallet": {
         "step1": {
           "entry": {
-            "title": "Write Down Your Mnemonic",
-            "subTitle": "This phrase is the only way to recover your account. Losing this mnemonics could lead to loss of your asset.",
+            "title": "Write down seed phrase",
+            "subTitle": "Write down the words in the sequence below anoKeep them safe. Don't share them with anyone, or you may permanently lose your assets",
+            "explain": "Click on the seed phrase to show it in full or hide it. Make sure no one is looking at your screen.",
             "continue": "Continue"
           },
           "layout": {
@@ -1372,12 +1566,19 @@
         },
         "entry": {
           "title": "Save Your Mnemonics",
-          "subTitle": "If you lose your password: Back up your mnemonic, reset your Cosmostation Extension, and start next.",
-          "description1": "The Cosmostation wallet does not store your password or mnemonic phrase.",
+          "title1": "Resetting your wallet",
+          "title2": "Forget password",
+          "subTitle": "If you lose your password: Back up your mnemonic, reset your OneWallet Extension, and start next.",
+          "subTitle1": "For your security, you must reset the app and re-import your accounts to regain access.",
+          "subTitle2": "You need to reset the OneWallet",
+          "description1": "The OneWallet wallet does not store your password or mnemonic phrase.",
           "description2": "If you lose your password, you can reset the program and restore your account using your backed-up mnemonic. However, if you lose your mnemonic, account recovery will be difficult.",
           "description3": "Resetting the program will remove all registered accounts. After the reset, you can restore your accounts using your backed-up mnemonic.",
+          "description4": "Re-importing will require your recovery phrase, private key, or social sign-in credentials.Failure to provide these will result in permanent loss of access to this wallet.",
+          "description5": "Onewallet will clear all the data and you need to re-import wallets. Input “RESET” to confirm and reset.",
           "resetWallet": "Reset Wallet",
-          "resetSuccess": "Reset Success"
+          "resetSuccess": "Reset Success",
+          "resetOneWallet": "Reset OneWallet"
         },
         "layout": {
           "header": "Reset Wallet"
@@ -1393,6 +1594,12 @@
           "Entry": {
             "Sui": {
               "index": {
+                "coinImageAlt": "Selected coin",
+                "selectAlt": "Select coin",
+                "balanceAlt": "Balance",
+                "toLabel": "To",
+                "recipientPlaceholder": "Enter Recipient",
+                "warningAlt": "Warning",
                 "invalidAddress": "Invalid address",
                 "invalidAmount": "Invalid amount",
                 "insufficientAmount": "Insufficient amount",
@@ -1510,7 +1717,7 @@
                 "recipientNetwork": "Recipient Network",
                 "ibcSend": "IBC Send",
                 "selectRecipientNetwork": "Select Recipient Network",
-                "searchRecipientNetwork": "Search Network (Ex. Bitcoin)",
+                "searchRecipientNetwork": "Search Network (Ex. OneWallet)",
                 "recipientAddress": "Recipient Address",
                 "amount": "Amount",
                 "memo": "Memo (Option)",
@@ -1557,6 +1764,12 @@
         }
       },
       "receive": {
+        "chain": {
+          "index": {
+            "networkWarning": "Send only<network>{{network}}</network> assets to this address",
+            "copyAddress": "Copy Address"
+          }
+        },
         "layout": {
           "header": "Select Coin"
         },
@@ -1634,8 +1847,19 @@
           "addToAddress": "Add to address",
           "cancel": "Cancel",
           "confirm": "Confirm",
-          "txPendingTitle": "Checking Transaction Status...",
-          "txPendingSubTitle": "Please wait a moment while the transaction status is being checked."
+          "loadingDetails": "Loading details",
+          "txPendingSubTitle": "Please wait a moment while the transaction status is being checked.",
+          "Sui": {
+            "index": {
+              "imageAlt": "Send confirmation",
+              "title": "Send",
+              "approxAmount": "≈${{amount}}",
+              "gasFee": "Gas Fee",
+              "from": "From",
+              "to": "To",
+              "copyAlt": "Copy address"
+            }
+          }
         },
         "layout": {
           "header": "Confirmation"
@@ -1669,11 +1893,59 @@
           "addAddresstoBook": "Is this a frequently used address?",
           "addToAddress": "Add to address",
           "confirm": "Confirm",
-          "txPendingTitle": "Checking Transaction Status...",
-          "txPendingSubTitle": "Please wait a moment while the transaction status is being checked."
+          "loadingDetails": "Loading details",
+          "txPendingSubTitle": "Please wait a moment while the transaction status is being checked.",
+          "Sui": {
+            "index": {
+              "imageAlt": "Send result",
+              "titleSuccess": "Transaction Success",
+              "titleLoading": "Loading details",
+              "completedUtc": "Completed (UTC)",
+              "to": "To",
+              "gas": "Gas",
+              "dividendAmount": "Dividend Amount",
+              "totalSupply": "Total Supply",
+              "dividendRecipients": "Dividend Recipients",
+              "claimedAmount": "Claimed Amount",
+              "recipient": "Recipient",
+              "buyAmount": "Buy Amount",
+              "paidAmount": "Paid Amount",
+              "price": "Price",
+              "loadingDetails": "Loading details",
+              "loadingAlt": "Loading"
+            }
+          }
         },
         "layout": {
           "header": "Transaction Result"
+        }
+      },
+      "history": {
+        "layout": {
+          "header": "Detail"
+        },
+        "entry": {
+          "Sui": {
+            "index": {
+              "coinImageAlt": "Coin avatar",
+              "approxValue": "≈${{value}}",
+              "txDigest": "Transaction Digest",
+              "copyAlt": "Copy",
+              "time": "Time",
+              "from": "From",
+              "to": "To",
+              "gasFee": "Gas Fee",
+              "dividendAmount": "Dividend Amount",
+              "totalSupply": "Total Supply",
+              "dividendRecipients": "Dividend Recipients",
+              "claimedAmount": "Claimed Amount",
+              "recipient": "Recipient",
+              "buyAmount": "Buy Amount",
+              "paidAmount": "Paid Amount",
+              "price": "Price",
+              "viewOnExplorer": "View on explorer"
+            }
+          }
         }
       },
       "stake": {
@@ -1692,7 +1964,7 @@
               },
               "index": {
                 "title": "Select Validator",
-                "searchPlaceholder": "Search Validator (Ex. Cosmostation)",
+                "searchPlaceholder": "Search Validator (Ex. OneWallet)",
                 "validator": "Validator",
                 "commisson": "Commission"
               }
@@ -2064,7 +2336,7 @@
           }
         },
         "entry": {
-          "searchPlaceholder": "Search Network (Ex. Bitcoin)",
+          "searchPlaceholder": "Search",
           "noSearchTitle": "No Result",
           "noSearchSubTitle": "Please check the network name and try again"
         }
@@ -2092,7 +2364,7 @@
         "manageCustomNetwork": "Manage Custom Network",
         "manageCustomNetworkDescription": "Manage Added Custom Chains",
         "prioritize": "Prioritize",
-        "prioritizeDescription": "Set Cosmostation as your default wallet.",
+        "prioritizeDescription": "Set OneWallet as your default wallet.",
         "support": "Support",
         "guide": "Guide",
         "lock": "Lock",
@@ -2100,7 +2372,9 @@
         "about": "About",
         "aboutDescription": "Check wallet version & info",
         "min": "{{minutes}} min",
-        "never": "Never"
+        "never": "Never",
+        "network": "Network",
+        "advanced": "Advanced"
       },
       "layout": {
         "header": "Setting"
@@ -2111,7 +2385,8 @@
             "OptionButton": {
               "index": {
                 "english": "English",
-                "korean": "한국어 ( Korean )"
+                "korean": "한국어 ( Korean )",
+                "chinese": "简体中文 ( Simplified Chinese )"
               }
             }
           },
@@ -2194,7 +2469,8 @@
         "entry": {
           "addAddress": "Add Address",
           "noList": "No addresses available",
-          "noListSubtitle": "Your address book is empty. Add a new address to get started"
+          "noListSubtitle": "Your address book is empty. Add a new address to get started",
+          "searchPlaceholder": "Search address or label"
         },
         "header": "Address Book",
         "add-address": {
@@ -2202,7 +2478,7 @@
             "addAddressSuccess": "Address added successfully",
             "network": "Network",
             "selectNetwork": "Select Network",
-            "searchNetwork": "Search Network (Ex. Bitcoin)",
+            "searchNetwork": "Search Network (Ex. OneWallet)",
             "label": "Label",
             "address": "Address",
             "memo": "Memo (Option)",
@@ -2237,7 +2513,7 @@
               "network": "Network",
               "universal": "Universal",
               "selectNetwork": "Select Network",
-              "searchNetwork": "Search Network (Ex. Bitcoin)",
+              "searchNetwork": "Search Network (Ex. OneWallet)",
               "label": "Label",
               "address": "Address",
               "memo": "Memo (Option)",
@@ -2268,7 +2544,7 @@
       },
       "manage-custom-network": {
         "entry": {
-          "search": "Search Network (Ex. Bitcoin)",
+          "search": "Search Network (Ex. OneWallet)",
           "network": "Network",
           "noCustomChains": "No Chains",
           "noCustomChainsDescription": "There are no chains to display at the moment",
@@ -2296,7 +2572,7 @@
                 "error": "Failed to edit the network",
                 "network": "Network",
                 "selectNetwork": "Select Network",
-                "searchNetwork": "Search Network (Ex. Bitcoin)",
+                "searchNetwork": "Search Network (Ex. OneWallet)",
                 "networkName": "Network Name",
                 "rpcURL": "RPC URL",
                 "chainId": "Chain ID (e.g., 1 or 0x1)",
@@ -2315,7 +2591,7 @@
                 "error": "Failed to edit the network",
                 "network": "Network",
                 "selectNetwork": "Select Network",
-                "searchNetwork": "Search Network (Ex. Bitcoin)",
+                "searchNetwork": "Search Network (Ex. OneWallet)",
                 "chainName": "Chain Name",
                 "restURL": "REST URL",
                 "denom": "Native Denom (e.g., uatom)",
@@ -2368,6 +2644,23 @@
         "layout": {
           "header": "Back Up Wallet"
         }
+      },
+      "advanced": {
+        "layout": {
+          "header": "Advanced"
+        },
+        "entry": {
+          "developerMode": "Developer Mode",
+          "developerModeEnabled": "Developer Mode Enabled",
+          "developerModeDisabled": "Developer Mode Disabled"
+        }
+      },
+      "lock": {
+        "entry": {
+          "minutes": "{{value}} min",
+          "hours": "{{value}} h",
+          "requirePassword": "Require password every time"
+        }
       }
     },
     "manage-assets": {
@@ -2379,7 +2672,7 @@
         },
         "assets": {
           "entry": {
-            "importCrypto": "Import Crypto",
+            "importCrypto": "Custom",
             "valueHighOrder": "Value High Order",
             "alphabeticalAsc": "Alphabetical Asc. (A -> Z)",
             "supportedCrypto": "Supported Crypto",
@@ -2398,7 +2691,7 @@
         },
         "network": {
           "entry": {
-            "searchPlaceholder": "Search Network (Ex. Bitcoin)",
+            "searchPlaceholder": "Search Network (Ex. OneWallet)",
             "viewTestnet": "View Testnet",
             "importNetwork": "Import Network",
             "network": "Network",
@@ -2475,12 +2768,26 @@
             }
           },
           "layout": {
-            "header": "Import Custom Crypto"
+            "header": "Custom Crypto"
           },
           "entry": {
             "network": "Network",
             "selectNetwork": "Select Network",
-            "searchNetwork": "Search Network (Ex. Bitcoin)"
+            "searchNetwork": "Search network",
+            "contractAddressLabel": "Contract address",
+            "contractAddressPlaceholder": "Enter contract information",
+            "searching": "Searching for token...",
+            "tokenDetail": "Token Detail",
+            "decimals": "Decimals: {{value}}",
+            "description": "Description: {{value}}",
+            "addAsset": "Add Asset",
+            "addSpecificAsset": "Add {{symbol}}",
+            "addingAsset": "Adding Asset...",
+            "toastAssetExists": "Asset already exists",
+            "toastStorageFailed": "Failed to add asset to storage",
+            "toastNoAsset": "No asset data found. Please enter a valid contract address.",
+            "toastAddSuccess": "Asset {{symbol}} added successfully",
+            "toastAddFailed": "Failed to add asset"
           }
         },
         "network": {
@@ -2534,7 +2841,7 @@
           "entry": {
             "network": "Network",
             "selectNetwork": "Select Network",
-            "searchNetwork": "Search Network (Ex. Bitcoin)"
+            "searchNetwork": "Search Network (Ex. OneWallet)"
           }
         },
         "nft": {
@@ -2691,7 +2998,8 @@
               "informTitle": "Secure Authorization",
               "informDescription": "Your mnemonic and private key will not be shared during the authorization.",
               "reject": "Reject",
-              "access": "Access"
+              "access": "Access",
+              "title": "Access Request"
             }
           }
         },
@@ -2834,7 +3142,7 @@
             "currencySymbol": "Currency Symbol",
             "networkURL": "Network URL",
             "cautionTitle": "Not Validated",
-            "cautionDescription": "Cosmostation does not validate custom network",
+            "cautionDescription": "OneWallet does not validate custom network",
             "reject": "Reject"
           }
         },
@@ -2956,7 +3264,7 @@
             "currencySymbol": "Currency Symbol",
             "networkURL": "Network URL",
             "cautionTitle": "Not Validated",
-            "cautionDescription": "Cosmostation does not validate custom network",
+            "cautionDescription": "OneWallet does not validate custom network",
             "reject": "Reject",
             "addChain": "Add Chain"
           }
@@ -3292,6 +3600,7 @@
         "empty": "required",
         "max": "Please enter less than {#limit} characters.",
         "min": "Please enter at least {#limit} or more characters.",
+        "min1": "Please enter at least {{limit}} or more characters.",
         "pattern": {
           "invalidRange": "Please enter a value less than 10",
           "invalidType": "Please enter number"

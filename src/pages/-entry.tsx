@@ -26,6 +26,7 @@ import { useCurrentAccountAddedNFTsWithMetaData } from '@/hooks/useCurrentAccoun
 import { useForceRefreshBalance } from '@/hooks/useForceRefreshBalance';
 import { useGroupAccountAssets } from '@/hooks/useGroupAccountAssets';
 import { useSmartBalanceRefresh } from '@/hooks/useSmartBalanceRefresh';
+import { useCurrentAccount } from '@/hooks/useCurrentAccount';
 import { Route as CoinDetail } from '@/pages/coin-detail/$coinId';
 import { Route as CoinOverview } from '@/pages/coin-overview/$coinId';
 import { Route as ManageAssets } from '@/pages/manage-assets/visibility/assets';
@@ -41,6 +42,7 @@ import { useExtensionStorageStore } from '@/zustand/hooks/useExtensionStorageSto
 import NFTList from './-components/NFTList';
 import SkeletonCoinList from './-components/SkeletonCoinList';
 import {
+  ScrollWrapper,
   CoinButtonWrapper,
   Container,
   Tabs,
@@ -58,6 +60,7 @@ import PlusIcon from '@/assets/images/icons/Plus12.svg';
 import EditIcon from '@/assets/img/icon/edit.png';
 import CryptoEmpty from '@/assets/img/crypto_empty.png';
 import { cn } from '@/utils/date.ts';
+import DefaultCoinImage from '@/assets/images/coin/defaultCoin.png';
 
 type PortfolioCoinItem = FlatAccountAssets & {
   value: string;
@@ -70,6 +73,9 @@ export default function Entry() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  const { currentAccount } = useCurrentAccount();
+  const currentUserHiddenAssetIds = useExtensionStorageStore.getState()[`${currentAccount.id}-user-hidden-assetIds`] || [];
+  const userHiddenAssetIds = currentUserHiddenAssetIds.map(item => `${item.id}__${item.chainId}__${item.chainType}`);
   //todo
   const tempDisplay = false;
 
@@ -84,6 +90,7 @@ export default function Entry() {
     dashboardCoinSortKey,
     userCurrencyPreference,
     isHideSmalValue,
+    isDeveloperMode,
     selectedChainFilterId,
     updateExtensionStorageStore,
   } = useExtensionStorageStore(
@@ -105,7 +112,7 @@ export default function Entry() {
 
   const { groupAccountAssets, isLoading: isGroupAssetsLoading } = useGroupAccountAssets();
   const { forceRefresh } = useForceRefreshBalance();
-  
+
   // 使用智能刷新，自动处理各种场景下的余额更新
   useSmartBalanceRefresh();
 
@@ -132,7 +139,7 @@ export default function Entry() {
 
     if (!chainDefaultCoins || chainDefaultCoins?.length === 0) return undefined;
 
-    return chainDefaultCoins.map((item) => {
+    return chainDefaultCoins.filter(item => !userHiddenAssetIds.includes(`${item.asset.id}__${item.asset.chainId}__${item.asset.chainType}`)).map((item) => {
       const balance = isStakeableAsset(item) ? item.totalBalance || '0' : item.balance;
       const totalDisplayAmount = toDisplayDenomAmount(balance, item.asset.decimals) || '0';
 
@@ -149,7 +156,7 @@ export default function Entry() {
         dollarValue: valueInDollar,
       };
     });
-  }, [accountAllAssets?.flatAccountAssets, coinGeckoPrice, selectedChainFilterId, usdCoinGeckoPrice, userCurrencyPreference]);
+  }, [accountAllAssets?.flatAccountAssets, coinGeckoPrice, selectedChainFilterId, usdCoinGeckoPrice, userCurrencyPreference, userHiddenAssetIds]);
 
   const computedAssetValues = useMemo<PortfolioCoinItem[]>(() => {
     // debugger;
@@ -286,206 +293,212 @@ export default function Entry() {
     };
   }, []);
 
-  const onlySuiAssets = useMemo(() => {
+  const filteredAssets = useMemo(() => {
     const res: PortfolioCoinItem[] = [];
     filteredAssetsBySearch.forEach((item) => {
-      if (item.chain.chainType === 'sui') {
+      if (item.chain.chainType === 'sui' || item.chain.chainType === 'evm') {
+        // 如果isDeveloperMode为false，过滤掉测试网资产
+        if (!isDeveloperMode && item.chain.id.includes('-testnet')) {
+          return;
+        }
         res.push(item);
       }
     });
     return res;
-  }, [filteredAssetsBySearch]);
+  }, [filteredAssetsBySearch, isDeveloperMode]);
 
   return (
     <>
       <BaseBody>
-        <EdgeAligner
-          style={{
-            flex: '1',
-          }}
-        >
-          <Container>
-            <PortFolio
-              selectedChainId={selectedChainFilterId || undefined}
-              onChangeChaindId={(chainId) => {
-                updateExtensionStorageStore('selectedChainFilterId', chainId || null);
-              }}
-            />
-            {/*Tokens NFTs 切换*/}
-            <Tabs>
-              <div className="flex flex-1 pt-[8px]">
+        <ScrollWrapper>
+          <EdgeAligner
+            style={{
+              flex: '1',
+            }}
+          >
+            <Container>
+              <PortFolio
+                selectedChainId={selectedChainFilterId || undefined}
+                onChangeChaindId={(chainId) => {
+                  updateExtensionStorageStore('selectedChainFilterId', chainId || null);
+                }}
+              />
+              {/*Tokens NFTs 切换*/}
+              <Tabs>
+                <div className="flex flex-1 pt-[8px]">
+                  <div
+                    className={cn(
+                      'box-content h-[16px] cursor-pointer border-b-2 border-solid pb-[12px] text-[16px] leading-[16px] text-white',
+                      tabValue === 0 ? 'border-[#477CFC] text-[#477CFC]' : 'border-none',
+                    )}
+                    onClick={() => {
+                      setTabValue(0);
+                    }}
+                  >
+                    {t('pages.index.tokens')}
+                  </div>
+                  {/*<div*/}
+                  {/*  className={cn(*/}
+                  {/*    "ml-[16px] box-content h-[16px] cursor-pointer border-b-2 border-solid pb-[12px] text-[16px] leading-[16px] text-white",*/}
+                  {/*    tabValue === 1 ? "border-[#0047C4] text-[#0047C4]" : "border-none",*/}
+                  {/*  )}*/}
+                  {/*  onClick={() => {*/}
+                  {/*    setTabValue(1);*/}
+                  {/*  }}*/}
+                  {/*>*/}
+                  {/*  NFTs*/}
+                  {/*</div>*/}
+                </div>
                 <div
-                  className={cn(
-                    'box-content h-[16px] cursor-pointer border-b-2 border-solid pb-[12px] text-[16px] leading-[16px] text-white',
-                    tabValue === 0 ? 'border-[#0047C4] text-[#0047C4]' : 'border-none',
-                  )}
+                  className="size-[32px] rounded-[20px]"
                   onClick={() => {
-                    setTabValue(0);
+                    navigate({
+                      to: ManageAssets.to,
+                    });
                   }}
                 >
-                  Tokens
-                </div>
-                {/*<div*/}
-                {/*  className={cn(*/}
-                {/*    "ml-[16px] box-content h-[16px] cursor-pointer border-b-2 border-solid pb-[12px] text-[16px] leading-[16px] text-white",*/}
-                {/*    tabValue === 1 ? "border-[#0047C4] text-[#0047C4]" : "border-none",*/}
-                {/*  )}*/}
-                {/*  onClick={() => {*/}
-                {/*    setTabValue(1);*/}
-                {/*  }}*/}
-                {/*>*/}
-                {/*  NFTs*/}
-                {/*</div>*/}
-              </div>
-              <div
-                className="size-[32px] rounded-[20px]"
-                onClick={() => {
-                  navigate({
-                    to: ManageAssets.to,
-                  });
-                }}
-              >
-                <img
-                  src={EditIcon}
-                  alt="edit"
-                  className="size-[16px] ml-[8px] mt-[8px]"
-                />
-              </div>
-            </Tabs>
-            <StyledTabPanel
-              value={tabValue}
-              index={0}
-              data-is-active={tabValue === 0}
-            >
-              {tempDisplay && (
-                <StickyTabPanelContentsContainer>
-                  {/*搜索token*/}
-                  <FilterContaienr>
-                    <Search
-                      value={search}
-                      onChange={(event) => {
-                        setSearch(event.currentTarget.value);
-                      }}
-                      placeholder={t('pages.index.searchPlaceholder')}
-                      isPending={isDebouncing}
-                      onClickFilter={() => {
-                        setIsOpenSortBottomSheet(true);
-                      }}
-                      onClear={() => {
-                        setSearch('');
-                        cancel();
-                      }}
-                    />
-                  </FilterContaienr>
-
-                  {/*隐藏小额  管理token*/}
-                  <ManageCryptoContainer>
-                    <CheckBoxTextButton
-                      isChecked={isHideSmalValue}
-                      onClick={() => {
-                        updateExtensionStorageStore('isHideSmalValue', !isHideSmalValue);
-                      }}
-                    >
-                      <Typography variant="b3_R">{t('pages.index.hideSmallBalance')}</Typography>
-                    </CheckBoxTextButton>
-                    <IconTextButton
-                      onClick={() => {
-                        navigate({
-                          to: ManageAssets.to,
-                        });
-                      }}
-                      leadingIcon={<PlusIcon />}
-                    >
-                      <MarginLeftTypography variant="b3_M">{t('pages.index.manageCrypto')}</MarginLeftTypography>
-                    </IconTextButton>
-                  </ManageCryptoContainer>
-                </StickyTabPanelContentsContainer>
-              )}
-              <CoinButtonWrapper>
-                {isLoading ? (
-                  <SkeletonCoinList />
-                ) : onlySuiAssets.length > 0 ? (
-                  <VirtualizedList
-                    items={onlySuiAssets}
-                    estimateSize={() => 60}
-                    renderItem={(coin, virtualItem) => {
-                      if (!coin) return null;
-
-                      const destinationRoute = coin.counts && gt(coin.counts, '1') ? CoinOverview.to : CoinDetail.to;
-
-                      const isGroupToken = gt(coin.counts || '0', '1');
-                      // const resolvedSymbol = coin.asset.symbol + `${isTestnetChain(coin.chain.id) ? ' (Testnet)' : ''}`;
-
-                      const chainName = coin.chain.name;
-                      const resolvedSymbol = coin.asset.symbol + `${isTestnetChain(coin.chain.id) ? `-(${chainName})` : ''}`;
-
-                      return (
-                        <CoinWithMarketTrendButton
-                          key={getCoinId(coin.asset) + virtualItem.index}
-                          onClick={() => {
-                            navigate({
-                              to: destinationRoute,
-                              params: {
-                                coinId: getCoinId(coin.asset),
-                              },
-                            });
-                          }}
-                          displayAmount={coin.totalDisplayAmount || '0'}
-                          symbol={resolvedSymbol}
-                          coinId={coin.asset.id}
-                          coinGeckoId={coin.asset.coinGeckoId}
-                          coinImageProps={{
-                            imageURL: coin.asset.image,
-                            isAggregatedCoin: gt(coin.counts || '0', '1'),
-                            badgeImageURL: isGroupToken ? undefined : coin.chain.image || undefined,
-                          }}
-                        />
-                      );
-                    }}
-                    overscan={5}
+                  <img
+                    src={EditIcon}
+                    alt="edit"
+                    className="size-[16px] ml-[8px] mt-[8px]"
                   />
-                ) : (
-                  <EmptyAssetContainer>
-                    <img
-                      src={CryptoEmpty}
-                      alt="empty"
-                      className="w-[52px] h-[70px] mt-[82px]"
-                    />
-                    <div className="mt-[26px] h-[16px] leading-[16px] text-[16px] text-white opacity-80">No Assets
-                      Found
-                    </div>
-                  </EmptyAssetContainer>
+                </div>
+              </Tabs>
+              <StyledTabPanel
+                value={tabValue}
+                index={0}
+                data-is-active={tabValue === 0}
+              >
+                {tempDisplay && (
+                  <StickyTabPanelContentsContainer>
+                    {/*搜索token*/}
+                    <FilterContaienr>
+                      <Search
+                        value={search}
+                        onChange={(event) => {
+                          setSearch(event.currentTarget.value);
+                        }}
+                        placeholder={t('pages.index.searchPlaceholder')}
+                        isPending={isDebouncing}
+                        onClickFilter={() => {
+                          setIsOpenSortBottomSheet(true);
+                        }}
+                        onClear={() => {
+                          setSearch('');
+                          cancel();
+                        }}
+                      />
+                    </FilterContaienr>
+
+                    {/*隐藏小额  管理token*/}
+                    <ManageCryptoContainer>
+                      <CheckBoxTextButton
+                        isChecked={isHideSmalValue}
+                        onClick={() => {
+                          updateExtensionStorageStore('isHideSmalValue', !isHideSmalValue);
+                        }}
+                      >
+                        <Typography variant="b3_R">{t('pages.index.hideSmallBalance')}</Typography>
+                      </CheckBoxTextButton>
+                      <IconTextButton
+                        onClick={() => {
+                          navigate({
+                            to: ManageAssets.to,
+                          });
+                        }}
+                        leadingIcon={<PlusIcon />}
+                      >
+                        <MarginLeftTypography variant="b3_M">{t('pages.index.manageCrypto')}</MarginLeftTypography>
+                      </IconTextButton>
+                    </ManageCryptoContainer>
+                  </StickyTabPanelContentsContainer>
                 )}
-              </CoinButtonWrapper>
-              <div className={'h-15'} />
-            </StyledTabPanel>
-            <StyledTabPanel
-              value={tabValue}
-              index={1}
-              data-is-active={tabValue === 1}
-            >
-              <NFTList selectedChainId={selectedChainFilterId || undefined} />
-            </StyledTabPanel>
-            <SortBottomSheet
-              optionButtonProps={[
-                {
-                  sortKey: DASHBOARD_COIN_SORT_KEY.VALUE_HIGH_ORDER,
-                  children: <Typography variant="b2_M">{t('pages.index.valueHighOrder')}</Typography>,
-                },
-                {
-                  sortKey: DASHBOARD_COIN_SORT_KEY.ALPHABETICAL_ASC,
-                  children: <Typography variant="b2_M">{t('pages.index.alphabeticalAsc')}</Typography>,
-                },
-              ]}
-              currentSortOption={dashboardCoinSortKey}
-              open={isOpenSortBottomSheet}
-              onClose={() => setIsOpenSortBottomSheet(false)}
-              onSelectSortOption={(val) => {
-                updateExtensionStorageStore('dashboardCoinSortKey', val as DashboardCoinSortKeyType);
-              }}
-            />
-          </Container>
-        </EdgeAligner>
+                <CoinButtonWrapper>
+                  {isLoading ? (
+                    <SkeletonCoinList />
+                  ) : filteredAssets.length > 0 ? (
+                    <VirtualizedList
+                      items={filteredAssets}
+                      estimateSize={() => 60}
+                      renderItem={(coin, virtualItem) => {
+                        if (!coin) return null;
+
+                        const destinationRoute = coin.counts && gt(coin.counts, '1') ? CoinOverview.to : CoinDetail.to;
+
+                        const isGroupToken = gt(coin.counts || '0', '1');
+                        // const resolvedSymbol = coin.asset.symbol + `${isTestnetChain(coin.chain.id) ? ' (Testnet)' : ''}`;
+
+                        const chainName = coin.chain.name;
+                        const resolvedSymbol = coin.asset.symbol + `${isTestnetChain(coin.chain.id) ? `-(${chainName})` : ''}`;
+
+                        return (
+                          <CoinWithMarketTrendButton
+                            key={getCoinId(coin.asset) + virtualItem.index}
+                            onClick={() => {
+                              navigate({
+                                to: destinationRoute,
+                                params: {
+                                  coinId: getCoinId(coin.asset),
+                                },
+                              });
+                            }}
+                            displayAmount={Number(coin.totalDisplayAmount).toFixed(6) || '0'}
+                            symbol={resolvedSymbol}
+                            coinId={coin.asset.id}
+                            coinGeckoId={coin.asset.coinGeckoId}
+                            coinImageProps={{
+                              imageURL: coin.asset.image ?? DefaultCoinImage,
+                              isAggregatedCoin: gt(coin.counts || '0', '1'),
+                              badgeImageURL: coin.chain.image || undefined,
+                            }}
+                          />
+                        );
+                      }}
+                      overscan={5}
+                    />
+                  ) : (
+                    <EmptyAssetContainer>
+                      <img
+                        src={CryptoEmpty}
+                        alt="empty"
+                        className="w-[52px] h-[70px] mt-[82px]"
+                      />
+                      <div className="mt-[26px] h-[16px] leading-[16px] text-[16px] text-white opacity-80">No Assets
+                        Found
+                      </div>
+                    </EmptyAssetContainer>
+                  )}
+                </CoinButtonWrapper>
+                <div className={'h-15'} />
+              </StyledTabPanel>
+              <StyledTabPanel
+                value={tabValue}
+                index={1}
+                data-is-active={tabValue === 1}
+              >
+                <NFTList selectedChainId={selectedChainFilterId || undefined} />
+              </StyledTabPanel>
+              <SortBottomSheet
+                optionButtonProps={[
+                  {
+                    sortKey: DASHBOARD_COIN_SORT_KEY.VALUE_HIGH_ORDER,
+                    children: <Typography variant="b2_M">{t('pages.index.valueHighOrder')}</Typography>,
+                  },
+                  {
+                    sortKey: DASHBOARD_COIN_SORT_KEY.ALPHABETICAL_ASC,
+                    children: <Typography variant="b2_M">{t('pages.index.alphabeticalAsc')}</Typography>,
+                  },
+                ]}
+                currentSortOption={dashboardCoinSortKey}
+                open={isOpenSortBottomSheet}
+                onClose={() => setIsOpenSortBottomSheet(false)}
+                onSelectSortOption={(val) => {
+                  updateExtensionStorageStore('dashboardCoinSortKey', val as DashboardCoinSortKeyType);
+                }}
+              />
+            </Container>
+          </EdgeAligner>
+        </ScrollWrapper>
       </BaseBody>
       <CheckLegacyAddressBalanceBottomSheet />
     </>

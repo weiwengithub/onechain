@@ -58,3 +58,21 @@ export const SticktFooterInnerBody = styled('div')(({ theme }) => ({
 
   backgroundColor: theme.palette.color.base1400,
 }));
+
+export const SuiStickyTabContainer = styled('div')(({ theme }) => ({
+  width: '100%',
+  height: 'fit-content',
+  position: 'sticky',
+  top: 0,
+  zIndex: 1,
+  backgroundColor: theme.palette.color.base1400,
+}));
+
+
+export const ScrollableStyledTabPanel = styled(TabPanel)({
+  marginTop: '0',
+  display: 'flex',
+  flexDirection: 'column',
+  height: 'calc(100vh - 280px)',
+  overflow: 'auto',
+});

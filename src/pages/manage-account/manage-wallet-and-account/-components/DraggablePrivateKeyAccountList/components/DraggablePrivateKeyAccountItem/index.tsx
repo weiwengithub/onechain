@@ -11,6 +11,7 @@ import { AccountButton, AccountImgContainer, AccountInfoContainer, AccountLeftCo
 import { type IndexedPrivatedKeyAccount, PRIVATE_KEY_ACCOUNT_DND_ITEM_TYPE } from '../..';
 
 import OrderIcon from 'assets/images/icons/Order20.svg';
+import Avatar from 'boring-avatars';
 
 type DraggablePrivateKeyAccountItemProps = {
   itemIndex: number;
@@ -79,7 +80,12 @@ export default function DraggablePrivateKeyAccountItem({
       >
         <AccountLeftContainer>
           <AccountImgContainer>
-            <AccountImage accountId={draggableItem.accountId} />
+            <Avatar
+              size={26}
+              name={draggableItem.accountId}
+              variant={'marble'}
+            />
+            {/*<AccountImage accountId={draggableItem.accountId} />*/}
           </AccountImgContainer>
 
           <AccountInfoContainer>

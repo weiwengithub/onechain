@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import validate, { Network } from 'bitcoin-address-validation';
@@ -18,7 +18,7 @@ import EthermintFilterChainSelectBox from '@/components/EthermintFilterChainSele
 import InformationPanel from '@/components/InformationPanel';
 import { useAddressBook } from '@/hooks/useAddressBook';
 import { useChainList } from '@/hooks/useChainList.ts';
-import type { ChainType, CosmosChain, UniqueChainId } from '@/types/chain.ts';
+import type { ChainType, CosmosChain, SuiChain, UniqueChainId } from '@/types/chain.ts';
 import type { AddressInfo } from '@/types/extension';
 import { isBitcoinChain } from '@/utils/chain';
 import { getAddressPrefix } from '@/utils/cosmos/address';
@@ -48,20 +48,31 @@ export default function Entry({ chainId, address: inputAddress, memo }: EntryPro
 
   const { flatChainList, chainList } = useChainList();
 
-  const baseChainList = [
-    {
-      id: UNIVERSAL_EVM_NETWORK_ID,
-      name: 'EVM Network',
-      image: EVMImage,
-      chainType: 'evm' as ChainType,
-    },
-    ...flatChainList,
-  ];
+  // const baseChainList = [
+  //   {
+  //     id: UNIVERSAL_EVM_NETWORK_ID,
+  //     name: 'EVM Network',
+  //     image: EVMImage,
+  //     chainType: 'evm' as ChainType,
+  //   },
+  //   ...flatChainList,
+  // ];
+
+  // 只展示 oct, oct测试网, sui, sui测试网
+  const baseChainList = useMemo(() => {
+    const res: SuiChain[] = [];
+    flatChainList.forEach((item) => {
+      if (item.chainType === 'sui') {
+        res.push(item as SuiChain);
+      }
+    });
+    return res;
+  }, [flatChainList]);
 
   const defaultChain = baseChainList[0] || undefined;
   const defaultChainId = (() => {
     if (chainId) {
-      if (parseUniqueChainId(chainId).chainType === 'cosmos') {
+      if (parseUniqueChainId(chainId).chainType === 'sui') {
         const targetChain = chainList.allCosmosChains.find((cosmosChain) => cosmosChain.accountPrefix === getAddressPrefix(inputAddress));
 
         if (targetChain) {
@@ -78,35 +89,35 @@ export default function Entry({ chainId, address: inputAddress, memo }: EntryPro
   const [currentChainId, setCurrentChainId] = useState<UniqueChainId | undefined>(defaultChainId);
   const currentChain = baseChainList.find((chain) => isMatchingUniqueChainId(chain, currentChainId));
 
-  const isDisplayMemo = currentChain?.chainType === 'cosmos';
+  const isDisplayMemo = false; // currentChain?.chainType === 'cosmos';
   const isUniversalChain = currentChainId === `${UNIVERSAL_EVM_NETWORK_ID}__evm`;
 
   const checkIsValidAddress = (address: string) => {
-    if (currentChain?.chainType === 'cosmos') {
-      const chainCasted = currentChain as CosmosChain;
-      return getCosmosAddressRegex(chainCasted.accountPrefix, [39]).test(address);
-    }
-
-    if (currentChain?.chainType === 'evm') {
-      return isValidAddress(address);
-    }
-
-    if (currentChain?.chainType === 'aptos') {
-      return aptosAddressRegex.test(address);
-    }
+    // if (currentChain?.chainType === 'cosmos') {
+    //   const chainCasted = currentChain as CosmosChain;
+    //   return getCosmosAddressRegex(chainCasted.accountPrefix, [39]).test(address);
+    // }
+    //
+    // if (currentChain?.chainType === 'evm') {
+    //   return isValidAddress(address);
+    // }
+    //
+    // if (currentChain?.chainType === 'aptos') {
+    //   return aptosAddressRegex.test(address);
+    // }
 
     if (currentChain?.chainType === 'sui') {
       return isValidSuiAddress(address);
     }
 
-    if (currentChain?.chainType === 'iota') {
-      return isValidIotaAddress(address);
-    }
+    // if (currentChain?.chainType === 'iota') {
+    //   return isValidIotaAddress(address);
+    // }
 
-    if (isBitcoinChain(currentChain)) {
-      const network = currentChain.isTestnet ? Network.testnet : Network.mainnet;
-      return validate(address, network);
-    }
+    // if (isBitcoinChain(currentChain)) {
+    //   const network = currentChain.isTestnet ? Network.testnet : Network.mainnet;
+    //   return validate(address, network);
+    // }
     return false;
   };
 
@@ -175,7 +186,7 @@ export default function Entry({ chainId, address: inputAddress, memo }: EntryPro
         </Container>
         <InputWrapper>
           <StandardInput
-            label={t('pages.general-setting.address-book.add-address.entry.label')}
+            placeholder={t('pages.general-setting.address-book.add-address.entry.label')}
             error={!!errors.label}
             helperText={errors.label?.message}
             slotProps={{
@@ -186,7 +197,7 @@ export default function Entry({ chainId, address: inputAddress, memo }: EntryPro
           />
 
           <StandardInput
-            label={t('pages.general-setting.address-book.add-address.entry.address')}
+            placeholder={t('pages.general-setting.address-book.add-address.entry.address')}
             error={!!errors.address}
             helperText={errors.address?.message}
             inputVarient="address"
@@ -198,7 +209,7 @@ export default function Entry({ chainId, address: inputAddress, memo }: EntryPro
           />
           {isDisplayMemo && (
             <StandardInput
-              label={t('pages.general-setting.address-book.add-address.entry.memo')}
+              placeholder={t('pages.general-setting.address-book.add-address.entry.memo')}
               error={!!errors.memo}
               helperText={errors.memo?.message}
               multiline

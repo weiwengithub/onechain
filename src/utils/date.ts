@@ -43,11 +43,18 @@ export function sortByLatestDate(a?: string | number, b?: string | number) {
   return new Date(bDateValue).getTime() - new Date(aDateValue).getTime();
 }
 
-export function formatDateForHistory(dateString: string) {
+export function formatDateForHistory(dateString: string, locale: string = 'en') {
   try {
     const dateValue = isUnixTimestamp(dateString) ? getTimestampValue(dateString) : dateString;
 
     const date = new Date(dateValue);
+
+    if (locale?.toLowerCase().startsWith('zh')) {
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      return `${year}年${month}月${day}日`;
+    }
 
     const options: Intl.DateTimeFormatOptions = {
       month: 'short',
@@ -187,19 +194,23 @@ export function getLast24HoursRange() {
   };
 }
 
-export function getShortDate(timestamp: number, format = "MMM DD, YYYY") {
+export function getShortDate(timestamp: number, format = "MMM DD, YYYY", locale = "en-US") {
   const date = new Date(timestamp);
   const year = date.getFullYear();
-  const month = date.toLocaleString("en-US", { month: "short" });
+  const monthShort = date.toLocaleString(locale, { month: "short" });
+  const monthNumber = date.getMonth() + 1;
   const day = date.getDate();
   const hour = date.getHours();
   const minute = date.getMinutes();
   const second = date.getSeconds();
-  // 格式化为指定的字符串格式
+
   return format
     .replace("YYYY", String(year))
-    .replace("MMM", month)
-    .replace("DD", String(day))
+    .replace("MMM", monthShort)
+    .replace("MM", String(monthNumber).padStart(2, "0"))
+    .replace("M", String(monthNumber))
+    .replace("DD", String(day).padStart(2, "0"))
+    .replace("D", String(day))
     .replace("HH", String(hour).padStart(2, "0"))
     .replace("mm", String(minute).padStart(2, "0"))
     .replace("ss", String(second).padStart(2, "0"));

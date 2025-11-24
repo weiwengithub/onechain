@@ -16,6 +16,6 @@ export const Loading = styled('div')({
 
 export const StyledCircularProgress = styled(CircularProgress)(({ theme }) => ({
   '&.MuiCircularProgress-root': {
-    color: theme.palette.accentColor.purple400,
+    color: theme.palette.accentColor.blue800,
   },
 }));

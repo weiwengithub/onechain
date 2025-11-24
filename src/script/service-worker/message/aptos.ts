@@ -14,7 +14,7 @@ import type {
 } from '@/types/message/inject/aptos';
 import { AptosRPCError } from '@/utils/error';
 import { refreshOriginConnectionTime } from '@/utils/origins';
-import { processRequest } from '@/utils/requestApp';
+import { handleMissingAccountRequest, processRequest } from '@/utils/requestApp';
 import { extensionLocalStorage, extensionSessionStorage, setExtensionLocalStorage } from '@/utils/storage';
 
 import { aptosSignMessageSchema, aptosSignTransactionSchema } from './schema';
@@ -26,10 +26,32 @@ export async function aptosProcess(message: AptosRequest) {
   const aptosPopupMethods = Object.values(APTOS_POPUP_METHOD_TYPE) as string[];
   const aptosNoPopupMethods = Object.values(APTOS_NO_POPUP_METHOD_TYPE) as string[];
 
-  const { currentAccount, currentAccountAllowedOrigins, currentAptosNetwork, approvedOrigins } = await extensionLocalStorage();
+  const {
+    currentAccount,
+    currentAccountAllowedOrigins,
+    currentAptosNetwork,
+    approvedOrigins,
+  } = await extensionLocalStorage();
   const { currentPassword } = await extensionSessionStorage();
 
   const chain = currentAptosNetwork;
+
+  // If no account exists, return error (expected on first launch)
+  const requiresInitialUiMethods = new Set<AptosRequest['method']>(['aptos_connect', 'aptos_account']);
+
+  if (!currentAccount) {
+    console.log('No account available aptos');
+    if (method && requiresInitialUiMethods.has(method as AptosRequest['method'])) {
+      void processRequest(message);
+    } else {
+      await handleMissingAccountRequest({
+        origin,
+        requestId,
+        tabId,
+      });
+    }
+    return;
+  }
 
   try {
     if (!method || !aptosMethods.includes(method)) {

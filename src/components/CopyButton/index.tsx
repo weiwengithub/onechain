@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import copy from 'copy-to-clipboard';
 import type { IconButtonProps } from '@mui/material';
+import { useClipboard } from '@/hooks/useClipboard';
 
 import { ContentWrapper, IconWrapper, StyledButton, StyledIconWrapper } from './styled';
 
@@ -21,14 +21,16 @@ export type CopyButtonProps = Omit<IconButtonProps, 'children'> & {
 
 export default function CopyButton({ copyString, iconSize, varient = 'default', leading, trailing, ...remainder }: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
-
-  const copyToClipboard = useCallback(() => {
-    copy(copyString || '');
+  const { copyToClipboard } = useClipboard();
+  
+  const _copyToClipboard = useCallback(() => {
+    copyToClipboard(copyString || '', false);
     setCopied(true);
-  }, [copyString]);
+  }, [copyString, copyToClipboard]);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    copyToClipboard();
+    e.stopPropagation();
+    _copyToClipboard();
     remainder.onClick?.(e);
   };
 

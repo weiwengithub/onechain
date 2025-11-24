@@ -102,6 +102,10 @@ export default function SuiSendingTxItem({ tx, digest, timestampMs, coinId }: Su
     };
   })();
 
+  const transactionTypeLabel = isSender
+    ? t('components.AccountTxHistory.components.Sui.components.SuiTxItem.components.SuiSendingTxItem.index.typeSend')
+    : t('components.AccountTxHistory.components.Sui.components.SuiTxItem.components.SuiSendingTxItem.index.typeReceive');
+
   return (
     <div
       className="border-[#2c3039] mb-[16px] flex items-center border-b border-solid pb-[16px]"
@@ -124,13 +128,13 @@ export default function SuiSendingTxItem({ tx, digest, timestampMs, coinId }: Su
         <img className="mx-auto mt-[6px] size-[20px]" src={isSender ? SwapIcon : ReceiveIcon} alt="receive" />
       </div>
       <div className="ml-[8px] flex-1">
-        <div className="h-[16px] text-[14px] leading-[16px] text-white">{isSender ? 'Send' : 'Receive'}</div>
+        <div className="h-[16px] text-[14px] leading-[16px] text-white">{transactionTypeLabel}</div>
         <div className="mt-[4px] h-[12px] text-[12px] leading-[12px] text-white opacity-40">{detail.subTitle}</div>
       </div>
       <div
         className={cn('ml-[8px] h-[16px] text-[14px] leading-[16px] font-bold', isSender ? 'text-white' : 'text-[#1bb292]')}
       >
-        {detail.amount ? `${detail.amount.balanceChangedMark}${Number(parseFloat(detail.amount.displayAmount).toFixed(6))} ${detail.amount.symbol}` : '-'}
+        {detail.amount ? `${detail.amount.balanceChangedMark}${Number(parseFloat(detail.amount.displayAmount).toFixed(6))} ${detail.amount.symbol}` : ''}
       </div>
     </div>
   );

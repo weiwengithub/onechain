@@ -14,7 +14,15 @@ import { useSwitchTapStore } from '@/zustand/hooks/useSwitchTabStore';
 
 import DraggableMnemonicAccountList from './-components/DraggableMnemonicAccountList';
 import DraggablePrivateKeyAccountList from './-components/DraggablePrivateKeyAccountList';
-import { SearchContainer, StickyTabContainer, StyledTabPanel, TabPanelContentsContainer } from './-styled';
+import DraggableZkLoginAccountList from './-components/DraggableZkLoginAccountList';
+import {
+  CoinContainer,
+  ManageWalletAndAccountBody,
+  SearchContainer,
+  StickyTabContainer,
+  StyledTabPanel,
+  TabPanelContentsContainer,
+} from './-styled';
 
 import { useAccountAllAssets } from '@/hooks/useAccountAllAssets';
 import { useOctPrice } from '@/onechain/useOctPrice.ts';
@@ -29,7 +37,11 @@ export default function Entry() {
   const { manageAccountTapIndex, updatedManateAccountTabIndex } = useSwitchTapStore((state) => state);
   const { userAccounts } = useExtensionStorageStore((state) => state);
 
-  const tabLabels = ['Mnenmonic', 'Private Key'];
+  const tabLabels = [
+    t('pages.manage-account.manage-wallet-and-account.entry.mnemonicTab'),
+    t('pages.manage-account.manage-wallet-and-account.entry.zkLoginTab'),
+    t('pages.manage-account.manage-wallet-and-account.entry.privateKeyTab'),
+  ];
 
   const [search, setSearch] = useState('');
   const [debouncedSearch, { cancel, isPending }] = useDebounce(search, 300);
@@ -49,15 +61,27 @@ export default function Entry() {
 
   const privateKeyAccountIds = userAccounts.filter((item) => item.type === 'PRIVATE_KEY').map((account) => account.id);
 
+  const zkLoginAccounts = userAccounts.filter((item) => item.type === 'ZKLOGIN');
+
+  // Debug: Log zkLogin accounts changes
   useEffect(() => {
-    resetNewSortedAccount();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    console.log('zkLoginAccounts count:', zkLoginAccounts.length);
+    if (zkLoginAccounts.length !== userAccounts.filter(acc => acc.type === 'ZKLOGIN').length) {
+      console.warn('zkLoginAccounts filtering issue detected!');
+    }
+  }, [zkLoginAccounts, userAccounts]);
+
+  // Remove the reset call that was clearing sort data on every component mount
+  // This was causing the zkLoginAccountIds to be reset to empty array
+  // useEffect(() => {
+  //   resetNewSortedAccount();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const { data: accountAllAssets } = useAccountAllAssets({
     filterByPreferAccountType: true,
   });
-  const {priceInfo} = useOctPrice();
+  const { priceInfo } = useOctPrice();
   const { data: coinGeckoPrice, isLoading } = useCoinGeckoPrice();
   const { userCurrencyPreference } = useExtensionStorageStore((state) => state);
   const [aggregatedTotalValue, setAggregatedTotalValue] = useState('0');
@@ -78,12 +102,12 @@ export default function Entry() {
       const coinGeckoId = item.asset.coinGeckoId;
       if (!coinGeckoId) {
         //do nothing
-      }
-      else if (coinGeckoId.startsWith('oct')) {
+      } else if (coinGeckoId.startsWith('oct')) {
         const coinId = item.asset.id;
         coinPrice = priceInfo[coinId]?.octPrice ?? 0;
-      }else {
-        coinPrice = coinGeckoPrice?.[coinGeckoId]?.[userCurrencyPreference] ?? 0;;
+      } else {
+        coinPrice = coinGeckoPrice?.[coinGeckoId]?.[userCurrencyPreference] ?? 0;
+        ;
       }
       const value = times(displayAmount, coinPrice);
       // return plus(acc, value);
@@ -104,19 +128,24 @@ export default function Entry() {
     <>
       <BaseBody>
         <EdgeAligner>
-          <StickyTabContainer>
-            <div>
-              <div className="h-[20px] text-[14px] text-white leading-[20px]">Total assets</div>
-              <div className="mt-[5px] h-[32px] text-[28px] text-white font-bold leading-[32px]">${aggregatedTotalValue}</div>
-            </div>
-            {tempDisplay && (
-              <>
-                <FilledTabs value={manageAccountTapIndex} onChange={handleChange} variant="fullWidth">
-                  {tabLabels.map((item) => (
-                    <FilledTab key={item} label={item} />
-                  ))}
-                </FilledTabs>
+          <CoinContainer>
+            <StickyTabContainer>
+              <div className="h-[20px] text-[14px] text-white leading-[20px]">
+                {t('pages.manage-account.manage-wallet-and-account.entry.totalAssets')}
+              </div>
+              <div className="mt-[5px] h-[32px] text-[28px] text-white font-bold leading-[32px]">
+                {t('pages.manage-account.manage-wallet-and-account.entry.totalAssetsValue', { value: aggregatedTotalValue })}
+              </div>
+            </StickyTabContainer>
 
+            <div className="pt-[12px]">
+              <FilledTabs value={manageAccountTapIndex} onChange={handleChange} variant="fullWidth">
+                {tabLabels.map((item) => (
+                  <FilledTab key={item} label={item} />
+                ))}
+              </FilledTabs>
+
+              {tempDisplay && (
                 <SearchContainer>
                   <Search
                     value={search}
@@ -132,23 +161,37 @@ export default function Entry() {
                     }}
                   />
                 </SearchContainer>
-              </>
-            )}
-          </StickyTabContainer>
-          <StyledTabPanel value={manageAccountTapIndex} index={0}>
-            <TabPanelContentsContainer>
-              <DndProvider backend={HTML5Backend}>
-                <DraggableMnemonicAccountList uniqueMnemonicRestoreStrings={uniqueMnemonicRestoreString} search={searchText} />
-              </DndProvider>
-            </TabPanelContentsContainer>
-          </StyledTabPanel>
-          <StyledTabPanel value={manageAccountTapIndex} index={1}>
-            <TabPanelContentsContainer>
-              <DndProvider backend={HTML5Backend}>
-                <DraggablePrivateKeyAccountList privateKeyAccountIds={privateKeyAccountIds} search={searchText} />
-              </DndProvider>
-            </TabPanelContentsContainer>
-          </StyledTabPanel>
+              )}
+            </div>
+
+            <ManageWalletAndAccountBody>
+              <StyledTabPanel value={manageAccountTapIndex} index={0}>
+                <TabPanelContentsContainer>
+                  <DndProvider backend={HTML5Backend}>
+                    <DraggableMnemonicAccountList
+                      uniqueMnemonicRestoreStrings={uniqueMnemonicRestoreString} search={searchText}
+                    />
+                  </DndProvider>
+                </TabPanelContentsContainer>
+              </StyledTabPanel>
+
+              <StyledTabPanel value={manageAccountTapIndex} index={1}>
+                <TabPanelContentsContainer>
+                  <DndProvider backend={HTML5Backend}>
+                    <DraggableZkLoginAccountList zkLoginAccounts={zkLoginAccounts} search={searchText} />
+                  </DndProvider>
+                </TabPanelContentsContainer>
+              </StyledTabPanel>
+
+              <StyledTabPanel value={manageAccountTapIndex} index={2}>
+                <TabPanelContentsContainer>
+                  <DndProvider backend={HTML5Backend}>
+                    <DraggablePrivateKeyAccountList privateKeyAccountIds={privateKeyAccountIds} search={searchText} />
+                  </DndProvider>
+                </TabPanelContentsContainer>
+              </StyledTabPanel>
+            </ManageWalletAndAccountBody>
+          </CoinContainer>
         </EdgeAligner>
       </BaseBody>
     </>

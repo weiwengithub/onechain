@@ -19,7 +19,7 @@ import type {
 import { IotaRPCError } from '@/utils/error';
 import { requestRPC as iotaRequestRPC } from '@/utils/iota/rpc';
 import { refreshOriginConnectionTime } from '@/utils/origins';
-import { processRequest } from '@/utils/requestApp';
+import { handleMissingAccountRequest, processRequest } from '@/utils/requestApp';
 import { extensionLocalStorage, extensionSessionStorage, setExtensionLocalStorage } from '@/utils/storage';
 import { isEqualsIgnoringCase } from '@/utils/string';
 
@@ -36,14 +36,36 @@ export async function iotaProcess(message: IotaRequest) {
   const iotaPopupMethods = Object.values(IOTA_POPUP_METHOD_TYPE) as string[];
   const iotaNoPopupMethods = Object.values(IOTA_NO_POPUP_METHOD_TYPE) as string[];
 
-  const { currentAccountAllowedOrigins, currentAccount, currentIotaNetwork, approvedOrigins, approvedIotaPermissions } = await extensionLocalStorage();
+  const {
+    currentAccountAllowedOrigins,
+    currentAccount,
+    currentIotaNetwork,
+    approvedOrigins,
+    approvedIotaPermissions,
+  } = await extensionLocalStorage();
 
   const { currentPassword } = await extensionSessionStorage();
 
-  const currentAccountIotaPermissions =
-    approvedIotaPermissions
-      ?.filter((permission) => permission.accountId === currentAccount.id && permission.origin === origin)
-      .map((permission) => permission.permission) || [];
+  // If no account exists, return error (expected on first launch)
+  const requiresInitialUiMethods = new Set<IotaRequest['method']>(['iota_connect']);
+
+  if (!currentAccount) {
+    console.log('No account available iota');
+    if (method && requiresInitialUiMethods.has(method as IotaRequest['method'])) {
+      void processRequest(message);
+    } else {
+      await handleMissingAccountRequest({
+        origin,
+        requestId,
+        tabId,
+      });
+    }
+    return;
+  }
+
+  const currentAccountIotaPermissions = approvedIotaPermissions
+    ?.filter((permission) => permission.accountId === currentAccount.id && permission.origin === origin)
+    .map((permission) => permission.permission) || [];
 
   try {
     if (!message?.method || !iotaMethods.includes(message.method)) {
@@ -200,13 +222,16 @@ export async function iotaProcess(message: IotaRequest) {
           },
         });
       } else if (method === 'iota_disconnect') {
-        const newAllowedOrigins = approvedOrigins.filter((item) => !(item.accountId === currentAccount.id && item.origin === origin));
-        await setExtensionLocalStorage('approvedOrigins', newAllowedOrigins);
+        // If no account exists, just return success (nothing to disconnect)
+        if (currentAccount) {
+          const newAllowedOrigins = approvedOrigins.filter((item) => !(item.accountId === currentAccount.id && item.origin === origin));
+          await setExtensionLocalStorage('approvedOrigins', newAllowedOrigins);
 
-        const newIotaPermissions = approvedIotaPermissions.filter(
-          (permission) => !(permission.accountId === currentAccount.id && permission.origin === origin),
-        );
-        await setExtensionLocalStorage('approvedIotaPermissions', newIotaPermissions);
+          const newIotaPermissions = approvedIotaPermissions.filter(
+            (permission) => !(permission.accountId === currentAccount.id && permission.origin === origin),
+          );
+          await setExtensionLocalStorage('approvedIotaPermissions', newIotaPermissions);
+        }
 
         const result = null;
 

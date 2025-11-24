@@ -30,4 +30,13 @@ export const DescriptionSubTitle = styled(Typography)(({ theme }) => ({
 
 export const MnemonicViewerContainer = styled('div')({
   marginTop: '2rem',
+  position: 'relative',
 });
+
+export const MnemonicExplain = styled('div')({
+  fontSize: '14px',
+  lineHeight: '18px',
+  color: '#FFFFFF',
+  opacity: 0.6,
+  marginTop: '12px',
+})

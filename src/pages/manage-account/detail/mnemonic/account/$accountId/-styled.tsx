@@ -13,7 +13,7 @@ export const OptionButtonContainer = styled('div')({
   alignItems: 'center',
   justifyContent: 'center',
 
-  margin: '1.6rem 0 2.4rem',
+  margin: '24px 0',
 });
 
 export const MainContentBody = styled('div')({
@@ -21,11 +21,14 @@ export const MainContentBody = styled('div')({
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  rowGap: '0.4rem',
+  rowGap: '12px',
+  marginTop: '16px',
 });
 
 export const MainContentTitleText = styled(Base1300Text)({
-  marginRight: '0.2rem',
+  fontSize: '24px',
+  fontWeight: '500',
+  marginRight: '8px',
 });
 
 export const MainContentSubtitleText = styled(Typography)(({ theme }) => ({
@@ -33,8 +36,8 @@ export const MainContentSubtitleText = styled(Typography)(({ theme }) => ({
 }));
 
 export const AccountImgContainer = styled('div')({
-  width: '5.4rem',
-  height: '5.4rem',
+  width: '80px',
+  height: '80px',
 });
 
 export const SmallAccountImgContainer = styled('div')({

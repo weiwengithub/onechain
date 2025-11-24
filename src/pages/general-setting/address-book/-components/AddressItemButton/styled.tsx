@@ -5,7 +5,10 @@ import BaseOptionButton from '@/components/common/BaseOptionButton';
 
 export const StyledOptionButton = styled(BaseOptionButton)(({ theme }) => ({
   width: '100%',
-  borderTop: `0.1rem solid ${theme.palette.color.base200}`,
+  position: 'relative',
+  padding: '16px 0',
+  borderBottom: '1px solid #2c3039',
+  marginBottom: '0',
 }));
 
 export const Container = styled('div')({

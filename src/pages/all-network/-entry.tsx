@@ -27,6 +27,8 @@ import AllNetworkImage from '@/assets/images/network.png';
 import { useAccountAllAssets } from '@/hooks/useAccountAllAssets';
 import { getFilteredChainsByChainId } from '@/utils/asset';
 import { useRouter } from '@tanstack/react-router';
+import { useCurrentAccount } from '@/hooks/useCurrentAccount';
+import { isZkLoginAccount, isSupportedZkLoginChain } from '@/utils/zklogin';
 
 interface ChainWithValue extends ChainBase {
   isActive: boolean;
@@ -69,10 +71,24 @@ export default function Entry() {
     }, '0')
     : '0';
 
+  const { currentAccount } = useCurrentAccount();
   const { data: accountAllAssets } = useAccountAllAssets({
     filterByPreferAccountType: true,
   });
-  const chainList = useMemo(() => getFilteredChainsByChainId(accountAllAssets?.flatAccountAssets), [accountAllAssets?.flatAccountAssets]);
+
+  const chainList = useMemo(() => {
+    const allChains = getFilteredChainsByChainId(accountAllAssets?.flatAccountAssets);
+
+    // 如果是 ZkLogin 账户，只显示支持的网络
+    if (currentAccount && isZkLoginAccount(currentAccount)) {
+      return allChains.filter(chain => {
+        const chainId = getUniqueChainId(chain);
+        return isSupportedZkLoginChain(chainId);
+      });
+    }
+
+    return allChains;
+  }, [accountAllAssets?.flatAccountAssets, currentAccount]);
 
   const categorizedChainsWithValue = useMemo(() => {
     return chainList.reduce(

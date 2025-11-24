@@ -15,7 +15,7 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <BaseLayout
       header={
-        <Header leftContent={<NavigationPanel />} middleContent={<Base1300Text variant="h4_B">{t('pages.general-setting.about.header')}</Base1300Text>} />
+        <Header leftContent={<NavigationPanel isHideHomeButton />} middleContent={<Base1300Text variant="h4_B">{t('pages.general-setting.about.header')}</Base1300Text>} />
       }
     >
       {children}

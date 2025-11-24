@@ -13,8 +13,8 @@ export const ImageContainer = styled('div')({
 
 export const BadgeImageContainer = styled('div')({
   position: 'absolute',
-  top: '-6.25%',
-  right: '-6.25%',
+  bottom: '-10%',
+  right: '-10%',
 
   width: '50%',
   height: '50%',

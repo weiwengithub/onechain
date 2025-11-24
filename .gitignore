@@ -27,4 +27,4 @@ dist-ssr
 
 #tools
 .claude
-CLAUDE.md
+*.md

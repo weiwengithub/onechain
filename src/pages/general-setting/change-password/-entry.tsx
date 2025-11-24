@@ -1,7 +1,5 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { joiResolver } from '@hookform/resolvers/joi';
 import { Typography } from '@mui/material';
 import { useRouter } from '@tanstack/react-router';
 
@@ -16,6 +14,8 @@ import { aesDecrypt, aesEncrypt } from '@/utils/crypto';
 import { sha512 } from '@/utils/crypto/password';
 import { toastSuccess } from '@/utils/toast';
 import { useExtensionStorageStore } from '@/zustand/hooks/useExtensionStorageStore';
+import { getPasswordStrength } from "@/utils/zxcvbn";
+import type { Score as PasswordScore } from "@zxcvbn-ts/core";
 
 import {
   Body,
@@ -28,8 +28,6 @@ import {
   NewPasswordInputContainer,
   PrevioudPasswordInputContainer,
 } from './-styled';
-import type { ChangePasswordForm } from './-useSchema';
-import { useSchema } from './-useSchema';
 
 export default function Entry() {
   const { t } = useTranslation();
@@ -38,56 +36,75 @@ export default function Entry() {
   const { userAccounts, comparisonPasswordHash, updateExtensionStorageStore } = useExtensionStorageStore((state) => state);
 
   const { setCurrentPassword } = useCurrentPassword();
-  const [inputPreviousPassword, setInputPreviousPassword] = useState('');
 
-  const { newPasswordForm } = useSchema({ comparisonPasswordHash });
+  const [previousPassword, setPreviousPassword] = useState<string>('');
+  const [newPassword, setNewPassword] = useState<string>('');
+  const [repeatNewPassword, setRepeatNewPassword] = useState<string>('');
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-    reset,
-  } = useForm<ChangePasswordForm>({
-    resolver: joiResolver(newPasswordForm),
-    mode: 'onSubmit',
-    reValidateMode: 'onSubmit',
-  });
+  const [previousPasswordMessage, setPreviousPasswordMessage] = useState<string>('');
+  const [newPasswordMessage, setNewPasswordMessage] = useState<string>('');
+  const [repeatNewPasswordMessage, setRepeatNewPasswordMessage] = useState<string>('');
 
-  const { previousPassword, newPassword, repeatNewPassword } = watch();
+  const [passwordScore, setPasswordScore] = useState<PasswordScore | null>(
+    null,
+  );
   const isButtonEnabled = previousPassword && newPassword && repeatNewPassword;
 
-  const submit = async (data: ChangePasswordForm) => {
-    const newAccounts = userAccounts.map((account) => {
-      if (account.type === 'MNEMONIC') {
-        const mnemonic = aesDecrypt(account.encryptedMnemonic, inputPreviousPassword);
+  useEffect(() => {
+    if (newPassword) {
+      void getPasswordStrength(newPassword).then((score) => {
+        setPasswordScore(score);
+      });
+    } else {
+      setPasswordScore(null);
+    }
+  }, [newPassword]);
 
-        return { ...account, encryptedMnemonic: aesEncrypt(mnemonic, data.newPassword), encryptedPassword: aesEncrypt(data.newPassword, mnemonic) };
-      }
+  const handleSubmit = async () => {
+    let isValid = true;
+    if (sha512(previousPassword) !== comparisonPasswordHash) {
+      setPreviousPasswordMessage(t('schema.changePasswordForm.password.any.only'))
+      isValid = false;
+    }
+    if (newPassword.length < 8) {
+      setNewPasswordMessage(t('schema.common.string.min1', { limit: 8 }))
+      isValid = false;
+    }
+    if (repeatNewPassword !== newPassword) {
+      setRepeatNewPasswordMessage(t('schema.changePasswordForm.repeatPassword.any.only'))
+      isValid = false;
+    }
+    if (isValid) {
+      const newAccounts = userAccounts.map((account) => {
+        if (account.type === 'MNEMONIC') {
+          const mnemonic = aesDecrypt(account.encryptedMnemonic, previousPassword);
 
-      if (account.type === 'PRIVATE_KEY') {
-        const privateKey = aesDecrypt(account.encryptedPrivateKey, inputPreviousPassword);
+          return { ...account, encryptedMnemonic: aesEncrypt(mnemonic, newPassword), encryptedPassword: aesEncrypt(newPassword, mnemonic) };
+        }
 
-        return { ...account, encryptedPrivateKey: aesEncrypt(privateKey, data.newPassword), encryptedPassword: aesEncrypt(data.newPassword, privateKey) };
-      }
+        if (account.type === 'PRIVATE_KEY') {
+          const privateKey = aesDecrypt(account.encryptedPrivateKey, previousPassword);
 
-      return account;
-    });
+          return { ...account, encryptedPrivateKey: aesEncrypt(privateKey, newPassword), encryptedPassword: aesEncrypt(newPassword, privateKey) };
+        }
 
-    await updateExtensionStorageStore('userAccounts', newAccounts);
+        return account;
+      });
 
-    await updateExtensionStorageStore('comparisonPasswordHash', sha512(data.newPassword));
+      await updateExtensionStorageStore('userAccounts', newAccounts);
 
-    await setCurrentPassword(data.newPassword);
+      await updateExtensionStorageStore('comparisonPasswordHash', sha512(newPassword));
 
-    reset();
-    toastSuccess(t('pages.general-setting.change-password.entry.success'));
+      await setCurrentPassword(newPassword);
 
-    history.go(-1);
+      toastSuccess(t('pages.general-setting.change-password.entry.success'));
+
+      history.go(-1);
+    }
   };
 
   return (
-    <FormContainer onSubmit={handleSubmit(submit)}>
+    <FormContainer>
       <BaseBody>
         <Body>
           <DescriptionContainer>
@@ -99,17 +116,12 @@ export default function Entry() {
             <StandardInput
               placeholder={t('pages.general-setting.change-password.entry.currentPassword')}
               type="password"
-              error={!!errors.previousPassword}
-              helperText={errors.previousPassword?.message}
-              slotProps={{
-                input: {
-                  ...register('previousPassword', {
-                    setValueAs: (v: string) => {
-                      setInputPreviousPassword(v);
-                      return v ? sha512(v) : '';
-                    },
-                  }),
-                },
+              error={!!previousPasswordMessage}
+              helperText={previousPasswordMessage}
+              value={previousPassword}
+              onChange={e => {
+                setPreviousPassword(e.target.value)
+                setPreviousPasswordMessage('')
               }}
             />
           </PrevioudPasswordInputContainer>
@@ -120,23 +132,39 @@ export default function Entry() {
             <StandardInput
               placeholder={t('pages.general-setting.change-password.entry.newPassword')}
               type="password"
-              error={!!errors.newPassword}
-              helperText={errors.newPassword?.message}
-              slotProps={{
-                input: {
-                  ...register('newPassword'),
-                },
+              error={!!newPasswordMessage}
+              helperText={newPasswordMessage}
+              value={newPassword}
+              onChange={e => {
+                setNewPassword(e.target.value)
+                setNewPasswordMessage('')
               }}
             />
+            {passwordScore !== null && (
+              <>
+                <div className="h-[8px] rounded-[4px] bg-[#1E2025] overflow-hidden">
+                  <div className={`h-full ${['w-1/5 bg-[#ef4444]', 'w-2/5 bg-[#f59e0b]', 'w-3/5 bg-[#eab308]', 'w-4/5 bg-[#22c55e]', 'w-full bg-[#16a34a]'][passwordScore]}`} />
+                </div>
+                <div className={`mt-[-8px] text-[14px] ${['text-[#ef4444]', 'text-[#f59e0b]', 'text-[#eab308]', 'text-[#22c55e]', 'text-[#16a34a]'][passwordScore]}`}>
+                  {[
+                    t('pages.account.set-password.index.veryWeak'),
+                    t('pages.account.set-password.index.weak'),
+                    t('pages.account.set-password.index.moderate'),
+                    t('pages.account.set-password.index.strong'),
+                    t('pages.account.set-password.index.veryStrong')
+                  ][passwordScore]}
+                </div>
+              </>
+            )}
             <StandardInput
               placeholder={t('pages.general-setting.change-password.entry.confirmNewPassword')}
               type="password"
-              error={!!errors.repeatNewPassword}
-              helperText={errors.repeatNewPassword?.message}
-              slotProps={{
-                input: {
-                  ...register('repeatNewPassword'),
-                },
+              error={!!repeatNewPasswordMessage}
+              helperText={repeatNewPasswordMessage}
+              value={repeatNewPassword}
+              onChange={e => {
+                setRepeatNewPassword(e.target.value)
+                setRepeatNewPasswordMessage('')
               }}
             />
           </NewPasswordInputContainer>
@@ -144,14 +172,14 @@ export default function Entry() {
       </BaseBody>
       <BaseFooter>
         <>
-          <CautionContainer>
-            <InformationPanel
-              varitant="caution"
-              title={<Typography variant="b3_M">{t('pages.general-setting.change-password.entry.caution')}</Typography>}
-              body={<Typography variant="b4_R_Multiline">{t('pages.general-setting.change-password.entry.cautionDescription')}</Typography>}
-            />
-          </CautionContainer>
-          <Button type="submit" disabled={!isButtonEnabled}>
+          {/*<CautionContainer>*/}
+          {/*  <InformationPanel*/}
+          {/*    varitant="caution"*/}
+          {/*    title={<Typography variant="b3_M">{t('pages.general-setting.change-password.entry.caution')}</Typography>}*/}
+          {/*    body={<Typography variant="b4_R_Multiline">{t('pages.general-setting.change-password.entry.cautionDescription')}</Typography>}*/}
+          {/*  />*/}
+          {/*</CautionContainer>*/}
+          <Button disabled={!isButtonEnabled} onClick={handleSubmit}>
             {t('pages.general-setting.change-password.entry.submit')}
           </Button>
         </>

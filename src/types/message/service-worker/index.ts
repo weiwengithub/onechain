@@ -58,6 +58,10 @@ export interface RequestSidePanelOpenMessage extends MessageBase {
   params: undefined;
 }
 
+export interface UserActivityMessage {
+  type: 'USER_ACTIVITY';
+}
+
 export type ServiceWorkerMessage =
   | UpdateBalanceMessage
   | UpdateAddressMessage

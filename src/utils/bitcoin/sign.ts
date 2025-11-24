@@ -21,7 +21,7 @@ export async function executeTransactionSequentially(txHex: string, urls: string
         { headers: { 'Content-Type': 'application/json' } },
       );
       return response;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-empty
+      // eslint-disable-next-line no-empty
     } catch (_) {}
   }
   throw new Error('All RPC URLs failed');

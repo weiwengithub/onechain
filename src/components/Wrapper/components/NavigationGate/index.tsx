@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 
 import { Route as Initial } from '@/pages/account/initial';
@@ -41,52 +41,145 @@ type NavigationGateProps = {
 
 export default function NavigationGate({ children }: NavigationGateProps) {
   const navigate = useNavigate();
+  const [isNavigating, setIsNavigating] = useState(false);
+  const [navigationError, setNavigationError] = useState<string | null>(null);
 
   const { userAccounts, requestQueue } = useExtensionStorageStore((state) => state);
 
   useEffect(() => {
-    void (async () => {
-      if (userAccounts.length === 0) {
-        navigate({
-          to: Initial.to,
+    // Add a small delay to ensure router is fully initialized
+    const timeoutId = setTimeout(() => {
+      void (async () => {
+        // Reset previous error state
+        setNavigationError(null);
+
+        console.log('[NavigationGate] Navigation check:', {
+          userAccountsLength: userAccounts.length,
+          requestQueueLength: requestQueue.length,
+          userAccounts: userAccounts.map(acc => ({ id: acc.id, type: acc.type })),
+          isNavigating
         });
+
+        // Prevent multiple simultaneous navigation attempts
+        if (isNavigating) {
+          console.log('[NavigationGate] Already navigating, skipping');
+          return;
+        }
+
+      if (userAccounts.length === 0) {
+        console.log('[NavigationGate] No accounts found, navigating to Initial page');
+        setIsNavigating(true);
+
+        try {
+          await navigate({
+            to: Initial.to,
+          });
+          console.log('[NavigationGate] Navigation to Initial page successful');
+        } catch (error) {
+          const errorMessage = `Failed to navigate to Initial page: ${error instanceof Error ? error.message : String(error)}`;
+          console.error('[NavigationGate]', errorMessage);
+          setNavigationError(errorMessage);
+        } finally {
+          setIsNavigating(false);
+        }
         return;
       }
 
+      console.log('[NavigationGate] Accounts exist, checking request queue');
+
       if (requestQueue.length > 0) {
-        if (requestQueue[0].chainType === 'cosmos') {
-          navigate({
-            to: getNavigationPathForCosmosRequest(requestQueue[0]),
-          });
-        }
-        if (requestQueue[0].chainType === 'evm') {
-          navigate({
-            to: getNavigationPathForEvmRequest(requestQueue[0]),
-          });
-        }
-        if (requestQueue[0].chainType === 'sui') {
-          navigate({
-            to: getNavigationPathForSuiRequest(requestQueue[0]),
-          });
-        }
-        if (requestQueue[0].chainType === 'bitcoin') {
-          navigate({
-            to: getNavigationPathForBitcoinRequest(requestQueue[0]),
-          });
-        }
-        if (requestQueue[0].chainType === 'aptos') {
-          navigate({
-            to: getNavigationPathForAptosRequest(requestQueue[0]),
-          });
-        }
-        if (requestQueue[0].chainType === 'iota') {
-          navigate({
-            to: getNavigationPathForIotaRequest(requestQueue[0]),
-          });
+        setIsNavigating(true);
+
+        try {
+          let navigationPath: string;
+
+          switch (requestQueue[0].chainType) {
+            case 'cosmos':
+              navigationPath = getNavigationPathForCosmosRequest(requestQueue[0]);
+              break;
+            case 'evm':
+              navigationPath = getNavigationPathForEvmRequest(requestQueue[0]);
+              break;
+            case 'sui':
+              navigationPath = getNavigationPathForSuiRequest(requestQueue[0]);
+              break;
+            case 'bitcoin':
+              navigationPath = getNavigationPathForBitcoinRequest(requestQueue[0]);
+              break;
+            case 'aptos':
+              navigationPath = getNavigationPathForAptosRequest(requestQueue[0]);
+              break;
+            case 'iota':
+              navigationPath = getNavigationPathForIotaRequest(requestQueue[0]);
+              break;
+            default:
+              console.warn('[NavigationGate] Unknown chain type:', requestQueue[0].chainType);
+              navigationPath = '/';
+          }
+
+          console.log('[NavigationGate] Navigating to request handler:', navigationPath);
+          await navigate({ to: navigationPath });
+          console.log('[NavigationGate] Navigation to request handler successful');
+        } catch (error) {
+          const errorMessage = `Failed to navigate to request handler: ${error instanceof Error ? error.message : String(error)}`;
+          console.error('[NavigationGate]', errorMessage);
+          setNavigationError(errorMessage);
+        } finally {
+          setIsNavigating(false);
         }
       }
     })();
-  }, [userAccounts.length, navigate, requestQueue]);
+    }, 100); // 100ms delay to ensure router is ready
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [userAccounts.length, navigate, requestQueue, isNavigating]);
+
+  // Show error message if navigation failed
+  if (navigationError) {
+    return (
+      <div style={{
+        padding: '20px',
+        backgroundColor: '#fee',
+        border: '1px solid #fcc',
+        borderRadius: '4px',
+        margin: '10px'
+      }}>
+        <h3>Navigation Error</h3>
+        <p>{navigationError}</p>
+        <button
+          onClick={() => {
+            setNavigationError(null);
+            setIsNavigating(false);
+          }}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  // Show loading indicator while navigating
+  if (isNavigating) {
+    return (
+      <div style={{
+        padding: '20px',
+        textAlign: 'center',
+        backgroundColor: '#f9f9f9'
+      }}>
+        <p>Navigating...</p>
+      </div>
+    );
+  }
 
   return <>{children}</>;
 }

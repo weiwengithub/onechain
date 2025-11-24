@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Onechain Wallet",
-  "description": "Non-custodial multi-chain extension wallet powered by Onechain, the interchain validator.",
+  "name": "OneWallet",
+  "description": "Non-custodial multi-chain extension wallet powered by OneWallet, the interchain validator.",
   "action": {
     "default_icon": {
       "16": "extension-assets/icon16.png",
@@ -12,7 +12,7 @@
       "128": "extension-assets/icon128.png",
       "512": "extension-assets/icon512.png"
     },
-    "default_title": "Onechain Wallet",
+    "default_title": "OneWallet",
     "default_popup": "popup.html"
   },
   "sidebar_action": {
@@ -20,11 +20,11 @@
       "16": "extension-assets/icon16.png",
       "32": "extension-assets/icon32.png"
     },
-    "default_title": "Onechain Wallet",
+    "default_title": "OneWallet",
     "default_panel": "sidepanel.html",
     "open_at_install": true
   },
-  "author": "Onechain",
+  "author": "OneWallet",
   "icons": {
     "16": "extension-assets/icon16.png",
     "19": "extension-assets/icon19.png",

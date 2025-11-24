@@ -1,9 +1,11 @@
 import type { V11Asset } from '@/types/apiV11.ts';
+import type { EvmErc20Asset } from '@/types/asset.ts';
 
-export const AWS_URL = 'https://onewallet2020.s3.ap-southeast-2.amazonaws.com';
+export const AWS_URL = 'https://file.one-wallet.cc';
 
 export const Chain_URL = `${AWS_URL}/image/chain/`;
 export const Token_URL = `${AWS_URL}/image/token/`;
+export const Default_Token_Icon = `${Token_URL}oct_gray.png`;
 
 export const suiTestnet = {
   chain_id: 'sui-testnet',
@@ -13,7 +15,7 @@ export const suiTestnet = {
       api_name: '',
       chain_id: '4c78adac',
       chain_name: 'Sui testnet',
-      chain_image: `${Chain_URL}sui.png`,
+      chain_image: `${Chain_URL}sui-testnet.png`,
       staking_asset_denom: '0x2::sui::SUI',
       staking_asset_symbol: 'SUI',
       staking_asset_image: `${Token_URL}sui.png`,
@@ -64,8 +66,8 @@ export const octTestnet = {
     chainlist_params: {
       api_name: '',
       chain_id: '4c78adac',
-      chain_name: 'ONECHAIN TESTNET',
-      chain_image: `${Chain_URL}oct.png`,
+      chain_name: 'OneChain Testnet',
+      chain_image: `${Chain_URL}oct-testnet.png`,
       staking_asset_denom: '0x2::oct::OCT',
       staking_asset_symbol: 'OCT',
       staking_asset_image: `${Token_URL}oct.png`,
@@ -116,8 +118,8 @@ export const octMainnet = {
     chainlist_params: {
       api_name: '',
       chain_id: '35834a8a',
-      chain_name: 'ONECHAIN',
-      chain_image: `${Token_URL}oct.png`,
+      chain_name: 'OneChain',
+      chain_image: `${Chain_URL}oct.png`,
       staking_asset_denom: '0x2::oct::OCT',
       staking_asset_symbol: 'OCT',
       staking_asset_image: `${Token_URL}oct.png`,
@@ -236,6 +238,17 @@ export const oct_mainnet_assets: V11Asset[] = [
     image: `${Token_URL}usdh.png`,
     coinGeckoId: 'oct-mainnet-usdh',
   },
+  {
+    symbol: 'USDO',
+    chain: 'oct',
+    type: 'bridge',
+    denom: '0x714159631ef1621b67a57db8239d6147492fb8278bfee7b9b734a032110c0fd6::usdo::USDO',
+    name: 'Usdo',
+    description: 'USDO',
+    decimals: 6,
+    image: `${Token_URL}usdo.png`,
+    coinGeckoId: 'oct-mainnet-usdo',
+  },
 ];
 
 export const oct_testnet_assets: V11Asset[] = [
@@ -247,59 +260,78 @@ export const oct_testnet_assets: V11Asset[] = [
     name: 'Oct',
     description: 'Oct Native Coin',
     decimals: 9,
-    image: `${Token_URL}oct.png`,
+    image: `${Token_URL}oct-testnet.png`,
     coinGeckoId: 'oct-testnet',
-  },
-  {
-    symbol: 'USDT',
-    chain: 'oct-testnet',
-    type: 'bridge',
-    denom: '0xba7bedcdba936baa2a42dfe92c47294c7c7775b9031a7a65a3967cc4e265259e::usdt::USDT',
-    name: 'Usdt',
-    description: 'USDT',
-    decimals: 9,
-    image: `${Token_URL}usdt.png`,
-    coinGeckoId: 'oct-testnet-usdt',
   },
   {
     symbol: 'USDH',
     chain: 'oct-testnet',
     type: 'bridge',
-    denom: '0x68e3caaf439b8d8326162257948e8d141b0a669f2da2a560c1ca267e4298c3a3::usdh::USDH',
+    denom: '0x72eba41c73c4c2ce2bcfc6ec1dc0896ba1b5c17bfe7ae7c6c779943f84912b41::usdh::USDH',
     name: 'Usdh',
     description: 'USDH',
     decimals: 9,
-    image: `${Token_URL}usdh.png`,
+    image: `${Token_URL}usdh-testnet.png`,
     coinGeckoId: 'oct-testnet-usdh',
+  },
+  {
+    symbol: 'USDO',
+    chain: 'oct-testnet',
+    type: 'bridge',
+    denom: '0xf0dbc2d1a28faec23a9d2af8e8bfaff594e370bab0eaf4ea08be456d292c7b34::usdo::USDO',
+    name: 'Usdo',
+    description: 'USDO',
+    decimals: 6,
+    image: `${Token_URL}usdo-testnet.png`,
+    coinGeckoId: 'oct-testnet-usdo',
   },
 ];
 
-export const evm_mainnet_assets: V11Asset[] = [
+export const eth_mainnet_coin: V11Asset[] = [
   {
-    "chain": "ethereum",
-    "type": "native",
-    "denom": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-    "name": "Ethereum",
-    "symbol": "ETH",
-    "description": "Ethereum Native Coin",
-    "decimals": 18,
-    "image": "https://raw.githubusercontent.com/cosmostation/chainlist/master/chain/ethereum/asset/eth.png",
-    "coinGeckoId": "ethereum"
-  }
-]
+    symbol: 'ETH',
+    chain: 'ethereum',
+    type: 'native',
+    denom: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+    name: 'ETH',
+    description: 'ETH',
+    decimals: 18,
+    image: `${Chain_URL}ethereum.png`,
+    coinGeckoId: 'ethereum',
+    category: 1,
+  },
+];
+
+export const eth_mainnet_assets: EvmErc20Asset[] = [
+  {
+    // chain: 'ethereum',
+    type: 'erc20',
+    // contract: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+    name: 'Tether',
+    symbol: 'USDT',
+    description: 'Tether',
+    decimals: 6,
+    image: `${Token_URL}usdt.png`,
+    coinGeckoId: 'tether',
+    wallet_preload: true,
+    id: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+    chainId: 'ethereum',
+    chainType: 'evm',
+  },
+];
 
 export const evm_testnet_assets: V11Asset[] = [
   {
-    "chain": "ethereum",
-    "type": "native",
-    "denom": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-    "name": "Ethereum",
-    "symbol": "ETH",
-    "description": "Ethereum Native Coin",
-    "decimals": 18,
-    "image": "https://raw.githubusercontent.com/cosmostation/chainlist/master/chain/ethereum/asset/eth.png",
-    "coinGeckoId": "ethereum"
-  }
-]
+    'chain': 'ethereum',
+    'type': 'native',
+    'denom': '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+    'name': 'Ethereum',
+    'symbol': 'ETH',
+    'description': 'Ethereum Native Coin',
+    'decimals': 18,
+    'image': 'https://raw.githubusercontent.com/cosmostation/chainlist/master/chain/ethereum/asset/eth.png',
+    'coinGeckoId': 'ethereum',
+  },
+];
 
 

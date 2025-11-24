@@ -41,6 +41,36 @@ export interface ImportantTransactionInfo {
   basic?: BasicTransactionInfo;
 }
 
+// RWA Event Types
+export interface DividendBatchSubmitEvent {
+  dividend_funds: string;
+  rwa_token_total_supply: string;
+}
+
+export interface DividendListAddEvent {
+  user: string;
+  participating_dividend: string;
+}
+
+export interface UserDividendFundsClaimEvent {
+  amount: string;
+  recipient: string;
+}
+
+export interface BuyRwaTokenEvent {
+  buy_amount: string;
+  pay_amount: string;
+  price: string;
+  project_id: string;
+  recipient: string;
+  user: string;
+}
+
+export interface SuiEvent {
+  type?: string;
+  parsedJson?: Record<string, any> | DividendBatchSubmitEvent | DividendListAddEvent | UserDividendFundsClaimEvent;
+}
+
 export interface AnalyzedTransaction {
   owner: string;
   digest: string;

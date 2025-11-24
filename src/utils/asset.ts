@@ -99,6 +99,9 @@ export function getDefaultAssets<T extends FlatAccountAssets>(
   if (!accountAssets || accountAssets.length === 0) return undefined;
 
   return accountAssets.filter((item) => {
+    // @ts-ignore
+    if (item.asset.category === 1) return true;
+
     if (!option?.disableDupeEthermint && item.chain.chainType === 'evm' && item.chain.isCosmos) {
       if (item.chain.chainDefaultCoinDenoms) {
         const resolvedChainDefaultCoinDenoms = [...item.chain.chainDefaultCoinDenoms, NATIVE_EVM_COIN_ADDRESS];

@@ -6,6 +6,7 @@ import type { NewSortedAccountState, NewSortedAccountStore } from '@/types/store
 const initialState: NewSortedAccountState = {
   menmonicRestoreStrings: [],
   privateKeyAccountIds: [],
+  zkLoginAccountIds: [],
 };
 
 export const useNewSortedAccountStore = create<NewSortedAccountStore>()((set) => ({
@@ -21,6 +22,13 @@ export const useNewSortedAccountStore = create<NewSortedAccountStore>()((set) =>
     set((state) =>
       produce(state, (draft) => {
         draft.privateKeyAccountIds = account;
+      }),
+    );
+  },
+  updatedNewSortedZkLoginAccounts: async (account) => {
+    set((state) =>
+      produce(state, (draft) => {
+        draft.zkLoginAccountIds = account;
       }),
     );
   },

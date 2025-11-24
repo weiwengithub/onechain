@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebounce } from 'use-debounce';
 import { Typography } from '@mui/material';
@@ -14,7 +14,7 @@ import { useAddressBook } from '@/hooks/useAddressBook';
 import { useChainList } from '@/hooks/useChainList';
 import { Route as AddAddress } from '@/pages/general-setting/address-book/add-address';
 import { Route as EditAddress } from '@/pages/general-setting/address-book/edit-address/$id';
-import type { ChainType, UniqueChainId } from '@/types/chain';
+import type { ChainType, SuiChain, UniqueChainId } from '@/types/chain';
 import { filterChainsByChainId } from '@/utils/asset';
 import { isMatchingUniqueChainId, parseUniqueChainId } from '@/utils/queryParamGenerator';
 
@@ -32,7 +32,7 @@ import {
 import { UNIVERSAL_EVM_NETWORK_ID } from './add-address/-entry';
 
 import NoListIcon from '@/assets/images/icons/NoList70.svg';
-import PlusIcon from '@/assets/images/icons/Plus12.svg';
+import PlusIcon from '@/assets/images/icons/Plus20.svg';
 
 import EVMImage from '@/assets/images/chain/evm.png';
 
@@ -53,6 +53,17 @@ export default function Entry() {
     },
     ...filterChainsByChainId(flatChainList),
   ];
+
+  // 只展示 oct, oct测试网, sui, sui测试网
+  const onlySuiChain = useMemo(() => {
+    const res: SuiChain[] = [];
+    filteredUniqueChains.forEach((item) => {
+      if (item.chainType === 'sui') {
+        res.push(item as SuiChain);
+      }
+    });
+    return res;
+  }, [filteredUniqueChains]);
 
   const baseChainList = [
     {
@@ -100,6 +111,7 @@ export default function Entry() {
         <Container>
           <StickyContainer>
             <Search
+              searchPlaceholder={t('pages.general-setting.address-book.entry.searchPlaceholder')}
               value={search}
               onChange={(event) => {
                 setSearch(event.currentTarget.value);
@@ -115,7 +127,7 @@ export default function Entry() {
             <RowContainer>
               <AllNetworkButton
                 currentChainId={currentSelectedChainId}
-                chainList={filteredUniqueChains}
+                chainList={onlySuiChain}
                 selectChainOption={(id) => {
                   setCurrentSelectedChainId(id);
                 }}
@@ -133,9 +145,7 @@ export default function Entry() {
                   </PurpleContainer>
                 }
               >
-                <AddTextContainer>
-                  <Typography variant="b3_M">{t('pages.general-setting.address-book.entry.addAddress')}</Typography>
-                </AddTextContainer>
+                <AddTextContainer>{t('pages.general-setting.address-book.entry.addAddress')}</AddTextContainer>
               </IconTextButton>
             </RowContainer>
           </StickyContainer>

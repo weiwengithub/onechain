@@ -5,21 +5,21 @@ import { styled } from '@mui/material/styles';
 import IconButton from '../IconButton';
 
 export const StyledInput = styled(OutlinedInput)<OutlinedInputProps>(({ theme, ...props }) => ({
-  borderRadius: '0.4rem',
+  borderRadius: '12px',
 
-  backgroundColor: theme.palette.color.base100,
-  color: theme.palette.color.base1300,
+  backgroundColor: '#1E2025',
+  color: '#FFFFFF',
 
   width: '100%',
 
   '&.MuiOutlinedInput-root': {
-    backgroundColor: theme.palette.color.base100,
+    backgroundColor: '#1E2025',
   },
 
   '.MuiOutlinedInput-input': {
     fontFamily: theme.typography.b2_M.fontFamily,
     fontStyle: theme.typography.b2_M.fontStyle,
-    fontSize: theme.typography.b2_M.fontSize,
+    fontSize: '16px',
     lineHeight: theme.typography.b2_M.lineHeight,
     letterSpacing: theme.typography.b2_M.letterSpacing,
 
@@ -33,11 +33,11 @@ export const StyledInput = styled(OutlinedInput)<OutlinedInputProps>(({ theme, .
     '&::placeholder': {
       fontFamily: theme.typography.b4_R.fontFamily,
       fontStyle: theme.typography.b4_R.fontStyle,
-      fontSize: theme.typography.b4_R.fontSize,
+      fontSize: '16px',
       lineHeight: theme.typography.b4_R.lineHeight,
       letterSpacing: theme.typography.b4_R.letterSpacing,
 
-      color: theme.palette.color.base700,
+      color: 'rgba(255,255,255,0.2)',
     },
   },
 
@@ -77,7 +77,7 @@ export const BottomContainer = styled('div')({
   display: 'flex',
   alignItems: 'center',
 
-  margin: '0.6rem 0.4rem 0',
+  marginTop: '8px',
 
   maxWidth: '100%',
   wordBreak: 'keep-all',
@@ -104,8 +104,9 @@ type HelperTextContainerProps = {
 
 export const HelperTextContainer = styled('div')<HelperTextContainerProps>(({ theme, ...props }) => ({
   width: '100%',
-
-  color: props['data-is-error'] ? theme.palette.accentColor.red400 : theme.palette.color.base1300,
+  lineHeight: '24px',
+  fontSize: '16px',
+  color: props['data-is-error'] ? "#E04646" : "rgba(255,255,255,0.6)",
 }));
 
 export const StyledIconButton = styled(IconButton)(({ theme }) => ({

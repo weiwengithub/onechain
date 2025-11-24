@@ -14,7 +14,8 @@ import { Route as SelectReceiveCoin } from '@/pages/wallet/receive';
 import { Route as ReceiveWithChainId } from '@/pages/wallet/receive/chain/$chainId';
 import { Route as SelectSendCoin } from '@/pages/wallet/send';
 import { Route as SendCoinWithChainId } from '@/pages/wallet/send/chain/$chainId';
-import type { SuiChain, UniqueChainId } from '@/types/chain';
+import { Route as OneTransfer } from '@/pages/onetransfer';
+import type { EvmChain, SuiChain, UniqueChainId } from '@/types/chain';
 import {
   getFilteredAssetsByChainId,
   getFilteredChainsByChainId,
@@ -24,6 +25,7 @@ import {
 import { formatDecimal, formatNumberWithSeparator, plus, times, toDisplayDenomAmount } from '@/utils/numbers';
 import { getCoinId, getUniqueChainId } from '@/utils/queryParamGenerator';
 import { useExtensionStorageStore } from '@/zustand/hooks/useExtensionStorageStore';
+import { isZkLoginAccount, getZkLoginSupportedChainId, isValidChainForAccount } from '@/utils/zklogin';
 
 import MoreOptionBottomSheet from './components/MoreOptionBottomSheet';
 import {
@@ -42,7 +44,8 @@ import MainBox from '..';
 
 import SendIcon from 'assets/images/onechain/wallet_home_send.png';
 import ReceiveIcon from 'assets/images/onechain/wallet_home_receive.png';
-import SettingIcon from '@/assets/img/icon/setting.png';
+import TransferIcon from 'assets/images/onechain/wallet_home_transfer.png';
+import FaucetIcon from 'assets/images/onechain/wallet_home_faucet.png';
 import LayoutIcon from '@/assets/img/icon/layout.png';
 import { isSidePanelView } from '@/utils/view/sidepanel.ts';
 import { setPopupAsDefaultView, setSidePanelWithDefaultView } from '@/utils/view/controlView.ts';
@@ -52,6 +55,10 @@ import ArrowDownIcon from '@/assets/img/icon/arrow_down.png';
 import { useCurrentAccount } from '@/hooks/useCurrentAccount.ts';
 import Avatar from 'boring-avatars';
 import { useCurrentSuiNetwork } from '@/hooks/sui/useCurrentSuiNetwork.ts';
+import { FunctionButton } from '@components/MainBox/Portfolio/components/FunctionButton.tsx';
+import { useFaucet } from '@/hooks/useFaucet';
+import { useCurrentAccountAddresses } from '@/hooks/useCurrentAccountAddresses';
+import GeneralSettingButton from '@/components/Header/components/GeneralSettingButton';
 
 type PortFolioProps = {
   selectedChainId?: UniqueChainId;
@@ -68,10 +75,24 @@ export default function PortFolio({ selectedChainId, onChangeChaindId }: PortFol
 
   const { currentAccount } = useCurrentAccount();
   const { setCurrentSuiNetwork } = useCurrentSuiNetwork();
+  const { requestFaucet, isRequesting } = useFaucet();
+  const { data: accountAddresses } = useCurrentAccountAddresses({ accountId: currentAccount.id });
+
+  // console.log('      accountAddresses', accountAddresses);
+
+  const currAddress = useMemo(() => {
+    if (!selectedChainId) return undefined;
+    const tempId = selectedChainId.split('__')[0];
+    const res = accountAddresses?.find((item) => {
+      return item.chainId === tempId;
+    });
+    return res?.address;
+  }, [accountAddresses, selectedChainId]);
 
   const {
     userCurrencyPreference,
     isBalanceVisible,
+    isDeveloperMode,
     updateExtensionStorageStore,
   } = useExtensionStorageStore((state) => state);
   const { data: coinGeckoPrice, isLoading } = useCoinGeckoPrice();
@@ -138,7 +159,6 @@ export default function PortFolio({ selectedChainId, onChangeChaindId }: PortFol
         coinPrice = priceInfo[coinId]?.octPrice ?? 0;
       } else {
         coinPrice = coinGeckoPrice?.[coinGeckoId]?.[userCurrencyPreference] ?? 0;
-        ;
       }
       const value = times(displayAmount, coinPrice);
       // return plus(acc, value);
@@ -156,15 +176,18 @@ export default function PortFolio({ selectedChainId, onChangeChaindId }: PortFol
   }, [priceInfo, accountAllAssets, coinGeckoPrice, userCurrencyPreference, isLoading, selectedChainId]);
 
   // 只展示 oct, oct测试网, sui, sui测试网
-  const onlySuiChain = useMemo(() => {
-    const res: SuiChain[] = [];
+  const filteredChains = useMemo(() => {
+    const res: (SuiChain | EvmChain)[] = [];
     chainList.forEach((item) => {
-      if (item.chainType === 'sui') {
-        res.push(item);
+      if (item.chainType === 'sui' || item.chainType === 'evm') {
+        // 如果开启开发者模式，保留测试网
+        if (isDeveloperMode || !item.id.includes('-testnet')) {
+          res.push(item);
+        }
       }
     });
     return res;
-  }, [chainList]);
+  }, [chainList, isDeveloperMode]);
 
   const handleViewChange = () => {
     if (isSidePanelView()) {
@@ -175,6 +198,9 @@ export default function PortFolio({ selectedChainId, onChangeChaindId }: PortFol
   };
 
   const handleChangeId = useCallback((chainId?: UniqueChainId) => {
+
+    // debugger;
+
     onChangeChaindId(chainId);
     if (chainId?.endsWith('__sui')) {
       const suiId = chainId.startsWith('oct-testnet') ? 'oct-testnet'
@@ -182,10 +208,37 @@ export default function PortFolio({ selectedChainId, onChangeChaindId }: PortFol
           : chainId.startsWith('oct__') ? 'oct'
             : chainId.startsWith('sui__') ? 'sui'
               : 'oct';
-      const suiChain = onlySuiChain.find(item => item.id === suiId) ?? onlySuiChain[0];
+      const suiChain = filteredChains.find(item => item.id === suiId) ?? filteredChains[0];
+      // @ts-ignore
       void setCurrentSuiNetwork(suiChain);
     }
-  }, [onChangeChaindId, onlySuiChain, setCurrentSuiNetwork]);
+  }, [onChangeChaindId, filteredChains, setCurrentSuiNetwork]);
+
+
+  // ZkLogin 账户的网络验证和自动修复逻辑
+  useEffect(() => {
+    if (isZkLoginAccount(currentAccount)) {
+      // 检查当前选中的网络是否对 ZkLogin 账户有效
+      if (!isValidChainForAccount(currentAccount, selectedChainId || null)) {
+        // 自动切换到 ZkLogin 支持的网络
+        const supportedChainId = getZkLoginSupportedChainId();
+        handleChangeId(supportedChainId);
+      }
+    }
+  }, [currentAccount.id, currentAccount.type, selectedChainId, handleChangeId, currentAccount]);
+
+  const showOneTransfer = useMemo(() => {
+    return selectedChainId?.includes('oct-testnet');
+  }, [selectedChainId]);
+
+  const showFaucet = useMemo(() => {
+    return isShowAccountDetail && (selectedChainId?.includes('oct-testnet') || selectedChainId?.includes('sui-testnet'));
+  }, [isShowAccountDetail, selectedChainId]);
+
+  // 判断是否为 ZkLogin 账户，如果是则禁用网络切换
+  const isZkLoginSingleNetwork = useMemo(() => {
+    return currentAccount.type === 'ZKLOGIN';
+  }, [currentAccount.type]);
 
   return (
     <>
@@ -193,7 +246,9 @@ export default function PortFolio({ selectedChainId, onChangeChaindId }: PortFol
         top={
           <TopContainer>
             {isShowAccountDetail ? (
-              <AddressActionButtons coinId={coinIdForReceivePage} variant="normal" typoVarient="h6n_M" />
+              <AddressActionButtons
+                coinId={coinIdForReceivePage} variant="normal" typoVarient="h6n_M"
+              />
             ) : (
               <TopLeftContainer>
                 <Avatar
@@ -202,7 +257,7 @@ export default function PortFolio({ selectedChainId, onChangeChaindId }: PortFol
                   variant={'marble'}
                 />
                 <div
-                  className="ml-[12px] flex items-center"
+                  className="ml-[12px] flex items-center cursor-pointer"
                   onClick={() => {
                     navigate({
                       to: SwithAccount.to,
@@ -213,7 +268,7 @@ export default function PortFolio({ selectedChainId, onChangeChaindId }: PortFol
                     className="h-[24px] text-[16px] leading-[24px] text-white font-semibold"
                   >{currentAccount.name}</div>
                   <img
-                    className="ml-[4px] cursor-pointer"
+                    className="ml-[4px]"
                     src={ArrowDownIcon}
                     alt="ArrowDown"
                   />
@@ -228,14 +283,17 @@ export default function PortFolio({ selectedChainId, onChangeChaindId }: PortFol
               </TopLeftContainer>
             )}
             <TopRightContainer>
-              <img
-                src={SettingIcon}
-                alt="setting"
-                className="size-[20px] cursor-pointer"
-                onClick={() => {
-                  navigate({
-                    to: GeneralSetting.to,
-                  });
+              <AllNetworkButton
+                typoVarient="b4_M"
+                variant="chip"
+                currentChainId={selectedChainId}
+                // chainList={chainList}
+                chainList={filteredChains}
+                isManageAssets
+                sizeVariant="small"
+                isZkLoginSingleNetwork={isZkLoginSingleNetwork}
+                selectChainOption={(id) => {
+                  handleChangeId(id);
                 }}
               />
               <img
@@ -244,18 +302,7 @@ export default function PortFolio({ selectedChainId, onChangeChaindId }: PortFol
                 className="size-[20px] cursor-pointer"
                 onClick={handleViewChange}
               />
-              <AllNetworkButton
-                typoVarient="b4_M"
-                variant="chip"
-                currentChainId={selectedChainId}
-                // chainList={chainList}
-                chainList={onlySuiChain}
-                isManageAssets
-                sizeVariant="small"
-                selectChainOption={(id) => {
-                  handleChangeId(id);
-                }}
-              />
+              <GeneralSettingButton />
             </TopRightContainer>
           </TopContainer>
         }
@@ -338,34 +385,29 @@ export default function PortFolio({ selectedChainId, onChangeChaindId }: PortFol
                 </StyledChipButton>
               </BodyBottomChipButtonContainer>}
 
-              {/*send and receive*/}
+              {/* faucet  send  receive*/}
               <div className="mt-[24px] flex justify-center gap-[8px]">
-                <div
-                  className="flex size-[72px] cursor-pointer flex-col items-center rounded-[8px] bg-[#2C3039] pr-[12px] pl-[12px] leading-[40px] hover:bg-[#0047C4]"
+                <FunctionButton
+                  name={t('components.MainBox.Portfolio.index.send')}
+                  imageSrc={SendIcon}
                   onClick={() => {
                     if (isShowAccountDetail) {
-                      navigate({
+                      void navigate({
                         to: SendCoinWithChainId.to,
                         params: {
                           chainId: selectedChainId as string,
                         },
                       });
                     } else {
-                      navigate({
+                      void navigate({
                         to: SelectSendCoin.to,
                       });
                     }
                   }}
-                >
-                  <img
-                    className="mx-auto mt-[12px] size-[24px]"
-                    src={SendIcon}
-                    alt="send"
-                  />
-                  <div className="mt-[8px] h-[20px] text-white text-center text-[14px] leading-[20px]">Send</div>
-                </div>
-                <div
-                  className="flex size-[72px] cursor-pointer flex-col items-center rounded-[8px] bg-[#2C3039] pr-[12px] pl-[12px] leading-[40px] hover:bg-[#0047C4]"
+                />
+                <FunctionButton
+                  name={t('components.MainBox.Portfolio.index.receive')}
+                  imageSrc={ReceiveIcon}
                   onClick={() => {
                     if (isShowAccountDetail && chainIdForReceivePage) {
                       navigate({
@@ -380,16 +422,33 @@ export default function PortFolio({ selectedChainId, onChangeChaindId }: PortFol
                       });
                     }
                   }}
-                >
-                  <img
-                    className="mx-auto mt-[12px] size-[24px]"
-                    src={ReceiveIcon}
-                    alt="receive"
+                />
+                {showOneTransfer && <FunctionButton
+                  name={t('components.MainBox.Portfolio.index.vault')}
+                  imageSrc={TransferIcon}
+                  onClick={() => {
+                    navigate({
+                      to: OneTransfer.to,
+                    });
+                  }}
+                />}
+                {showFaucet && currAddress && (
+                  <FunctionButton
+                    name={t('components.MainBox.Portfolio.index.faucet')}
+                    imageSrc={FaucetIcon}
+                    loading={isRequesting}
+                    disabled={isRequesting}
+                    onClick={() => {
+                      if (selectedChainId && currAddress) {
+                        requestFaucet({
+                          recipient: currAddress,
+                          chainId: selectedChainId,
+                        });
+                      }
+                    }}
                   />
-                  <div className="mt-[8px] h-[20px] text-white text-center text-[14px] leading-[20px]">Receive</div>
-                </div>
+                )}
               </div>
-
             </BodyBottomContainer>
           </BodyContainer>
         }

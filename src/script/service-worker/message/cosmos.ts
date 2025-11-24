@@ -44,7 +44,7 @@ import { cosmosURL } from '@/utils/crypto/cosmos';
 import { CosmosRPCError } from '@/utils/error';
 import { FetchError, get, post } from '@/utils/fetch';
 import { refreshOriginConnectionTime } from '@/utils/origins';
-import { processRequest } from '@/utils/requestApp';
+import { handleMissingAccountRequest, processRequest } from '@/utils/requestApp';
 import { extensionLocalStorage, extensionSessionStorage, setExtensionLocalStorage } from '@/utils/storage';
 
 import {
@@ -65,9 +65,33 @@ export async function cosmosProcess(message: CosmosRequest) {
 
   const { cosmosChains } = await getChains();
 
-  const { currentAccount, currentAccountAllowedOrigins, currentAccountName, approvedOrigins, preferAccountType, currentAccountAddressInfo } =
+  const {
+    currentAccount,
+    currentAccountAllowedOrigins,
+    currentAccountName,
+    approvedOrigins,
+    preferAccountType,
+    currentAccountAddressInfo,
+  } =
     await extensionLocalStorage();
   const { currentPassword } = await extensionSessionStorage();
+
+  // If no account exists, return error (expected on first launch)
+  const requiresInitialUiMethods = new Set<CosmosRequest['method']>(['cos_requestAccount', 'cos_requestAccounts', 'cos_requestAccountsSettled']);
+
+  if (!currentAccount || !currentAccountAddressInfo) {
+    console.log('No account available cosmos');
+    if (method && requiresInitialUiMethods.has(method as CosmosRequest['method'])) {
+      void processRequest(message);
+    } else {
+      await handleMissingAccountRequest({
+        origin,
+        requestId,
+        tabId,
+      });
+    }
+    return;
+  }
 
   const addedCustomChains = await getAddedCustomChains();
 
@@ -91,10 +115,10 @@ export async function cosmosProcess(message: CosmosRequest) {
 
     const response = inAppSelectedPreferAccountType
       ? produce(chain, (draft) => {
-          draft.accountTypes = draft.accountTypes.filter(
-            (item) => item.pubkeyStyle === inAppSelectedPreferAccountType?.pubkeyStyle && item.hdPath === inAppSelectedPreferAccountType?.hdPath,
-          );
-        })
+        draft.accountTypes = draft.accountTypes.filter(
+          (item) => item.pubkeyStyle === inAppSelectedPreferAccountType?.pubkeyStyle && item.hdPath === inAppSelectedPreferAccountType?.hdPath,
+        );
+      })
       : chain;
 
     return response;
@@ -238,7 +262,10 @@ export async function cosmosProcess(message: CosmosRequest) {
         try {
           const validatedParams = (await schema.validateAsync({ ...params, chainName })) as CosSignAmino['params'];
 
-          void processRequest({ ...message, params: { ...validatedParams, chainName: chain?.name } as CosSignAmino['params'] });
+          void processRequest({
+            ...message,
+            params: { ...validatedParams, chainName: chain?.name } as CosSignAmino['params'],
+          });
         } catch (err) {
           throw new CosmosRPCError(RPC_ERROR.INVALID_PARAMS, `${err as string}`);
         }
@@ -258,7 +285,10 @@ export async function cosmosProcess(message: CosmosRequest) {
         try {
           const validatedParams = (await schema.validateAsync({ ...params, chainName })) as CosSignDirect['params'];
 
-          void processRequest({ ...message, params: { ...validatedParams, chainName: chain?.name } as CosSignDirect['params'] });
+          void processRequest({
+            ...message,
+            params: { ...validatedParams, chainName: chain?.name } as CosSignDirect['params'],
+          });
         } catch (err) {
           throw new CosmosRPCError(RPC_ERROR.INVALID_PARAMS, `${err as string}`);
         }
@@ -282,7 +312,10 @@ export async function cosmosProcess(message: CosmosRequest) {
         try {
           const validatedParams = (await schema.validateAsync({ ...params, chainName })) as CosSignMessage['params'];
 
-          void processRequest({ ...message, params: { ...validatedParams, chainName: chain?.name } as CosSignMessage['params'] });
+          void processRequest({
+            ...message,
+            params: { ...validatedParams, chainName: chain?.name } as CosSignMessage['params'],
+          });
         } catch (err) {
           throw new CosmosRPCError(RPC_ERROR.INVALID_PARAMS, `${err as string}`);
         }
@@ -328,7 +361,10 @@ export async function cosmosProcess(message: CosmosRequest) {
               return;
             }
 
-            void processRequest({ ...message, params: { ...validatedParams, chainName: params.chainName } as CosRequestAddChain['params'] });
+            void processRequest({
+              ...message,
+              params: { ...validatedParams, chainName: params.chainName } as CosRequestAddChain['params'],
+            });
           } catch (err) {
             if (err instanceof CosmosRPCError) {
               throw err;

@@ -12,20 +12,10 @@ export const StyledSelectBox = styled(TextField)<TextFieldProps>(({ theme }) => 
   width: '100%',
 
   '& .MuiInput-root': {
-    marginTop: '2.2rem',
-
-    '& .MuiInputAdornment-positionStart': {
-      margin: '0 0 0.8rem 0.4rem',
-    },
-
-    '& .MuiInputAdornment-positionEnd': {
-      margin: '0 0.4rem 0.8rem 0',
-    },
+    padding: '6px 0 12px',
 
     '& .MuiInputBase-input': {
       cursor: 'pointer !important',
-
-      padding: '0 0.4rem 1.1rem',
 
       height: 'fit-content',
 
@@ -49,6 +39,7 @@ export const StyledSelectBox = styled(TextField)<TextFieldProps>(({ theme }) => 
   '& .MuiInput-underline': {
     '&:before': {
       borderBottom: `0.1rem solid ${theme.palette.color.base200}`,
+      height: 0,
     },
 
     '&:after': {
@@ -64,6 +55,7 @@ export const StyledSelectBox = styled(TextField)<TextFieldProps>(({ theme }) => 
   '& .MuiInput-underline.Mui-disabled': {
     '&:before': {
       borderBottom: `0.1rem solid ${theme.palette.color.base200}`,
+      height: 0,
     },
 
     '&:after': {
@@ -94,8 +86,7 @@ export const StyledSelectBox = styled(TextField)<TextFieldProps>(({ theme }) => 
   },
 
   '& .MuiInputLabel-shrink': {
-    padding: '0 0.4rem 0.8rem',
-
+    fontSize: '16px',
     color: theme.palette.color.base1000,
   },
 
@@ -133,9 +124,9 @@ export const HelperTextContainer = styled('div')<HelperTextContainerProps>(({ th
 }));
 
 export const ChainImageContainer = styled(BaseChainImage)({
-  width: '2.2rem',
-  height: '2.2rem',
-  paddingBottom: '0.5rem',
+  width: '20px',
+  height: '20px',
+  flex: '0 0 auto',
 });
 
 export const RightAdormentConatiner = styled('div')({

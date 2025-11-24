@@ -1,10 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { getAssets } from '@/libs/asset';
+import { useCurrentAccount } from '@/hooks/useCurrentAccount';
+import { isZkLoginAccount } from '@/utils/zklogin';
 
 export function useCoinList() {
+  const { currentAccount } = useCurrentAccount();
+
   const fetcher = async () => {
-    const coinAssets = await getAssets();
+    const forZkLoginOnly = currentAccount ? isZkLoginAccount(currentAccount) : false;
+    const coinAssets = await getAssets(forZkLoginOnly);
 
     const flatCoinList = coinAssets ? Object.values(coinAssets).flat() : [];
 
@@ -15,7 +20,7 @@ export function useCoinList() {
   };
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['coinList'],
+    queryKey: ['coinList', currentAccount?.id, currentAccount?.type],
     queryFn: fetcher,
     staleTime: Infinity,
   });

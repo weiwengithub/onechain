@@ -2,7 +2,18 @@ import type { DelegatedStake as IotaDelegatedStake } from '@iota/iota-sdk/client
 import type { DelegatedStake } from '@onelabs/sui/client';
 
 import type { AptosResourceResponse } from './aptos/api';
-import type { AptosAsset, AssetId, BitcoinAsset, CosmosAsset, CosmosCw20Asset, CustomCosmosAsset, EvmAsset, EvmErc20Asset, IotaAsset, SuiAsset } from './asset';
+import type {
+  AptosAsset,
+  AssetId,
+  BitcoinAsset,
+  CosmosAsset,
+  CosmosCw20Asset,
+  CustomCosmosAsset,
+  EvmAsset,
+  EvmErc20Asset,
+  IotaAsset,
+  SuiAsset,
+} from './asset';
 import type { BitcoinBalance } from './bitcoin/balance';
 import type {
   AptosChain,
@@ -27,11 +38,14 @@ import type { Erc20Balance } from './evm/balance';
 import type { IotaGetBalance } from './iota/api';
 import type { SuiGetBalance } from './sui/api';
 
-export type AccountType = 'PRIVATE_KEY' | 'MNEMONIC';
+export type AccountType = 'PRIVATE_KEY' | 'MNEMONIC' | 'ZKLOGIN';
+export type ZkloginProvider = 'apple' | 'google';
+
 export interface AccountBase {
   id: string;
   type: AccountType;
 }
+
 export interface PrivateAccount extends AccountBase {
   type: Extract<AccountType, 'PRIVATE_KEY'>;
   encryptedPrivateKey: string;
@@ -45,7 +59,19 @@ export interface MnemonicAccount extends AccountBase {
   encryptedRestoreString: string;
 }
 
-export type Account = PrivateAccount | MnemonicAccount;
+export interface ZkLoginAccount extends AccountBase {
+  type: Extract<AccountType, 'ZKLOGIN'>;
+  encryptedIdToken: string;
+  encryptedUserSalt: string;
+  address: string;
+  encryptedEphemeralKey: string;
+  encryptedZkProof: string;
+  maxEpoch: number;
+  encryptedRestoreString: string;
+  provider: ZkloginProvider;
+}
+
+export type Account = PrivateAccount | MnemonicAccount | ZkLoginAccount;
 
 export type AccountWithName = Account & { name: string };
 
@@ -73,6 +99,7 @@ export interface AccountAddressDelegationsCosmos {
   address: string;
   delegations: LcdDelegationResponse[];
 }
+
 export interface AccountAddressUnbondingsCosmos {
   id: Chain['id'];
   assetId: AssetId['id'];
@@ -81,6 +108,7 @@ export interface AccountAddressUnbondingsCosmos {
   address: string;
   unbondings: UnbondingResponses[];
 }
+
 export interface AccountAddressRewardsCosmos {
   id: Chain['id'];
   assetId: AssetId['id'];
@@ -89,6 +117,7 @@ export interface AccountAddressRewardsCosmos {
   address: string;
   rewards: RewardDetails;
 }
+
 export interface AccountAddressCommissionsCosmos {
   id: Chain['id'];
   assetId: AssetId['id'];
@@ -105,6 +134,7 @@ export interface AccountAddressLockedBalanceCosmos {
   address: string;
   lockedBalances: CosmosBalance[];
 }
+
 export interface AccountAddressAccountInfoCosmos {
   id: Chain['id'];
   chainId: Chain['chainId'];
@@ -160,6 +190,7 @@ export interface AccountAddressDelegationsIota {
   address: string;
   delegations: IotaDelegatedStake[];
 }
+
 export interface AccountAddressBalanceBitcoin {
   id: Chain['id'];
   chainId: Chain['chainId'];
@@ -237,6 +268,7 @@ export interface AccountErc20Asset {
   address: AccountAddress;
   balance: string;
 }
+
 export interface AccountAptosAsset {
   chain: AptosChain;
   asset: AptosAsset;
@@ -253,6 +285,7 @@ export interface AccountSuiAsset {
   reward?: string;
   totalBalance?: string;
 }
+
 export interface AccountBitcoinAsset {
   chain: BitcoinChain;
   asset: BitcoinAsset;

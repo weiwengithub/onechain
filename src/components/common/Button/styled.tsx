@@ -18,7 +18,7 @@ export const StyledButton = styled('button')<StyledButtonProps>(({ theme, ...pro
       return theme.palette.color.base400;
     }
     if (variants === 'red') {
-      return theme.palette.accentColor.red200;
+      return "#E04646";
     }
     return "#0047c4";
   })();
@@ -32,9 +32,23 @@ export const StyledButton = styled('button')<StyledButtonProps>(({ theme, ...pro
       return theme.palette.color.base500;
     }
     if (variants === 'red') {
-      return theme.palette.accentColor.red300;
+      return "#FF6B6B";
     }
     return "#3b82ff";
+  })();
+
+  const disabledBackgroundColor = (() => {
+    const variants = props['variants'];
+    if (variants === 'light') {
+      return "rgba(0,71,196,0.3)";
+    }
+    if (variants === 'dark') {
+      return theme.palette.color.base500;
+    }
+    if (variants === 'red') {
+      return "rgba(224,70,70,0.3)";
+    }
+    return "rgba(0,71,196,0.3)";
   })();
 
   return {
@@ -57,7 +71,7 @@ export const StyledButton = styled('button')<StyledButtonProps>(({ theme, ...pro
     },
 
     '&:disabled': {
-      backgroundColor: "rgba(0,71,196,0.3)",
+      backgroundColor: disabledBackgroundColor,
       color: "rgba(255,255,255,0.3)",
 
       cursor: 'default',

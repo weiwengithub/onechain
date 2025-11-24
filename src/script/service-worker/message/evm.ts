@@ -37,7 +37,7 @@ import { requestRPC as ethereumRequestRPC } from '@/utils/ethereum';
 import { ethersProvider } from '@/utils/ethereum/ethers';
 import { signTypedData } from '@/utils/ethereum/sign';
 import { refreshOriginConnectionTime } from '@/utils/origins';
-import { enqueueRequest, processRequest, setQueues } from '@/utils/requestApp';
+import { enqueueRequest, handleMissingAccountRequest, processRequest, setQueues } from '@/utils/requestApp';
 import { extensionLocalStorage, extensionSessionStorage } from '@/utils/storage';
 import { isEqualsIgnoringCase, toHex } from '@/utils/string';
 
@@ -70,6 +70,20 @@ export async function evmProcess(message: EvmRequest) {
   const { currentAccountAllowedOrigins, currentEthereumNetwork, currentAccount } = await extensionLocalStorage();
 
   const { currentPassword } = await extensionSessionStorage();
+
+  // If no account exists, return error (expected on first launch)
+  const connectMethodSet = new Set<EvmRequest['method']>(['eth_requestAccounts']);
+
+  if (!currentAccount) {
+    console.log('No account available evm');
+    if (method && connectMethodSet.has(method as EvmRequest['method'])) {
+      console.log('queueing request until account setup completes');
+      void processRequest(message);
+    } else {
+      await handleMissingAccountRequest({ origin, requestId, tabId });
+    }
+    return;
+  }
 
   const ethereumMethods = Object.values(EVM_METHOD_TYPE) as string[];
   const ethereumNoPopupMethods = Object.values(EVM_NO_POPUP_METHOD_TYPE) as string[];
