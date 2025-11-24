@@ -149,6 +149,7 @@ export interface ExtensionStorage {
   chosenSuiNetworkId: string;
   chosenBitcoinNetworkId: string;
   chosenIotaNetworkId: string;
+  chosenTronNetworkId: string;
   currentWindowId: number | null;
   prioritizedProvider: PrioritizedProvider;
   pinnedDappIds: number[];

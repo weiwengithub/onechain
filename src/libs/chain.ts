@@ -11,6 +11,7 @@ import type {
   EvmChain,
   IotaChain,
   SuiChain,
+  TronChain,
 } from '@/types/chain';
 import type { ExtensionStorage } from '@/types/extension';
 import { ZKLOGIN_SUPPORTED_CHAIN_ID } from '@/constants/zklogin';
@@ -59,6 +60,7 @@ export async function getChains(forZkLoginOnly = false) {
   const aptosChains = supportedChains.filter((chainInfo) => chainInfo.params.chainlist_params?.chain_type?.includes('aptos'));
   const bitcoinChains = supportedChains.filter((chainInfo) => chainInfo.params.chainlist_params?.chain_type?.includes('bitcoin'));
   const iotaChains = supportedChains.filter((chainInfo) => chainInfo.params.chainlist_params?.chain_type?.includes('iota'));
+  const tronChains = supportedChains.filter((chainInfo) => chainInfo.params.chainlist_params?.chain_type?.includes('tron'));
 
   // debugger;
 
@@ -491,6 +493,69 @@ export async function getChains(forZkLoginOnly = false) {
     };
   });
 
+  const remappedTronChains = tronChains.map((chain) => {
+    const id = chain.id;
+    const chainType = 'tron';
+    const chainId = chain.params.chainlist_params.chain_id!;
+
+    const name = chain.params.chainlist_params.chain_name.toUpperCase();
+    const image = chain.params.chainlist_params?.chain_image ?? null;
+
+    const mainAssetDenom = chain.params.chainlist_params?.staking_asset_denom || 'TRX';
+    const chainDefaultCoinDenoms = collectDefaultDenoms(chain.params.chainlist_params);
+
+    const rpcUrls =
+      chain.params.chainlist_params.rpc_endpoint?.map((endpoint) => ({
+        ...endpoint,
+        url: removeTrailingSlash(endpoint.url),
+      })) ?? [];
+
+    const fullNodeUrls = rpcUrls;
+    const solidityNodeUrls = rpcUrls;
+
+    const explorer = chain.params.chainlist_params?.explorer
+      ? Object.entries(chain.params.chainlist_params.explorer).reduce((acc, [key, value]) => {
+        acc[key as keyof ChainExplorer] = removeTrailingSlash(value);
+        return acc;
+      }, {} as ChainExplorer)
+      : {
+        name: '',
+        url: '',
+        account: '',
+        tx: '',
+        proposal: '',
+      };
+
+    const accountTypes =
+      chain.params.chainlist_params?.account_type?.map((accountType) => {
+        const hdPath = accountType.hd_path.replace('X', '${index}');
+        return {
+          hdPath,
+          pubkeyStyle: accountType.pubkey_style,
+          pubkeyType: accountType.pubkey_type ?? null,
+          isDefault: accountType.is_default ?? null,
+        };
+      }) ?? [];
+
+    const isTestnet = isTestnetChain(id);
+
+    return {
+      id,
+      chainId,
+      name,
+      image,
+      chainType,
+      mainAssetDenom,
+      chainDefaultCoinDenoms,
+      rpcUrls,
+      fullNodeUrls,
+      solidityNodeUrls,
+      explorer,
+      accountTypes,
+      isTestnet,
+    };
+  });
+
   // ZkLogin 用户只返回指定链
   if (forZkLoginOnly) {
     const zkLoginSuiChains = remappedSuiChains.filter(chain => chain.id === ZKLOGIN_SUPPORTED_CHAIN_ID);
@@ -502,6 +567,7 @@ export async function getChains(forZkLoginOnly = false) {
       aptosChains: [],
       bitcoinChains: [],
       iotaChains: [],
+      tronChains: [],
     };
   }
 
@@ -512,6 +578,7 @@ export async function getChains(forZkLoginOnly = false) {
     aptosChains: remappedAptosChains,
     bitcoinChains: remappedBitcoinChains,
     iotaChains: remappedIotaChains,
+    tronChains: remappedTronChains,
   };
 }
 

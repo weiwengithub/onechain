@@ -28,6 +28,7 @@ export function useChainList() {
 
     const allCosmosChains = [...(data?.cosmosChains || []), ...customCosmosChains];
     const allEVMChains = [...(data?.evmChains || []), ...customEvmChains];
+    const allTronChains = data?.tronChains || [];
 
     return {
       ...data,
@@ -35,6 +36,7 @@ export function useChainList() {
       customEvmChains,
       allCosmosChains,
       allEVMChains,
+      allTronChains,
     };
   }, [addedCustomChainList, data]);
 

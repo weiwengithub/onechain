@@ -9,10 +9,10 @@ import { useChainList } from '../useChainList';
 
 export function useCurrentTronNetwork() {
   const { chainList } = useChainList();
-  const { chosenTronNetworkId, addedCustomChainList, approvedOrigins, updateExtensionStorageStore } = useExtensionStorageStore((state) => state);
+  const { chosenTronNetworkId, approvedOrigins, updateExtensionStorageStore } = useExtensionStorageStore((state) => state);
 
   const allTronChains = useMemo(() => [...(chainList?.allTronChains || [])], [chainList?.allTronChains]);
-  const additionalTronNetworks = useMemo(() => addedCustomChainList.filter((chain) => chain.chainType === 'tron'), [addedCustomChainList]);
+  const additionalTronNetworks = useMemo(() => [], []);
 
   const currentAccountSelectedTronNetworkId = useMemo(() => {
     const selectedTronChain = allTronChains.find((network) => isMatchingUniqueChainId(network, chosenTronNetworkId)) || allTronChains[0];
