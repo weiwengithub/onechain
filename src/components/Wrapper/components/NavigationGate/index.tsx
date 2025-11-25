@@ -1,0 +1,317 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
+
+import { Route as Initial } from '@/pages/account/initial';
+import { Route as AptosSignMessage } from '@/pages/popup/aptos/sign-message';
+import { Route as AptosTransaction } from '@/pages/popup/aptos/transaction';
+import { Route as BitcoinSend } from '@/pages/popup/bitcoin/send';
+import { Route as BitcoinSignMessage } from '@/pages/popup/bitcoin/sign-message';
+import { Route as BitcoinSignPsbt } from '@/pages/popup/bitcoin/sign-psbt';
+import { Route as BitcoinSignPsbts } from '@/pages/popup/bitcoin/sign-psbts';
+import { Route as BitcoinSwitchChain } from '@/pages/popup/bitcoin/switch-network';
+import { Route as CosmosAddChain } from '@/pages/popup/cosmos/add-chain';
+import { Route as CosmosAddNFTs } from '@/pages/popup/cosmos/add-nfts';
+import { Route as CosmosAddToken } from '@/pages/popup/cosmos/add-token';
+import { Route as CosmosSignAmino } from '@/pages/popup/cosmos/sign/amino';
+import { Route as CosmosSignDirect } from '@/pages/popup/cosmos/sign/direct';
+import { Route as CosmosSignMessage } from '@/pages/popup/cosmos/sign/message';
+import { Route as EVMAddChain } from '@/pages/popup/evm/add-chain';
+import { Route as EVMAddToken } from '@/pages/popup/evm/add-token';
+import { Route as EVMSign } from '@/pages/popup/evm/sign/eth-sign';
+import { Route as EVMPersonalSign } from '@/pages/popup/evm/sign/personal-sign';
+import { Route as EVMSignTypedData } from '@/pages/popup/evm/sign/sign-typed-data';
+import { Route as EVMSwitchChain } from '@/pages/popup/evm/switch-network';
+import { Route as EVMTransaction } from '@/pages/popup/evm/transaction';
+import { Route as IotaSignMessage } from '@/pages/popup/iota/sign-message';
+import { Route as IotaTransaction } from '@/pages/popup/iota/transaction';
+import { Route as RequestAccount } from '@/pages/popup/request-account';
+import { Route as SuiSignMessage } from '@/pages/popup/sui/sign-message';
+import { Route as SuiTransaction } from '@/pages/popup/sui/transaction';
+import type { AptosRequest } from '@/types/message/inject/aptos';
+import type { BitcoinRequest } from '@/types/message/inject/bitcoin';
+import type { CosmosRequest } from '@/types/message/inject/cosmos';
+import type { EvmRequest } from '@/types/message/inject/evm';
+import type { IotaRequest } from '@/types/message/inject/iota';
+import type { SuiRequest } from '@/types/message/inject/sui';
+import { useExtensionStorageStore } from '@/zustand/hooks/useExtensionStorageStore';
+
+type NavigationGateProps = {
+  children: JSX.Element;
+};
+
+export default function NavigationGate({ children }: NavigationGateProps) {
+  const navigate = useNavigate();
+  const [isNavigating, setIsNavigating] = useState(false);
+  const [navigationError, setNavigationError] = useState<string | null>(null);
+
+  const { userAccounts, requestQueue } = useExtensionStorageStore((state) => state);
+
+  useEffect(() => {
+    // Add a small delay to ensure router is fully initialized
+    const timeoutId = setTimeout(() => {
+      void (async () => {
+        // Reset previous error state
+        setNavigationError(null);
+
+        console.log('[NavigationGate] Navigation check:', {
+          userAccountsLength: userAccounts.length,
+          requestQueueLength: requestQueue.length,
+          userAccounts: userAccounts.map(acc => ({ id: acc.id, type: acc.type })),
+          isNavigating
+        });
+
+        // Prevent multiple simultaneous navigation attempts
+        if (isNavigating) {
+          console.log('[NavigationGate] Already navigating, skipping');
+          return;
+        }
+
+      if (userAccounts.length === 0) {
+        console.log('[NavigationGate] No accounts found, navigating to Initial page');
+        setIsNavigating(true);
+
+        try {
+          await navigate({
+            to: Initial.to,
+          });
+          console.log('[NavigationGate] Navigation to Initial page successful');
+        } catch (error) {
+          const errorMessage = `Failed to navigate to Initial page: ${error instanceof Error ? error.message : String(error)}`;
+          console.error('[NavigationGate]', errorMessage);
+          setNavigationError(errorMessage);
+        } finally {
+          setIsNavigating(false);
+        }
+        return;
+      }
+
+      console.log('[NavigationGate] Accounts exist, checking request queue');
+
+      if (requestQueue.length > 0) {
+        setIsNavigating(true);
+
+        try {
+          let navigationPath: string;
+
+          switch (requestQueue[0].chainType) {
+            case 'cosmos':
+              navigationPath = getNavigationPathForCosmosRequest(requestQueue[0]);
+              break;
+            case 'evm':
+              navigationPath = getNavigationPathForEvmRequest(requestQueue[0]);
+              break;
+            case 'sui':
+              navigationPath = getNavigationPathForSuiRequest(requestQueue[0]);
+              break;
+            case 'bitcoin':
+              navigationPath = getNavigationPathForBitcoinRequest(requestQueue[0]);
+              break;
+            case 'aptos':
+              navigationPath = getNavigationPathForAptosRequest(requestQueue[0]);
+              break;
+            case 'iota':
+              navigationPath = getNavigationPathForIotaRequest(requestQueue[0]);
+              break;
+            default:
+              console.warn('[NavigationGate] Unknown chain type:', requestQueue[0].chainType);
+              navigationPath = '/';
+          }
+
+          console.log('[NavigationGate] Navigating to request handler:', navigationPath);
+          await navigate({ to: navigationPath });
+          console.log('[NavigationGate] Navigation to request handler successful');
+        } catch (error) {
+          const errorMessage = `Failed to navigate to request handler: ${error instanceof Error ? error.message : String(error)}`;
+          console.error('[NavigationGate]', errorMessage);
+          setNavigationError(errorMessage);
+        } finally {
+          setIsNavigating(false);
+        }
+      }
+    })();
+    }, 100); // 100ms delay to ensure router is ready
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [userAccounts.length, navigate, requestQueue, isNavigating]);
+
+  // Show error message if navigation failed
+  if (navigationError) {
+    return (
+      <div style={{
+        padding: '20px',
+        backgroundColor: '#fee',
+        border: '1px solid #fcc',
+        borderRadius: '4px',
+        margin: '10px'
+      }}>
+        <h3>Navigation Error</h3>
+        <p>{navigationError}</p>
+        <button
+          onClick={() => {
+            setNavigationError(null);
+            setIsNavigating(false);
+          }}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  // Show loading indicator while navigating
+  if (isNavigating) {
+    return (
+      <div style={{
+        padding: '20px',
+        textAlign: 'center',
+        backgroundColor: '#f9f9f9'
+      }}>
+        <p>Navigating...</p>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
+}
+
+const getNavigationPathForCosmosRequest = (requestQueue: CosmosRequest) => {
+  switch (requestQueue.method) {
+    case 'cos_requestAccount':
+      return RequestAccount.to;
+    case 'cos_requestAccountsSettled':
+      return RequestAccount.to;
+    case 'cos_addChain':
+      return CosmosAddChain.to;
+    case 'cos_signAmino':
+      return CosmosSignAmino.to;
+    case 'cos_signDirect':
+      return CosmosSignDirect.to;
+    case 'cos_addTokensCW20Internal':
+      return CosmosAddToken.to;
+    case 'cos_addNFTsCW721':
+      return CosmosAddNFTs.to;
+    case 'cos_signMessage':
+      return CosmosSignMessage.to;
+
+    default:
+      return '/';
+  }
+};
+
+const getNavigationPathForEvmRequest = (requestQueue: EvmRequest) => {
+  switch (requestQueue.method) {
+    case 'eth_requestAccounts':
+      return RequestAccount.to;
+    case 'wallet_requestPermissions':
+      return RequestAccount.to;
+    case 'ethc_switchNetwork':
+      return EVMSwitchChain.to;
+    case 'eth_signTransaction':
+      return EVMTransaction.to;
+    case 'eth_sendTransaction':
+      return EVMTransaction.to;
+    case 'eth_sign':
+      return EVMSign.to;
+    case 'personal_sign':
+      return EVMPersonalSign.to;
+    case 'eth_signTypedData_v3':
+      return EVMSignTypedData.to;
+    case 'eth_signTypedData_v4':
+      return EVMSignTypedData.to;
+    case 'ethc_addNetwork':
+      return EVMAddChain.to;
+    case 'ethc_addTokens':
+      return EVMAddToken.to;
+
+    default:
+      return '/';
+  }
+};
+
+const getNavigationPathForSuiRequest = (requestQueue: SuiRequest) => {
+  switch (requestQueue.method) {
+    case 'sui_connect':
+      return RequestAccount.to;
+    case 'sui_getAccount':
+      return RequestAccount.to;
+    case 'sui_signTransaction':
+      return SuiTransaction.to;
+    case 'sui_signAndExecuteTransaction':
+      return SuiTransaction.to;
+    case 'sui_signTransactionBlock':
+      return SuiTransaction.to;
+    case 'sui_signAndExecuteTransactionBlock':
+      return SuiTransaction.to;
+    case 'sui_signMessage':
+      return SuiSignMessage.to;
+    case 'sui_signPersonalMessage':
+      return SuiSignMessage.to;
+
+    default:
+      return '/';
+  }
+};
+
+const getNavigationPathForBitcoinRequest = (requestQueue: BitcoinRequest) => {
+  switch (requestQueue.method) {
+    case 'bit_requestAccount':
+      return RequestAccount.to;
+    case 'bitc_switchNetwork':
+      return BitcoinSwitchChain.to;
+    case 'bit_sendBitcoin':
+      return BitcoinSend.to;
+    case 'bit_signPsbt':
+      return BitcoinSignPsbt.to;
+    case 'bit_signPsbts':
+      return BitcoinSignPsbts.to;
+    case 'bit_signMessage':
+      return BitcoinSignMessage.to;
+
+    default:
+      return '/';
+  }
+};
+
+const getNavigationPathForAptosRequest = (requestQueue: AptosRequest) => {
+  switch (requestQueue.method) {
+    case 'aptos_connect':
+      return RequestAccount.to;
+    case 'aptos_account':
+      return RequestAccount.to;
+    case 'aptos_signTransaction':
+      return AptosTransaction.to;
+    case 'aptos_signMessage':
+      return AptosSignMessage.to;
+
+    default:
+      return '/';
+  }
+};
+
+const getNavigationPathForIotaRequest = (requestQueue: IotaRequest) => {
+  switch (requestQueue.method) {
+    case 'iota_connect':
+      return RequestAccount.to;
+    case 'iota_getAccount':
+      return RequestAccount.to;
+    case 'iota_signTransaction':
+      return IotaTransaction.to;
+    case 'iota_signAndExecuteTransaction':
+      return IotaTransaction.to;
+    case 'iota_signPersonalMessage':
+      return IotaSignMessage.to;
+
+    default:
+      return '/';
+  }
+};

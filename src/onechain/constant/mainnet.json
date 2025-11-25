@@ -1,0 +1,16 @@
+{
+  "rightNetwork": "oct:mainnet",
+  "chainName": "onechain",
+  "explorerUrl": "https://onescan.cc/mainnet/",
+  "networkOptions": {
+    "SWAP_PACKAGE": "2c895379bf5080bd032607563ed2854521383bde08081c49e4386d4ea7726f45",
+    "SWAP_MODULE": "swap",
+    "OBJECT_LIQUIDITY_POOLS": "0xac4d3019a92ae2f32c1bc7274af0cce970e99ae574afd5aadae53753bf7d47ee",
+    "FEE_REGISTRY": "0xccd336d5b88d6fe66f83868923a6486f252b0fb56ecb5b18ab03da6e63a65aa5",
+    "CLOCK_OBJECT_ID": "0x0000000000000000000000000000000000000000000000000000000000000006",
+    "FEE_TYPE": "0x2c895379bf5080bd032607563ed2854521383bde08081c49e4386d4ea7726f45::fee::Fee30Bps"
+  },
+  "useGasPool": 1,
+  "gasBudget": 2000000000,
+  "reserveDurationSecs": 60
+}

@@ -1,0 +1,3705 @@
+{
+  "components": {
+    "MainBox": {
+      "Portfolio": {
+        "index": {
+          "totalValue": "My Total Value",
+          "allNetwork": "All Network",
+          "send": "Send",
+          "receive": "Receive",
+          "history": "History",
+          "stake": "Stake",
+          "swap": "Swap",
+          "buy": "Buy",
+          "dapp": "Dapp",
+          "more": "More",
+          "receiveWithSymbol": "{{symbol}} Receive",
+          "vault": "Vault",
+          "faucet": "Faucet"
+        },
+        "components": {
+          "MoreOptionBottomSheet": {
+            "index": {
+              "header": "More Actions",
+              "vote": "Vote",
+              "voteDescription": "Participate governance by voting on proposals",
+              "buy": "Buy",
+              "buyDescription": "Purchase crypto with fiat or another asset",
+              "dropMoney": "Drop.Money",
+              "dropMoneyDescription": "Keep your assets liquid stake with Drop",
+              "babylon": "Babylon",
+              "babylonDescription": "Stake Bitcoin and unlock earnings potential"
+            }
+          }
+        }
+      },
+      "CoinOverview": {
+        "index": {
+          "Overview": "Overview",
+          "in": "In",
+          "networks": "Networks"
+        }
+      },
+      "StakeDetailBox": {
+        "Cosmos": {
+          "index": {
+            "title": "Stake & Earn {{symbol}}",
+            "reward": "Rewards",
+            "stake": "Stake",
+            "claim": "Claim",
+            "compound": "Compound",
+            "unstake": "Unstake",
+            "staked": "Staked"
+          }
+        },
+        "Sui": {
+          "index": {
+            "title": "Stake & Earn {{symbol}}",
+            "available": "Available",
+            "suiStake": "Sui Stake",
+            "totalStaked": "Total Staked",
+            "staked": "Staked",
+            "earned": "Earned",
+            "stake": "Stake",
+            "unstake": "Unstake"
+          }
+        },
+        "Iota": {
+          "index": {
+            "title": "Stake & Earn {{symbol}}",
+            "available": "Available",
+            "suiStake": "Sui Stake",
+            "totalStaked": "Total Staked",
+            "staked": "Staked",
+            "earned": "Earned",
+            "stake": "Stake",
+            "unstake": "Unstake"
+          }
+        }
+      },
+      "CoinDetailBox": {
+        "index": {
+          "copied": "Copied to Clipboard",
+          "send": "Send",
+          "receive": "Receive",
+          "swap": "Swap",
+          "vote": "Vote",
+          "more": "more",
+          "vault": "Vault",
+          "dao": "Dao",
+          "vaultDescription": "Vault to put $NTRN to get voting power",
+          "daoDescription": "Participate in decisions through DAO voting",
+          "copyFailed": "Failed to Copy"
+        }
+      }
+    },
+    "SortBottomSheet": {
+      "index": {
+        "title": "Select Sort Option"
+      }
+    },
+    "Mnemonic": {
+      "index": {
+        "seedPhrase": "Seed Phrase",
+        "twelveWords": "12 Words",
+        "twentyFourWords": "24 Words"
+      }
+    },
+    "MnemonicViewer": {
+      "index": {
+        "seedPhrase": "Seed Phrase",
+        "twelveWords": "12 Words",
+        "twentyFourWords": "24 Words",
+        "copy": "Copy to Clipboard",
+        "copied": "Copied to Clipboard",
+        "words": "{{wordCounts}} words"
+      }
+    },
+    "AllNetworkButton": {
+      "index": {
+        "allNetwork": "All Network"
+      }
+    },
+    "FooterCoinPrice": {
+      "index": {
+        "currentPrice": "Current Price",
+        "coinGecko24h": "Coingecko 24H",
+        "seeDetail": "See Detail"
+      }
+    },
+    "ChainListBottomSheet": {
+      "index": {
+        "title": "Select Network",
+        "allNetwork": "All Network",
+        "searchPlaceholder": "Search network",
+        "customNetwork": "Can't find your network?\nYou can manually add a custom network",
+        "network": "Network",
+        "switchCoinType": "Switch Coin Type",
+        "valueHighOrder": "Value High Order",
+        "alphabeticalAsc": "Alphabetical Asc. (A -> Z)"
+      }
+    },
+    "Lock": {
+      "index": {
+        "title": "Unlock wallet",
+        "enterPassword": "Enter Password",
+        "unlock": "Unlock",
+        "forgotPassword": "Forgot Password?",
+        "loading": "It may take a while...",
+        "zkSessionExpired": "Your zkLogin session has expired. Starting re-authentication...",
+        "reAuthSuccess": "Re-authentication successful! Please enter your password again to unlock.",
+        "reAuthFailed": "Re-authentication failed: {{message}}. Please try again."
+      }
+    },
+    "FeeSettingBottomSheet": {
+      "components": {
+        "OptionButton": {
+          "index": {
+            "feeToken": "Fee Token :"
+          }
+        }
+      },
+      "index": {
+        "title": "Select Fee Option",
+        "customDescription": "Do you want a advanced setting?",
+        "custom": "Custom"
+      }
+    },
+    "Fee": {
+      "index": {
+        "networkFee": "Network Fee",
+        "continue": "Continue"
+      },
+      "Components": {
+        "FeeSettingBottomSheet": {
+          "components": {
+            "FeeCustomOverlay": {
+              "index": {
+                "networkFee": "Network Fee",
+                "gasAmount": "Gas Amount",
+                "inform": "How Network Fees are paid",
+                "informDescription": "Network fees are paid to the blockchain network, not to the OneWallet wallet app",
+                "done": "Done",
+                "feeToken": "Fee Token",
+                "selectFeeToken": "Select Fee Token"
+              }
+            }
+          }
+        }
+      },
+      "SuiFee": {
+        "index": {
+          "estimatedGasFee": "Estimated Gas Fee",
+          "networkFee": "Network Fee",
+          "continue": "Continue"
+        }
+      },
+      "EVMFee": {
+        "Components": {
+          "FeeSettingBottomSheet": {
+            "components": {
+              "EIP1559FeeCustomOverlay": {
+                "index": {
+                  "inputGasAmountError": "invalid gas amount",
+                  "inputMaxBaseFeeAmountError": "invalid max base fee amount",
+                  "inputPriorityFeeAmountError": "priority fee should be smaller than max base fee",
+                  "networkFee": "Network Fee",
+                  "feeToken": "Fee Token",
+                  "gasAmount": "Gas Amount",
+                  "maxbaseFee": "Max base fee per gas (GWEI)",
+                  "priorityFee": "Max priority fee per gas (GWEI)",
+                  "inform": "How Network Fees are paid",
+                  "informDescription": "Network fees are paid to the blockchain network, not to the OneWallet wallet app",
+                  "done": "Setup Complete"
+                }
+              },
+              "GasPriceCustomOverlay": {
+                "index": {
+                  "inputGasAmountError": "invalid gas amount",
+                  "inputMaxBaseFeeAmountError": "invalid max base fee amount",
+                  "networkFee": "Network Fee",
+                  "feeToken": "Fee Token",
+                  "gasAmount": "Gas Amount",
+                  "maxbaseFee": "Max base fee per gas (GWEI)",
+                  "inform": "How Network Fees are paid",
+                  "informDescription": "Network fees are paid to the blockchain network, not to the OneWallet wallet app",
+                  "done": "Setup Complete",
+                  "gasPrice": "Gas Price"
+                }
+              }
+            }
+          }
+        },
+        "components": {
+          "FeeSettingBottomSheet": {
+            "components": {
+              "OptionButton": {
+                "index": {
+                  "feeToken": "Fee Token"
+                }
+              }
+            }
+          }
+        },
+        "index": {
+          "networkFee": "Network Fee",
+          "continue": "Continue"
+        }
+      },
+      "BitcoinFee": {
+        "index": {
+          "networkFee": "Network Fee",
+          "continue": "Continue"
+        }
+      },
+      "AptosFee": {
+        "index": {
+          "networkFee": "Network Fee",
+          "continue": "Continue"
+        }
+      },
+      "CosmosFee": {
+        "components": {
+          "FeeSettingBottomSheet": {
+            "components": {
+              "FeeCustomOverlay": {
+                "index": {
+                  "networkFee": "Network Fee",
+                  "feeToken": "Fee Token",
+                  "selectFeeToken": "Select Fee Token",
+                  "gasAmount": "Gas Amount",
+                  "gasRate": "Gas Rate",
+                  "inform": "How Network Fees are paid",
+                  "informDescription": "Network fees are paid to the blockchain network, not to the OneWallet wallet app",
+                  "done": "Setup Complete",
+                  "inputGasAmountError": "invalid gas amount",
+                  "inputGasRateError": "invalid gas rate"
+                }
+              }
+            }
+          }
+        },
+        "FeeSettingBottomSheet": {
+          "index": {
+            "title": "Select Fee Option",
+            "customDescription": "Do you want a advanced setting?",
+            "custom": "Custom"
+          }
+        },
+        "index": {
+          "networkFee": "Network Fee",
+          "continue": "Continue"
+        }
+      },
+      "IotaFee": {
+        "index": {
+          "networkFee": "Network Fee",
+          "continue": "Continue"
+        }
+      }
+    },
+    "FinalReviewBottomSheet": {
+      "index": {
+        "title": "Final Review",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "viewDetails": "View Details",
+        "jsonDialogTitle": "Tx Data"
+      }
+    },
+    "MnemonicBackupChecker": {
+      "index": {
+        "phrase": "Phrase"
+      }
+    },
+    "VerifyPasswordBottomSheet": {
+      "index": {
+        "title": "Verify Password",
+        "descriptionSubTitle": "Please enter your password to proceed. This step is required to securely access sensitive information",
+        "password": "Password",
+        "confirm": "Confirm"
+      }
+    },
+    "SetNameBottomSheet": {
+      "index": {
+        "header": "Set Account Name",
+        "description": "Please enter a name for your account. You can change the account name at any time in the future",
+        "accountName": "Account Name",
+        "setUpComplete": "Set Up Complete"
+      }
+    },
+    "SettingPopover": {
+      "index": {
+        "setting": "Settings",
+        "manageDapps": "Manage Dapps",
+        "lockWallet": "Lock Wallet"
+      }
+    },
+    "CoinSelect": {
+      "index": {
+        "searchPlaceholder": "Search Crypto (Ex. BTC)",
+        "valueHighOrder": "Value High Order",
+        "alphabeticalAsc": "Alphabetical Asc. (A -> Z)",
+        "aprDesc": "APR Desc",
+        "noResultsTitle": "No Results Found",
+        "noResultsSubtitle": "Try adjusting your filters or search term."
+      }
+    },
+    "History": {
+      "received": "Received"
+    },
+    "CoinListBottomSheet": {
+      "index": {
+        "title": "Select Coin"
+      }
+    },
+    "GithubBottomSheet": {
+      "index": {
+        "goToGithub": "Go to Github"
+      }
+    },
+    "DeleteConfirmBottomSheet": {
+      "index": {
+        "header": "Delete Confirmation",
+        "delete": "Delete"
+      }
+    },
+    "AddressBottomSheet": {
+      "index": {
+        "myAddress": "My Address",
+        "addressBook": "Address Book",
+        "title": "Select Address",
+        "searchPlaceholder": "Search Wallet, Account, Address"
+      },
+      "components": {
+        "PrivatekeyAccount": "Private Key",
+        "noAccounts": "No addresses available",
+        "noAccountsDescription": "Add or import an address to see it here."
+      }
+    },
+    "AddressBook": {
+      "index": {
+        "memo": "Memo :",
+        "noAddressBookItem": "No saved addresses",
+        "noAddressBookItemDescription": "No addresses added yet. Save frequently used ones for quick access"
+      }
+    },
+    "CheckLegacyAddressBalanceBottomSheet": {
+      "index": {
+        "title": "Set Coin Type",
+        "contentTitle": "Assets found in Legacy",
+        "contentBody": "Assets are detected in the legacy address.\nThe selected type of coins will be displayed in the portfolio, and if not selected, the default path will be applied.",
+        "infoTitle": "The default coin type is recommended.",
+        "infoBody": "You can later change the coin type again via **Portfolio > Network Filter > Switch Coin Type**.",
+        "later": "Later",
+        "goToSetUp": "Go to Set Up"
+      }
+    },
+    "Overlay": {
+      "components": {
+        "EventDialog": {
+          "index": {
+            "hideDescription": "Hide for the next {{duration}} days"
+          }
+        }
+      },
+      "EventDialog": {
+        "components": {
+          "DropDialog": {
+            "index": {
+              "launch": "Liquid Stake"
+            }
+          },
+          "BabylonPopover": {
+            "index": {
+              "launch": "Stake Now"
+            }
+          }
+        }
+      }
+    },
+    "CoinTypeSelector": {
+      "components": {
+        "CoinType": {
+          "coinType": "${chain} Coin Type"
+        }
+      }
+    },
+    "AccountTxHistory": {
+      "components": {
+        "Cosmos": {
+          "components": {
+            "CosmosTxItem": {
+              "index": {
+                "txSend": "Send",
+                "txReceive": "Received",
+                "txTransfer": "Transfer",
+                "txMultiSend": "Multi Send",
+                "txDelegate": "Delegate",
+                "txUndelegate": "Undelegate",
+                "txCancelUndelegate": "Cancel Undelegate",
+                "txRedelegate": "Redelegate",
+                "txGetReward": "Get Rewards",
+                "txGetCommission": "Get Commission",
+                "txFundPool": "Funding Community Pool",
+                "txChangeRewardAddress": "Edit Address",
+                "txVote": "Vote",
+                "txSubmitProposal": "Proposal",
+                "txProposalDeposit": "Proposal Deposit",
+                "txVoteWeighted": "Vote Weighted",
+                "txDeposit": "Deposit",
+                "txAuthzGrant": "Authz Grant",
+                "txAuthzRevoke": "Authz Revoke",
+                "txAuthzExe": "Authz Execute",
+                "txFeegrantAllowance": "Fee Grant Allowance",
+                "txFeegrantRevoke": "Fee Grant Revoke",
+                "txCreateValidator": "Create Val",
+                "txEditValidator": "Edit Val",
+                "txUnjailValidator": "Unjail Val",
+                "txReinvest": "Compounding",
+                "txGetRewardAll": "Get All Rewards",
+                "txNewOrder": "New Order",
+                "txCancelOrder": "Cancel Order",
+                "txIssueToken": "Issue Token",
+                "txKavaPostPrice": "Post Price",
+                "txKavaCreateCdp": "CDP Open",
+                "txKavaDepositCdp": "CDP Deposit",
+                "txKavaWithdrawCdp": "CDP Withdraw",
+                "txKavaDrawdebtCdp": "CDP Borrow",
+                "txKavaRepaydebtCdp": "CDP Repay",
+                "txKavaLiquidateCdp": "CDP Liquidate",
+                "txCreateHtlc": "BEP3 Create",
+                "txSendHtlc": "BEP3 Send",
+                "txReceiveHtlc": "BEP3 Receive",
+                "txClaimHtlc": "BEP3 Claim",
+                "txRefundHtlc": "BEP3 Refund",
+                "txKavaBep3Create": "BEP3 Send",
+                "txKavaBep3Claim": "BEP3 Claim",
+                "txKavaBep3Refund": "BEP3 Refund",
+                "txKavaIncentiveReward": "Incentive Minting",
+                "txKavaHavestDeposit": "Hard Lend Deposit",
+                "txKavaHavestWithdraw": "Hard Lend Withdraw",
+                "txKavaHavestClaim": "Hard Lend Get Rewards",
+                "txStarnameRegisteDomain": "Register Domain",
+                "txStarnameRegisteAccount": "Register Account",
+                "txStarnameDeleteDomain": "Delete Domain",
+                "txStarnameDeleteAccount": "Delete Account",
+                "txStarnameRenewDomain": "Renew Domain",
+                "txStarnameRenewAccount": "Renew Account",
+                "txStarnameUpdateResource": "Replace Address",
+                "txKavaHardDeposit": "Hard Lend Deposit",
+                "txKavaHardWithdraw": "Hard Lend Withdraw",
+                "txKavaHardBorrow": "Hard Lend Borrow",
+                "txKavaHardRepay": "Hard Lend Repay",
+                "txKavaHardLiquidate": "Hard Lend Liquidate",
+                "txKavaHardIncentive": "Hard Lend Incentive",
+                "txKavaMintIncentive": "USDX Minting Incentive",
+                "txKavaDelegatorIncentive": "Delegator Incentive",
+                "txKavaSwapIncentive": "Swap Incentive",
+                "txKavaSaveIncentive": "Save Incentive",
+                "txKavaEarnIncentive": "Earn Incentive",
+                "txKavaIncentiveClaimAll": "Claim Incentive",
+                "txKavaSwapToken": "Swap Coin",
+                "txKavaSwapDeposit": "Swap Pool Deposit",
+                "txKavaSwapWithdraw": "Swap Pool Withdraw",
+                "txKavaAuctionBid": "Auction Bid",
+                "txKavaSaveDeposit": "Saving Deposit",
+                "txKavaSaveWithdraw": "Saving Withdraw",
+                "txKavaEarnDeposit": "Earn Liquidate Deposit",
+                "txKavaEarnDelegateDeposit": "Earn Liquidate Delegate Deposit",
+                "txKavaEarnWithdraw": "Earn Liquidate Withdraw",
+                "txIbcSend": "IBC Send",
+                "txIbcReceive": "IBC Received",
+                "txIbcClientUpdate": "IBC Client Update",
+                "txIbcAcknowledgement": "IBC Ack",
+                "txCreatePool": "Create Pool",
+                "txJoinPool": "Join Pool",
+                "txExitPool": "Exit Pool",
+                "txCoinSwap": "Swap Coin",
+                "txOsmosisTokenLockup": "Lockup Token",
+                "txOsmosisBeginUnlucking": "Begin Unlocking",
+                "txOsmosisBeginUnluckingAll": "Begin Unlocking All",
+                "txOsmosisPreriodlockUnlock": "Claim Unlocked Token",
+                "txOsmosisTokenUnlock": "Unlock Tokens",
+                "txOsmosisSuperFluidDelegate": "SuperFluid\nStaking",
+                "txOsmosisSuperFluidUndelegate": "SuperFluid\nUnstaking",
+                "txOsmosisSuperFluidUnbondinglock": "SuperFluid\nUnbonding Lock",
+                "txOsmosisSuperFluidLockanddelegate": "SuperFluid\nLock & Staking",
+                "txRizonEventHorizon": "Receive Swap Token",
+                "txMedAddRecord": "Add Record",
+                "txMedCreateTopic": "Create Topic",
+                "txMedAddWriter": "Add Writer",
+                "txMedCreateDid": "Create DID",
+                "txAddLiquidity": "Add Liquidity",
+                "txRemoveLiquidity": "Remove Liquidity",
+                "txDespensationClaim": "Claim Incentive",
+                "txDistributionRun": "Distribution Run",
+                "txNftMint": "Issue NFT",
+                "txNftSend": "NFT Send",
+                "txNftReceive": "NFT Receive",
+                "txNftTransfer": "NFT Transfer",
+                "txNftEdit": "NFT Edit",
+                "txNftIssueDenom": "Issue NFT Denom",
+                "txFarmStake": "Stake",
+                "txFarmHarvest": "Harvest",
+                "txDesmosSaveProfile": "Save Profile",
+                "txDesmosDeleteProfile": "Delete Profile",
+                "txDesmosCreateRelation": "Create Relationship",
+                "txDesmosDeleteRelation": "Delete Relationship",
+                "txDesmosDeleteBlockUser": "Block User",
+                "txDesmosDeleteUnblockUser": "Unblock User",
+                "txDesmosLinkChainAccount": "Link Account",
+                "txCosmwasmStoreCode": "Store Contract Code",
+                "txCosmwasmInstantiate": "Instantiate Contract",
+                "txCosmwasmExecontract": "Execute Contract",
+                "txCosmwasm": "Wasm",
+                "txEthereumEvm": "Evm Tx",
+                "txCrescentLiquidStake": "Liquid Stake",
+                "txCrescentLiquidUnstake": "Liquid Unstake",
+                "txCrescentCreatePair": "Liquidity\nCreate Pair",
+                "txCrescentCreatePool": "Liquidity\nCreate Pool",
+                "txCrescentDeposit": "Liquidity\nDeposit",
+                "txCrescentWithdraw": "Liquidity\nWithdraw",
+                "txCrescentLimitOrder": "Limit Order",
+                "txCrescentMarketOrder": "Market Order",
+                "txCrescentCancelOrder": "Cancel Order",
+                "txCrescentCancelAllOrders": "Cancel All Orders",
+                "txCrescentStake": "Farming Stake",
+                "txCrescentUnstake": "Farming Unstake",
+                "txCrescentHarvest": "Farming Harvest",
+                "txCrescentCreateFixedAmountPlan": "Farming\nCreate Plain(Amount)",
+                "txCrescentCreateRatioPlan": "Farming\nCreate Plain(Ratio)",
+                "txCrescentRemovePlan": "Farming\nRemove Plain",
+                "txCrescentAdvanceEpoch": "Farming\nEpoch",
+                "txCrescentClaim": "Airdrop",
+                "txAxelarRefundMsgRequest": "Refund Msg\nRequest",
+                "txAxelarLinkRequest": "Link Request",
+                "txAxelarConfirmDepositRequest": "Confirm Deposit\nRequest",
+                "txAxelarRouteIbcRequest": "Route IBC request",
+                "txInjectiveBatchUpdateOrder": "Update Order",
+                "txInjectiveCreateLimitOrder": "Create Derivative Order",
+                "txInjectiveCreateSpotOrder": "Create Spot Order",
+                "txInjectiveCancelLimitOrder": "Cancel Derivative Order",
+                "txInjectiveCancelSpotOrder": "Cancel Spot Order",
+                "txStrideLiquidStake": "Liquid Stake",
+                "txStrideLiquidUnstake": "Liquid Unstake",
+                "txPersisLiquidRedeem": "Liquid Redeem",
+                "txPersisLiquidClaim": "Liquid Unstaked Claim",
+                "txKnown": "Unknown"
+              }
+            }
+          },
+          "index": {
+            "NoHistoryTitle": "No History",
+            "NoHistorySubTitle": "Your transaction history will be displayed here",
+            "LoadingTitle": "Loading",
+            "LoadingSubTitle": "Please wait a moment",
+            "goToExplorer": "Go to Explorer",
+            "noTransactionsFound": "No transactions found"
+          }
+        },
+        "EVM": {
+          "components": {
+            "EVMTxItem": {
+              "index": {
+                "sent": "Sent",
+                "received": "Received",
+                "transaction": "Transaction"
+              }
+            }
+          },
+          "index": {
+            "NoHistoryTitle": "No History",
+            "NoHistorySubTitle": "Your transaction history will be displayed here",
+            "LoadingTitle": "Loading",
+            "LoadingSubTitle": "Please wait a moment",
+            "goToExplorer": "Go to Explorer"
+          }
+        },
+        "Sui": {
+          "components": {
+            "SuiTxItem": {
+              "components": {
+                "SuiSendingTxItem": {
+                  "index": {
+                    "sent": "Sent {{object}}",
+                    "received": "Received {{object}}",
+                    "to": "To: {{address}}",
+                    "from": "From: {{address}}",
+                    "typeSend": "Send",
+                    "typeReceive": "Receive"
+                  }
+                },
+                "SuiFaucetTxItem": {
+                  "index": {
+                    "faucet": "Faucet"
+                  }
+                },
+                "SuiStakingTxItem": {
+                  "index": {
+                    "failedStaking": "Failed Staking",
+                    "staking": "Staking",
+                    "unstaking": "Unstaking"
+                  }
+                },
+                "SuiFailedTxItem": {
+                  "index": {
+                    "failed": "Failed Transaction"
+                  }
+                },
+                "SuiDefaultTxItem": {
+                  "index": {
+                    "transaction": "Transaction"
+                  }
+                }
+              }
+            }
+          },
+          "index": {
+            "NoHistoryTitle": "No History",
+            "NoHistorySubTitle": "Your transaction history will be displayed here",
+            "LoadingTitle": "Loading",
+            "LoadingSubTitle": "Please wait a moment",
+            "goToExplorer": "Go to Explorer",
+            "noTransactionsFound": "No transactions found"
+          }
+        },
+        "Bitcoin": {
+          "components": {
+            "BitcoinTxItem": {
+              "index": {
+                "sent": "Sent",
+                "received": "Received"
+              }
+            },
+            "BitcoinMempoolTxItem": {
+              "index": {
+                "sent": "Sent",
+                "received": "Received",
+                "pending": "(Pending)"
+              }
+            }
+          },
+          "index": {
+            "NoHistoryTitle": "No History",
+            "NoHistorySubTitle": "Your transaction history will be displayed here",
+            "LoadingTitle": "Loading",
+            "LoadingSubTitle": "Please wait a moment",
+            "goToExplorer": "Go to Explorer"
+          }
+        },
+        "Aptos": {
+          "components": {
+            "AptosTxItem": {
+              "index": {
+                "transaction": "Transaction"
+              }
+            },
+            "AptosPendingTxItem": {
+              "index": {
+                "transaction": "Transaction",
+                "pending": "(Pending)"
+              }
+            }
+          },
+          "index": {
+            "NoHistoryTitle": "No History",
+            "NoHistorySubTitle": "Your transaction history will be displayed here",
+            "LoadingTitle": "Loading",
+            "LoadingSubTitle": "Please wait a moment",
+            "goToExplorer": "Go to Explorer"
+          }
+        },
+        "Iota": {
+          "components": {
+            "IotaTxItem": {
+              "components": {
+                "IotaDefaultTxItem": {
+                  "index": {
+                    "transaction": "Transaction"
+                  }
+                },
+                "IotaFailedTxItem": {
+                  "index": {
+                    "failed": "Failed Transaction"
+                  }
+                },
+                "IotaFaucetTxItem": {
+                  "index": {
+                    "faucet": "Faucet"
+                  }
+                },
+                "IotaSendingTxItem": {
+                  "index": {
+                    "sent": "Sent {{object}}",
+                    "received": "Received {{object}}",
+                    "to": "To: {{address}}",
+                    "from": "From: {{address}}"
+                  }
+                },
+                "IotaStakingTxItem": {
+                  "index": {
+                    "failedStaking": "Failed Staking",
+                    "staking": "Staking",
+                    "unstaking": "Unstaking"
+                  }
+                }
+              }
+            }
+          },
+          "index": {
+            "NoHistoryTitle": "No History",
+            "NoHistorySubTitle": "Your transaction history will be displayed here",
+            "LoadingTitle": "Loading",
+            "LoadingSubTitle": "Please wait a moment",
+            "goToExplorer": "Go to Explorer"
+          }
+        }
+      }
+    },
+    "EthermintSendBottomSheet": {
+      "index": {
+        "cosmosTitle": "Send to COSMOS Style Address",
+        "evmTitle": "Send to EVM Style Address",
+        "cosmosSubtitle": "Use this option for {{bech32Prefix}} address or IBC Send",
+        "evmSubtitle": "Use this option for 0x address",
+        "title": "Select Send Type"
+      }
+    },
+    "Wrapper": {
+      "components": {
+        "MigrationChecker": {
+          "index": {
+            "migration": "Migration",
+            "migrationInProgress": "Migration in Progress",
+            "migrationDescription": "We are updating the OneWallet extension!\nPlease wait while we safely transfer your data.\n\n Do not close the browser or exit the extension\nuntil the migration is complete.",
+            "completed": "{{percent}}% Completed",
+            "migrationError": "Migration Error, Please try again",
+            "retry": "Restart now?",
+            "startWithMigration": "Start migration",
+            "migrationRequired": "Migration Required",
+            "verifyPasswordBottomSheetDescription": "Please enter your password to proceed. This step is required to securely access sensitive information",
+            "migrationRequiredDescription": "As the extension has been updated to the latest version, a migration process is required to safely transfer existing data. \n\n Please proceed with the migration for seamless service.",
+            "errorOccurred": "Error has occurred",
+            "forgotPassword": "Forgot Password?",
+            "reset": "Reset",
+            "resetExtension": "Reset Extension"
+          }
+        }
+      }
+    },
+    "EthermintFilterChainSelectBox": {
+      "index": {
+        "evmTokenTitle": "Add ERC20 token",
+        "cosmosTokenTitle": "Add CW20 token",
+        "evmTokenSubtitle": "For Ethereum-style tokens (0x address)",
+        "cosmosTokenSubtitle": "For tokens on CosmWasm chains (starts with {{prefix}})"
+      }
+    },
+    "JsonPopover": {
+      "title": "Data"
+    },
+    "Search": {
+      "placeholder": "Search crypto or contract address"
+    }
+  },
+  "pages": {
+    "index": {
+      "tokens": "Tokens",
+      "hideSmallBalance": "Hide Small Balance",
+      "manageCrypto": "Manage Crypto",
+      "valueHighOrder": "Value High Order",
+      "alphabeticalAsc": "Alphabetical Asc. (A -> Z)",
+      "searchPlaceholder": "Search Crypto (Ex. BTC)",
+      "noTokensDescription": "Try adjusting your search or filters",
+      "noTokens": "No Assets Found"
+    },
+    "onetransfer": {
+      "title": "Voucher",
+      "tabs": {
+        "issue": "Issue",
+        "redeem": "Redeem"
+      },
+      "mainTabs": {
+        "voucher": "Voucher",
+        "redPacket": "Red Packet"
+      },
+      "fields": {
+        "currency": "Currency",
+        "amount": "Amount",
+        "recipient": "Recipient"
+      },
+      "labels": {
+        "balance": "Balance: {{value}} {{symbol}}",
+        "issueFee": "Network Fee: {{fee}}%",
+        "issueFee2": "Gas Fee: 1 {{currency}}",
+        "redeemFee": "Network fee: 1 {{currency}}"
+      },
+      "placeholders": {
+        "recipientAddress": "Enter recipient address",
+        "voucherCode": "Enter voucher code"
+      },
+      "messages": {
+        "processing": "Processing...",
+        "generatingProof": "Generating zero-knowledge proof, this may take 10-30 seconds..."
+      },
+      "sections": {
+        "issued": "Issued vouchers",
+        "redeemed": "Redeemed vouchers"
+      },
+      "empty": {
+        "issued": "No issued vouchers yet",
+        "redeemed": "No redeemed vouchers"
+      },
+      "toasts": {
+        "issueSuccess": "Voucher issued successfully!",
+        "redeemSuccess": "Voucher redeemed successfully! Amount: {{amount}} {{currency}}",
+        "redPacketSuccess": "Red packet sent successfully! Amount: {{amount}} {{currency}}",
+        "copied": "Copied to clipboard"
+      },
+      "errors": {
+        "copyFailed": "Copy failed",
+        "noCurrencySelected": "Please select a currency first",
+        "amountNotSupported": "Amount {{amount}} {{currency}} is not supported",
+        "insufficientBalance": "Insufficient balance",
+        "noCoinObjects": "No available coin objects. Please acquire assets first",
+        "tooManyCoins": "Too many coin objects (>{{max}}). Please merge assets in the wallet before issuing a voucher",
+        "recipientUnavailable": "Failed to obtain recipient address",
+        "operationFailed": "Operation failed: {{message}}",
+        "invalidAddress": "Invalid address format",
+        "invalidAmount": "Please enter a valid amount",
+        "invalidVoucherCode": "Please enter a voucher code",
+        "voucherErrors": {
+          "gasInsufficient": "Insufficient gas, please recharge OCT and try again",
+          "gasObjectInvalid": "Invalid gas object, please contact technical support",
+          "gasExceedsMaximum": "Transaction gas fee is too high, please reduce the amount and try again",
+          "coinBalanceInsufficient": "Insufficient balance, please check your account balance",
+          "transactionValidationFailed": "Transaction validation failed, please check network and contract status",
+          "transactionBuildFailed": "Transaction build failed, please try again",
+          "networkError": "Network error, please check your network connection",
+          "rpcError": "Unable to connect to blockchain node, please check your network",
+          "signerNotAvailable": "Please unlock your wallet first",
+          "walletNotConnected": "Wallet not connected, please connect your wallet first",
+          "voucherAlreadyRedeemed": "Voucher has already been redeemed",
+          "voucherNotFound": "Voucher does not exist or was not found",
+          "invalidVoucherCode": "Invalid voucher code format",
+          "merkleProofFailed": "Merkle proof generation failed",
+          "merkleTreeSyncFailed": "Indexer is still syncing. Please retry in a moment.",
+          "zkProofGenerationFailed": "Zero-knowledge proof generation failed, please try again",
+          "zkProofVerificationFailed": "Zero-knowledge proof verification failed",
+          "unknownError": "Operation failed, please try again"
+        }
+      },
+      "buttons": {
+        "processing": "Processing",
+        "sendRedPacket": "Send Red Packet"
+      },
+      "history": {
+        "layout": {
+          "header": "History"
+        }
+      },
+      "voucher": {
+        "errors": {
+          "syncFailed": "Unable to synchronize voucher status: {{message}}"
+        },
+        "altText": {
+          "used": "Used voucher",
+          "unused": "Unused voucher"
+        }
+      }
+    },
+    "account": {
+      "initial": {
+        "index": {
+          "termsNotice": "I have read and agree to the",
+          "termsOfUse": "Terms of Use",
+          "start": "Start",
+          "slogan": "Your Gateway to Future Finance",
+          "createWallet": "Create Wallet",
+          "importWallet": "Import Wallet",
+          "welcome": "Welcome to OneWallet",
+          "googleLogin": "Sign in with Google",
+          "appleLogin": "Sign in with Apple"
+        },
+        "entry": {
+          "languageOptions": {
+            "english": "English",
+            "chinese": "简体中文"
+          },
+          "termsNotice": "By continuing, you agree to our <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>"
+        }
+      },
+      "set-password": {
+        "index": {
+          "title": "Set Wallet Password",
+          "subTitle": "Protects important information within the wallet and is required each time you access the wallet",
+          "password": "Password",
+          "verifyPassword": "Verify Password",
+          "passwordLength": "Password must be at least 8 characters",
+          "passwordNotMatch": "Passwords do not match",
+          "veryWeak": "Very weak",
+          "weak": "Weak",
+          "moderate": "Moderate",
+          "strong": "Strong",
+          "veryStrong": "Very strong",
+          "caution": "Caution",
+          "cautionDescription": "If you forget your password, you will not be able to access your wallet. Please write down your password and keep it in a safe place.",
+          "protectWallet": "Protect your wallet",
+          "passwordTip": "Use it to unlock your wallet.",
+          "confirmPassword": "Confirm Password",
+          "next": "Next",
+          "nextStep": "Next Step"
+        },
+        "layout": {
+          "header": "Create Account"
+        }
+      },
+      "add-wallet": {
+        "index": {
+          "guide": "Do you need a detailed guide?",
+          "goToGuide": "Go to the guide",
+          "infoTitle": "Select Wallet Creation or Recovery Method",
+          "infoBody": "Choose a method to create a new wallet or recover an existing one. Please proceed in a secure environment.",
+          "createNewWallet": "Create New Wallet",
+          "createNewWalletDescription": "Create a cryptocurrency wallet with a new mnemonic",
+          "restoreWithMnemonic": "Restore With Mnemonic",
+          "restoreWithMnemonicDescription": "Restore an existing wallet using a 12, 18, or 24-word mnemonic",
+          "restoreWithPrivateKeyDescription": "Restore an account using a private key from the network",
+          "restoreWithPrivateKey": "Restore With Private Key",
+          "header": "Add Wallet"
+        },
+        "layout": {
+          "header": "Add Wallet"
+        },
+        "entry": {
+          "toastGoogleDataMissing": "Failed to complete Google authentication - missing required data",
+          "toastGoogleAuthFailed": "Failed to authenticate with Google: {{message}}",
+          "toastAppleDataMissing": "Failed to complete Apple authentication - missing required data",
+          "toastAppleAuthFailed": "Failed to authenticate with Apple: {{message}}",
+          "toastPasswordMissing": "Password not set. Please set up password first.",
+          "toastDuplicateZkLogin": "This {{provider}} account is already imported in the wallet.",
+          "toastDataIncomplete": "ZkLogin data incomplete. Please authenticate again.",
+          "toastProofMissing": "ZkLogin proof missing. Please authenticate again.",
+          "toastEphemeralMissing": "Ephemeral key pair not available. Please try again.",
+          "toastMaxEpochMissing": "Max epoch not available. Please try again.",
+          "toastCreateSuccess": "ZkLogin account \"{{name}}\" created successfully!",
+          "toastCreateFailed": "Failed to create ZkLogin account: {{message}}",
+          "languageOptions": {
+            "english": "English",
+            "chinese": "简体中文"
+          },
+          "providers": {
+            "google": "Google",
+            "apple": "Apple"
+          },
+          "unknownError": "Unknown error"
+        }
+      },
+      "restore-wallet": {
+        "mnemonic": {
+          "components": {
+            "HdPathBottomSheet": {
+              "index": {
+                "emptyHdPath": "Please enter a HD Path",
+                "invalidHdPathIndex": "Please enter a valid HD Path Index",
+                "header": "HD Path Setting",
+                "description": "You can create a new account with the same seed phrase but a different HD Path.",
+                "lastHdPath": "Last HD Path",
+                "majorChains": "Major Chains",
+                "confirm": "Confirm"
+              }
+            }
+          },
+          "index": {
+            "title": "Enter in a secure space",
+            "subTitle": "This phrase consists of 12, 18 or 24 words. Please enter them in the correct order",
+            "clearAll": "Clear All",
+            "hdPathDescription": "Use custom path?",
+            "hdPathSetting": "HD Path Setting",
+            "next": "Confirm and Import",
+            "pasteFromClipboard": "Paste from Clipboard",
+            "passwordNotSet": "Password not set",
+            "invalidMnemonicPhrase": "Invalid mnemonic phrase",
+            "mnemonicAlreadyExists": "This mnemonic phrase has already been imported",
+            "accountCreated": "Account created",
+            "addressAndBalanceFetchingError": "Failed to fetch address and balance",
+            "importAllAssets": "Import Assets",
+            "importBottmSheetContentsTitle": "Find My Coins",
+            "importBottmSheetContentsSubTitle": "Would you like to load all your assets? \nIt may take some time if you have many coins.",
+            "no": "No",
+            "import": "Import",
+            "loadingOverlayTitle": "Syncing your wallet assets...",
+            "loadingOverlayMessage": "Checking your assets. This process may take some time.\nPlease wait a moment."
+          },
+          "layout": {
+            "header": "Restore With Mnemonic"
+          },
+          "entry": {
+            "description": "Directly from your existing wallet.",
+            "mnemonicTab": "Mnemonic",
+            "privateKeyTab": "Private Key"
+          }
+        },
+        "privatekey": {
+          "index": {
+            "title": "Enter in a secure space",
+            "subTitle": "Your private key is sensitive; don't share it. Anyone can access your account with it, so be cautious",
+            "clearAll": "Clear All",
+            "pasteFromClipboard": "Paste from Clipboard",
+            "next": "Confirm and Import",
+            "privateKey": "Private Key",
+            "enterPrivateKey": "Enter Private Key",
+            "setUpError": "Failed to set up",
+            "alreadyExist": "Already exists ",
+            "setUpSuccess": "Set up success",
+            "loadingOverlayTitle": "Syncing your wallet assets...",
+            "loadingOverlayMessage": "Checking your assets. This process may take some time.\nPlease wait a moment."
+          },
+          "layout": {
+            "header": "Restore With Private Key"
+          }
+        }
+      },
+      "create-mnemonic": {
+        "mnemonic": {
+          "index": {
+            "title": "Write Down Your Mnemonic",
+            "subTitle": "This phrase is the only way to recover your account. Losing this mnemonics could lead to loss of your asset.",
+            "next": "Next",
+            "passwordNotSet": "Password not set",
+            "success": "Success",
+            "failed": "Failed",
+            "setUpLater": "Later",
+            "backup": "Yes, I’ve saved it",
+            "loadingOverlayTitle": "Syncing your wallet assets...",
+            "loadingOverlayMessage": "Checking your assets. This process may take some time.\nPlease wait a moment."
+          },
+          "components": {
+            "MnemonicBitPopover": {
+              "index": {
+                "twelveWords": "12 Words",
+                "twentyWords": "24 Words",
+                "eighteenWords": "18 words"
+              }
+            }
+          },
+          "entry": {
+            "saveTitle": "Save your recovery phrase",
+            "saveDescription": "The recovery phrase is the key to your wallet. Never share it with anyone.",
+            "copy": "Copy to Clipboard"
+          }
+        }
+      },
+      "create-wallet": {
+        "menmonic": {
+          "layout": {
+            "header": "Create New Wallet"
+          }
+        }
+      },
+      "backup-check": {
+        "entry": {
+          "setUpComplete": "Set Up Complete",
+          "next": "Confirm and Create",
+          "title": "Complete the quiz in order",
+          "subTitle": "Check the backed-up mnemonic and select the correct phrase in order for each number.",
+          "incorrect": "Mnemonic does not match",
+          "setupError": "Fail to set up",
+          "loadingOverlayTitle": "Syncing your wallet assets...",
+          "loadingOverlayMessage": "Checking your assets. This process may take some time.\nPlease wait a moment.",
+          "confirmTitle": "Confirm recovery Phrase",
+          "confirmDescription": "Confirm your recovery phrase to complete setup."
+        },
+        "layout": {
+          "header": "Back Up Wallet"
+        }
+      }
+    },
+    "coin-detail": {
+      "components": {
+        "ContractAddress": {
+          "index": {
+            "copied": "Contract address successfully copied",
+            "contract": "Contract"
+          }
+        },
+        "StakePromotion": {
+          "index": {
+            "title": "Earn ${{symbol}} and make a profit",
+            "stake": "Go to Manage Stake",
+            "titleWithApr": "Earn ${{symbol}} up to {{apr}} APR"
+          }
+        },
+        "AmountDetail": {
+          "Cosmos": {
+            "title": "My Coin Details",
+            "available": "Available",
+            "staked": "Staked",
+            "unstaking": "Unstaking",
+            "rewards": "Rewards",
+            "incentive": "Incentive",
+            "commission": "Commission",
+            "locked": "Locked"
+          },
+          "Sui": {
+            "title": "My Coin Details",
+            "available": "Available",
+            "totalStaked": "Total Staked",
+            "staked": "Staked",
+            "earned": "Earned"
+          },
+          "Bitcoin": {
+            "title": "My Coin Details",
+            "available": "Available",
+            "pendingReceive": "Pending Receive",
+            "pendingSent": "Pending Sent"
+          },
+          "Iota": {
+            "title": "My Coin Details",
+            "available": "Available",
+            "totalStaked": "Total Staked",
+            "staked": "Staked",
+            "earned": "Earned"
+          }
+        }
+      },
+      "entry": {
+        "history": "History",
+        "denom": "Denom",
+        "copiedDenom": "IBC denom is successfully copied"
+      },
+      "$coinId": {
+        "manage-stake": {
+          "layout": {
+            "header": "Manage Stake"
+          },
+          "Entry": {
+            "Cosmos": {
+              "components": {
+                "StakingItem": {
+                  "index": {
+                    "commission": "Commission",
+                    "staked": "Staked",
+                    "reward": "Reward",
+                    "stake": "Stake",
+                    "stakeDescription": "Lock your tokens to earn rewards over time",
+                    "unstake": "Unstake",
+                    "unstakeDescription": "Withdraw staked tokens, may have a delay",
+                    "claimRewards": "Claim Rewards",
+                    "claimRewardsDescription": "Collect your accumulated staking rewards",
+                    "compounding": "Compounding",
+                    "compoundingDescription": "Reinvest rewards to increase future earnings"
+                  }
+                },
+                "UnstakingItem": {
+                  "index": {
+                    "unstaking": "Unstaking",
+                    "cancelUnstaking": "Cancel Unstaking",
+                    "cancelUnstakingDescription": "Cancel the unstaking process"
+                  }
+                }
+              }
+            },
+            "Sui": {
+              "components": {
+                "StakingItem": {
+                  "index": {
+                    "objectId": "Object ID : {{objectId}}",
+                    "staked": "Staked",
+                    "earned": "Earned",
+                    "totalStaked": "Total Staked",
+                    "startEarning": "Start Earning",
+                    "stake": "Stake",
+                    "stakeDescription": "Lock your tokens to earn rewards over time",
+                    "unstake": "Unstake",
+                    "unstakeDescription": "Withdraw staked tokens",
+                    "claimRewards": "Claim Rewards",
+                    "claimRewardsDescription": "Collect your accumulated staking rewards"
+                  }
+                },
+                "PendingItem": {
+                  "index": {
+                    "objectId": "Object ID : {{objectId}}",
+                    "totalStaked": "Total Staked",
+                    "staked": "Staked",
+                    "earned": "Earned",
+                    "startEarning": "Start Earning"
+                  }
+                }
+              }
+            },
+            "components": {
+              "StakingOptionBottomSheet": {
+                "index": {
+                  "title": "Select Option"
+                }
+              }
+            },
+            "Iota": {
+              "components": {
+                "PendingItem": {
+                  "index": {
+                    "objectId": "Object ID : {{objectId}}",
+                    "totalStaked": "Total Staked",
+                    "staked": "Staked",
+                    "earned": "Earned",
+                    "startEarning": "Start Earning"
+                  }
+                },
+                "StakingItem": {
+                  "index": {
+                    "objectId": "Object ID : {{objectId}}",
+                    "totalStaked": "Total Staked",
+                    "staked": "Staked",
+                    "earned": "Earned",
+                    "startEarning": "Start Earning",
+                    "stake": "Stake",
+                    "stakeDescription": "Lock your tokens to earn rewards over time",
+                    "unstake": "Unstake",
+                    "unstakeDescription": "Withdraw staked tokens"
+                  }
+                }
+              }
+            }
+          },
+          "entry": {
+            "Sui": {
+              "components": {
+                "EpochIndicator": {
+                  "index": {
+                    "currentEpoch": "Current Epoch",
+                    "nextRewardShare": "The next rewards will be distributed"
+                  }
+                }
+              },
+              "index": {
+                "emptyPending": "No Pending",
+                "emptyPendingDescription": "There are no pending objects.",
+                "startStaking": "Start Staking with OneWallet",
+                "startStakingDescription": "Start earning staking rewards and\ncontribute to the network ecosystem",
+                "goToStake": "Go to Stake"
+              }
+            },
+            "Cosmos": {
+              "index": {
+                "startStaking": "Start Staking with OneWallet",
+                "startStakingDescription": "Start earning staking rewards and\ncontribute to the network ecosystem",
+                "goToStake": "Go to Stake",
+                "emptyStaking": "No Unstaking",
+                "emptyStakingDescription": "Currently have no unstaking transactions."
+              }
+            },
+            "Iota": {
+              "components": {
+                "EpochIndicator": {
+                  "index": {
+                    "currentEpoch": "Current Epoch",
+                    "nextRewardShare": "The next rewards will be distributed"
+                  }
+                }
+              },
+              "index": {
+                "emptyPending": "No Pending",
+                "emptyPendingDescription": "There are no pending objects.",
+                "startStaking": "Start Staking with OneWallet",
+                "startStakingDescription": "Start earning staking rewards and\ncontribute to the network ecosystem",
+                "goToStake": "Go to Stake"
+              }
+            }
+          },
+          "components": {
+            "SuiStakingInfoBottomSheet": {
+              "index": {
+                "header": "SUI Staking Info",
+                "title1": "Epoch Creation",
+                "subtitle1": "Epochs are created every 24 hours. ",
+                "title2": "Pending State",
+                "subtitle2-1": "If you have started staking, it will remain in a ‘pending’ state until the current",
+                "epoch": "epoch(#{{epoch}})",
+                "subtitle2-2": "ends.",
+                "title3": "Reward Distribution",
+                "subtitle3-1": "At the end of the next",
+                "subtitle3-2": ", rewards will be distributed, Each subsequent epoch will be repeated.",
+                "title4": "Compounded Rewards",
+                "subtitle4": "Rewards are compounded and can be used immediately after the start of unstaking.  ",
+                "available": "Available",
+                "estApr": "Est, APR",
+                "goToSuiStake": "Go to SUI Stake"
+              }
+            }
+          }
+        },
+        "about": {
+          "entry": {
+            "contract": "Contract",
+            "denom": "Denom",
+            "coinId": "Coin ID",
+            "description": "Description",
+            "detailInformation": "Detail Information",
+            "network": "Network",
+            "decimals": "Decimals",
+            "displayDecimals": "{{decimals}} decimals",
+            "erc20Coin": "ERC20 Token",
+            "cw20Coin": "CW20 Token",
+            "nativeCoin": "Native Coin",
+            "bridgeCoin": "Bridged COin",
+            "type": "Type",
+            "learnMore": "Learn More",
+            "coinGecko": "CoinGecko"
+          },
+          "layout": {
+            "about": "About {{symbol}}"
+          }
+        }
+      }
+    },
+    "manage-account": {
+      "detail": {
+        "mnemonic": {
+          "entry": {
+            "deleteMnemonic": "Delete Mnemonic",
+            "viewMyMnemonic": "View My Mnemonic",
+            "viewMyMnemonicDescription": "View Recovery Phrase",
+            "mnemonicWallet": "Mnemonic Wallet",
+            "notBackedUp": "Not Backed Up",
+            "updateMnemonicNameSuccess": "Mnemonic name updated",
+            "editMnemonicName": "Edit Mnemonic Name",
+            "editMnemonicNameDescription": "Please enter a name for your mnemonic. You can change the mnemonic name at any time in the future",
+            "mnemonicName": "Mnemonic Name",
+            "successDeleteMnemonic": "Delete Mnemonic Success",
+            "deleteAccountDescription": "Are you sure you want to delete this wallet? Please make sure to back up your mnemonic in a safe place before deleting the wallet."
+          },
+          "layout": {
+            "header": "Wallet Detail"
+          },
+          "components": {
+            "MnemonicAccount": {
+              "myAccount": "My Account",
+              "lastHdPath": "Last HD Path"
+            }
+          },
+          "account": {
+            "entry": {
+              "lastHdPath": "Last HD Path",
+              "viewMyMnemonic": "Mnemonic",
+              "viewMyMnemonicDescription": "View Recovery Phrase",
+              "deleteAccount": "Delete Account",
+              "viewPrivateKey": "Private Key (EachChain）",
+              "viewPrivateKeyDescription": "Access private keys for each chain",
+              "notBackedUp": "Not Backed Up",
+              "accountNameUpdated": "Account name updated",
+              "successDeleteAccount": "Delete Account Success",
+              "deleteAccountDescription": "Are you sure you want to delete this account? Please make sure to back up your mnemonic in a safe place before deleting the account."
+            },
+            "layout": {
+              "header": "Account Detail"
+            }
+          }
+        },
+        "privateKey": {
+          "account": {
+            "entry": {
+              "viewPrivateKey": "View My Private Key",
+              "viewPrivateKeyDescription": "View Recovery Phrase",
+              "deleteAccount": "Delete Account",
+              "successDeleteAccount": "Delete Account Success",
+              "deleteAccountDescription": "Are you sure you want to delete this account? Please make sure to back up your private key in a safe place before deleting the account."
+            },
+            "layout": {
+              "header": "Wallet Detail"
+            }
+          }
+        },
+        "zklogin": {
+          "account": {
+            "entry": {
+              "delete": "Delete",
+              "deleteAccountTitle": "Delete Account",
+              "successDeleteAccount": "Delete Account Success",
+              "deleteAccountDescription": "Are you sure you want to delete this account?"
+            },
+            "layout": {
+              "header": "Wallet Detail"
+            }
+          }
+        }
+      },
+      "switch-account": {
+        "components": {
+          "lastHdPath": "Last HD Path",
+          "createNewWallet": "Create New Account",
+          "backUpNow": "Back Up Now",
+          "switchAccountSuccess": "Switched to Account {{accountName}}",
+          "notBackedUp": "(Not Backed Up)",
+          "googleAccounts": "Google Accounts",
+          "appleAccounts": "Apple Accounts",
+          "addAccount": "Add account",
+          "privateKeyAccounts": "Private Key Accounts",
+          "accountName": "Account {{index}}"
+        },
+        "layout": {
+          "header": "Switch Account",
+          "manage": "Manage",
+          "edit": "Edit",
+          "addWallet": "Add Wallet"
+        },
+        "entry": {
+          "importPrivateKey": "Import Private Key",
+          "importPrivateKeyDescription": "Account will be displayed after importing with a private key",
+          "importMnemonic": "Import Mnemonic",
+          "importMnemonicDescription": "Account will be displayed after importing with a mnemonic",
+          "searchPlaceholder": "Search Wallet, Account",
+          "totalAssets": "Total assets",
+          "totalAssetsValue": "${{value}}"
+        }
+      },
+      "view": {
+        "mnemonic": {
+          "entry": {
+            "title": "Write Down Your Mnemonic",
+            "subTitle": "This phrase is the only way to recover your account. Losing this mnemonics could lead to loss of your asset."
+          }
+        },
+        "privateKey": {
+          "entry": {
+            "copied": "Private key successfully copied",
+            "title": "Write Down Your Private Key",
+            "subTitle": "This phrase is the only way to recover your account. Losing this Private Key could lead to loss of your asset",
+            "privateKey": "Private Key",
+            "copy": "Copy to Clipboard"
+          }
+        }
+      },
+      "manage-wallet-and-account": {
+        "components": {
+          "MnemonicAccount": {
+            "index": {
+              "notBackedUp": "(Not Backed Up)",
+              "backUpNow": "Back Up Now"
+            },
+            "DraggableMnemonicAccountItem": {
+              "deleteTitle": "Are you sure you want to delete this wallet?",
+              "deleteDescription": "Deleting this wallet will remove it from your app. - You can restore it anytime by importing the recovery phrase. - Make sure you've securely backed up your recovery phrase, if not, you will permanently lose access to this wallet.",
+              "deleteConfirm": "Delete",
+              "cancel": "Cancel"
+            }
+          }
+        },
+        "entry": {
+          "importMnemonic": "Import Mnemonic",
+          "importPrivateKeyDescription": "Account will be displayed after importing with a private key",
+          "importPrivateKey": "Import Private Key",
+          "importMnemonicDescription": "Account will be displayed after importing with a mnemonic",
+          "searchPlaceholder": "Search Wallet, Account",
+          "totalAssets": "Total assets",
+          "totalAssetsValue": "${{value}}",
+          "mnemonicTab": "Mnemonic",
+          "zkLoginTab": "ZkLogin",
+          "privateKeyTab": "Private Key"
+        },
+        "layout": {
+          "header": "Manage Wallet",
+          "save": "Save",
+          "saveSuccess": "Account order has been updated",
+          "saveFail": "Failed to update account order",
+          "done": "Done"
+        }
+      },
+      "create-account": {
+        "entry": {
+          "success": "Add account success",
+          "failToFindMnemonic": "Failed to find mnemonic",
+          "setupSuccess": "Set up success",
+          "setupFail": "Set up fail",
+          "title": "HD Path Setting",
+          "subTitle": "You can create a new account with the same seed phrase but a different HD Path.",
+          "accountName": "Account Name",
+          "lastHdPathIndex": "Last HD Path",
+          "majorNetwork": "Major Network",
+          "setUpComplete": "Setup Complete",
+          "loadingOverlayTitle": "Syncing your wallet assets...",
+          "loadingOverlayMessage": "Checking your assets. This process may take some time.\nPlease wait a moment."
+        },
+        "layout": {
+          "header": "Create New Account"
+        }
+      },
+      "backup-wallet": {
+        "step1": {
+          "entry": {
+            "title": "Write down seed phrase",
+            "subTitle": "Write down the words in the sequence below anoKeep them safe. Don't share them with anyone, or you may permanently lose your assets",
+            "explain": "Click on the seed phrase to show it in full or hide it. Make sure no one is looking at your screen.",
+            "continue": "Continue"
+          },
+          "layout": {
+            "header": "Back Up Wallet"
+          }
+        },
+        "step2": {
+          "entry": {
+            "backupComplete": "Backup Complete",
+            "title": "Complete the quiz in order",
+            "subTitle": "Check the backed-up mnemonic and select the correct phrase in order for each number.",
+            "incorrect": "Mnemonic does not match",
+            "success": "Your wallet has been backed up"
+          },
+          "layout": {
+            "header": "Verify Seed Phrase"
+          }
+        }
+      },
+      "reset-wallet": {
+        "components": {
+          "ResetBottomSheet": {
+            "index": {
+              "title": "Confirm Reset",
+              "description1": "To initialize, please enter the text",
+              "description1-1": " \"RESET\" ",
+              "description2": "You must know your mnemonic to recover your wallet before reset.",
+              "inputLabel": "Enter “RESET”",
+              "cancel": "Cancel",
+              "reset": "Reset"
+            }
+          }
+        },
+        "entry": {
+          "title": "Save Your Mnemonics",
+          "title1": "Resetting your wallet",
+          "title2": "Forget password",
+          "subTitle": "If you lose your password: Back up your mnemonic, reset your OneWallet Extension, and start next.",
+          "subTitle1": "For your security, you must reset the app and re-import your accounts to regain access.",
+          "subTitle2": "You need to reset the OneWallet",
+          "description1": "The OneWallet wallet does not store your password or mnemonic phrase.",
+          "description2": "If you lose your password, you can reset the program and restore your account using your backed-up mnemonic. However, if you lose your mnemonic, account recovery will be difficult.",
+          "description3": "Resetting the program will remove all registered accounts. After the reset, you can restore your accounts using your backed-up mnemonic.",
+          "description4": "Re-importing will require your recovery phrase, private key, or social sign-in credentials.Failure to provide these will result in permanent loss of access to this wallet.",
+          "description5": "Onewallet will clear all the data and you need to re-import wallets. Input “RESET” to confirm and reset.",
+          "resetWallet": "Reset Wallet",
+          "resetSuccess": "Reset Success",
+          "resetOneWallet": "Reset OneWallet"
+        },
+        "layout": {
+          "header": "Reset Wallet"
+        }
+      }
+    },
+    "wallet": {
+      "send": {
+        "$coinId": {
+          "layout": {
+            "header": "Send"
+          },
+          "Entry": {
+            "Sui": {
+              "index": {
+                "coinImageAlt": "Selected coin",
+                "selectAlt": "Select coin",
+                "balanceAlt": "Balance",
+                "toLabel": "To",
+                "recipientPlaceholder": "Enter Recipient",
+                "warningAlt": "Warning",
+                "invalidAddress": "Invalid address",
+                "invalidAmount": "Invalid amount",
+                "insufficientAmount": "Insufficient amount",
+                "failedToDryRun": "Transaction simulation failed",
+                "send": "Send",
+                "recipientAddress": "Recipient Address",
+                "amount": "Amount",
+                "chooseRecipientAddress": "Choose Recipient",
+                "sendReview": "Confirm Send",
+                "sendReviewSub": "Are you sure you want to proceed with the transfer? \nThis action cannot be undone once completed.",
+                "failedToSend": "Failed to send",
+                "failedToBuildTransaction": "Failed to build transaction",
+                "txProcessing": "Transaction Processing",
+                "txProcessingSub": "Please wait a moment while the transaction is being processed",
+                "tooLowAmount": "Please enter an amount greater than 0",
+                "noRecipientAddress": "Please enter the recipient address",
+                "noAmount": "Please enter the amount",
+                "recipientNetwork": "Recipient Network",
+                "sendReviewWithSymbol": "Confirm to Send {{symbol}}"
+              }
+            },
+            "components": {
+              "TxProcessingOverlay": {
+                "header": "Transaction Result",
+                "confirm": "Confirm"
+              }
+            },
+            "EVM": {
+              "index": {
+                "contract": "Contract",
+                "invalidAddress": "Invalid address",
+                "invalidENSAddress": "Failed to resolve ENS address",
+                "invalidENSFormat": "Invalid ENS format",
+                "invalidAmount": "Invalid amount",
+                "insufficientAmount": "Insufficient amount",
+                "bankLocked": "Send functionality is currently disabled. It can be activated later through on-chain governance.",
+                "insufficientFee": "Insufficient fee",
+                "send": "Send",
+                "recipientAddress": "Recipient Address",
+                "amount": "Amount",
+                "chooseRecipientAddress": "Choose Recipient",
+                "sendReview": "Confirm Send",
+                "sendReviewSub": "Are you sure you want to proceed with the transfer? \nThis action cannot be undone once completed.",
+                "txProcessing": "Transaction Processing",
+                "txProcessingSub": "Please wait a moment while the transaction is being processed",
+                "noTransaction": "Failed to create transaction",
+                "tooLowAmount": "Please enter an amount greater than 0",
+                "noAvailableAmount": "No available amount",
+                "noAmount": "Please enter the amount",
+                "noRecipientAddress": "Please enter the recipient address",
+                "recipientNetwork": "Recipient Network",
+                "sendReviewWithSymbol": "Confirm to Send {{symbol}}"
+              }
+            },
+            "Bitcoin": {
+              "index": {
+                "invalidAddress": "Invalid address",
+                "noAvailableAmount": "No available amount",
+                "noAmount": "Please enter the amount",
+                "memoMaxLength": "OP_RETURN cannot exceed 80 characters",
+                "failedLoadFee": "Failed to load fee",
+                "failedCreateTxHex": "Failed to create transaction hex",
+                "send": "Send",
+                "recipientAddress": "Recipient Address",
+                "amount": "Amount",
+                "chooseRecipientAddress": "Choose Recipient",
+                "sendReview": "Confirm Send",
+                "sendReviewSub": "Are you sure you want to proceed with the transfer? \nThis action cannot be undone once completed.",
+                "txProcessing": "Transaction Processing",
+                "txProcessingSub": "Please wait a moment while the transaction is being processed",
+                "memo": "OP_RETURN (option)",
+                "tooLowAmount": "Please enter an amount greater than 0",
+                "noRecipientAddress": "Please enter the recipient address",
+                "recipientNetwork": "Recipient Network",
+                "sendReviewWithSymbol": "Confirm to Send {{symbol}}"
+              }
+            },
+            "Aptos": {
+              "index": {
+                "invalidAddress": "Invalid address",
+                "noAvailableAmount": "No available amount",
+                "insufficientAmount": "Insufficient amount",
+                "insufficientFee": "Insufficient fee",
+                "noAmount": "Please enter the amount",
+                "invalidAmount": "Invalid amount",
+                "failedGenerateTransaction": "Failed to generate transaction",
+                "send": "Send",
+                "recipientAddress": "Recipient Address",
+                "amount": "Amount",
+                "chooseRecipientAddress": "Choose Recipient",
+                "sendReview": "Confirm Send",
+                "sendReviewSub": "Are you sure you want to proceed with the transfer? \nThis action cannot be undone once completed.",
+                "txProcessing": "Transaction Processing",
+                "txProcessingSub": "Please wait a moment while the transaction is being processed",
+                "tooLowAmount": "Please enter an amount greater than 0",
+                "noRecipientAddress": "Please enter the recipient address",
+                "recipientNetwork": "Recipient Network",
+                "sendReviewWithSymbol": "Confirm to Send {{symbol}}"
+              }
+            },
+            "Cosmos": {
+              "index": {
+                "contract": "Contract",
+                "denom": "Denom",
+                "invalidAddress": "Invalid address",
+                "insufficientAmount": "Insufficient amount",
+                "noAmount": "Please enter the amount",
+                "bankLocked": "Send functionality is currently disabled. It can be activated later through on-chain governance.",
+                "timeoutHeightError": "Network Error",
+                "noAvailableAmount": "No available amount",
+                "invalidAmount": "Invalid amount",
+                "insufficientFeeAmount": "Insufficient fee",
+                "failedToCalculateTransaction": "Failed to build transaction",
+                "send": "Send",
+                "recipientNetwork": "Recipient Network",
+                "ibcSend": "IBC Send",
+                "selectRecipientNetwork": "Select Recipient Network",
+                "searchRecipientNetwork": "Search Network (Ex. OneWallet)",
+                "recipientAddress": "Recipient Address",
+                "amount": "Amount",
+                "memo": "Memo (Option)",
+                "chooseRecipientAddress": "Choose Recipient",
+                "sendReview": "Confirm Send",
+                "sendReviewSub": "Are you sure you want to proceed with the transfer? \nThis action cannot be undone once completed.",
+                "txProcessing": "Transaction Processing",
+                "txProcessingSub": "Please wait a moment while the transaction is being processed",
+                "tooLowAmount": "Please enter an amount greater than 0",
+                "noRecipientAddress": "Please enter the recipient address",
+                "invalidRewardAmount": "Invalid reward amount",
+                "memoOverflow": "Memo is too long. Please shorten it.",
+                "sendReviewWithSymbol": "Confirm to Send {{symbol}}",
+                "insufficientFee": "Insufficient fee"
+              }
+            },
+            "Iota": {
+              "index": {
+                "invalidAddress": "Invalid address",
+                "invalidAmount": "Invalid amount",
+                "insufficientAmount": "Insufficient amount",
+                "failedToDryRun": "Transaction simulation failed",
+                "send": "Send",
+                "recipientAddress": "Recipient Address",
+                "amount": "Amount",
+                "chooseRecipientAddress": "Choose Recipient",
+                "sendReview": "Confirm Send",
+                "sendReviewSub": "Are you sure you want to proceed with the transfer? \nThis action cannot be undone once completed.",
+                "failedToSend": "Failed to send",
+                "failedToBuildTransaction": "Failed to build transaction",
+                "txProcessing": "Transaction Processing",
+                "txProcessingSub": "Please wait a moment while the transaction is being processed",
+                "tooLowAmount": "Please enter an amount greater than 0",
+                "noRecipientAddress": "Please enter the recipient address",
+                "noAmount": "Please enter the amount",
+                "recipientNetwork": "Recipient Network",
+                "sendReviewWithSymbol": "Confirm to Send {{symbol}}"
+              }
+            }
+          }
+        },
+        "layout": {
+          "header": "Select Coin"
+        }
+      },
+      "receive": {
+        "chain": {
+          "index": {
+            "networkWarning": "Send only<network>{{network}}</network> assets to this address",
+            "copyAddress": "Copy Address"
+          }
+        },
+        "layout": {
+          "header": "Select Coin"
+        },
+        "$coinId": {
+          "entry": {
+            "contract": "Contract",
+            "ibc": "IBC",
+            "denom": "Denom",
+            "copied": "Successfully copied",
+            "addressDescription1": "Send",
+            "addressDescription2": "Network assets Only",
+            "myAddress": "My Address"
+          }
+        }
+      },
+      "swap": {
+        "layout": {
+          "header": "Select Coin"
+        },
+        "$coinId": {
+          "components": {
+            "CoinInputBox": {
+              "index": {
+                "payAmount": "Pay Amount"
+              }
+            },
+            "CoinOutputBox": {
+              "index": {
+                "minReceived": "Min Received"
+              }
+            }
+          },
+          "entry": {
+            "slippage": "Slippage",
+            "exchageRate": "Exchange Rate",
+            "provider": "Provider",
+            "swapVenue": "Swap Venue",
+            "sendReview": "Confirm Swap",
+            "sendReviewSub": "Are you sure you want to proceed with the swap? \nThis action cannot be undone once completed.",
+            "swap": "Swap",
+            "invalidFee": "Lack of Network Fee",
+            "invalidFeeDescription1": "The balance is insufficient to cover the estimated gas fee for this transaction. Please ensure you have at least ",
+            "invalidFeeDescription2": " before trying again."
+          },
+          "layout": {
+            "header": "Swap"
+          }
+        }
+      },
+      "tx-confirm": {
+        "$txHash": {
+          "$coinId": {
+            "entry": {
+              "txSuccess": "Transaction Success",
+              "goToExplorer": "Go to Explorer",
+              "addAddresstoBook": "Is this a frequently used address?",
+              "addToAddress": "Add to address",
+              "confirm": "Confirm"
+            }
+          }
+        },
+        "$tx-hash": {
+          "$coin-id": {
+            "layout": {
+              "header": "Transaction Result"
+            }
+          }
+        },
+        "entry": {
+          "txFailTitle": "Transaction Failed",
+          "txSuccessTitle": "Transaction Success",
+          "txFailSubTitle": "The transaction failed. Please check the details and try again.",
+          "goToExplorer": "Go to Explorer",
+          "addAddresstoBook": "Is this a frequently used address?",
+          "addToAddress": "Add to address",
+          "cancel": "Cancel",
+          "confirm": "Confirm",
+          "loadingDetails": "Loading details",
+          "txPendingSubTitle": "Please wait a moment while the transaction status is being checked.",
+          "Sui": {
+            "index": {
+              "imageAlt": "Send confirmation",
+              "title": "Send",
+              "approxAmount": "≈${{amount}}",
+              "gasFee": "Gas Fee",
+              "from": "From",
+              "to": "To",
+              "copyAlt": "Copy address"
+            }
+          }
+        },
+        "layout": {
+          "header": "Confirmation"
+        }
+      },
+      "tx-result": {
+        "$txHash": {
+          "$coinId": {
+            "entry": {
+              "txSuccess": "Transaction Success",
+              "goToExplorer": "Go to Explorer",
+              "addAddresstoBook": "Is this a frequently used address?",
+              "addToAddress": "Add to address",
+              "confirm": "Confirm"
+            }
+          }
+        },
+        "$tx-hash": {
+          "$coin-id": {
+            "layout": {
+              "header": "Transaction Result"
+            }
+          }
+        },
+        "entry": {
+          "txFailTitle": "Transaction Failed",
+          "txSuccessTitle": "Transaction Success",
+          "txFailSubTitle": "The transaction failed. Please check the details and try again.",
+          "goToExplorer": "Go to Explorer",
+          "viewOnExplorer": "View on explorer",
+          "addAddresstoBook": "Is this a frequently used address?",
+          "addToAddress": "Add to address",
+          "confirm": "Confirm",
+          "loadingDetails": "Loading details",
+          "txPendingSubTitle": "Please wait a moment while the transaction status is being checked.",
+          "Sui": {
+            "index": {
+              "imageAlt": "Send result",
+              "titleSuccess": "Transaction Success",
+              "titleLoading": "Loading details",
+              "completedUtc": "Completed (UTC)",
+              "to": "To",
+              "gas": "Gas",
+              "dividendAmount": "Dividend Amount",
+              "totalSupply": "Total Supply",
+              "dividendRecipients": "Dividend Recipients",
+              "claimedAmount": "Claimed Amount",
+              "recipient": "Recipient",
+              "buyAmount": "Buy Amount",
+              "paidAmount": "Paid Amount",
+              "price": "Price",
+              "loadingDetails": "Loading details",
+              "loadingAlt": "Loading"
+            }
+          }
+        },
+        "layout": {
+          "header": "Transaction Result"
+        }
+      },
+      "history": {
+        "layout": {
+          "header": "Detail"
+        },
+        "entry": {
+          "Sui": {
+            "index": {
+              "coinImageAlt": "Coin avatar",
+              "approxValue": "≈${{value}}",
+              "txDigest": "Transaction Digest",
+              "copyAlt": "Copy",
+              "time": "Time",
+              "from": "From",
+              "to": "To",
+              "gasFee": "Gas Fee",
+              "dividendAmount": "Dividend Amount",
+              "totalSupply": "Total Supply",
+              "dividendRecipients": "Dividend Recipients",
+              "claimedAmount": "Claimed Amount",
+              "recipient": "Recipient",
+              "buyAmount": "Buy Amount",
+              "paidAmount": "Paid Amount",
+              "price": "Price",
+              "viewOnExplorer": "View on explorer"
+            }
+          }
+        }
+      },
+      "stake": {
+        "layout": {
+          "header": "Select Coin"
+        },
+        "$coinId": {
+          "components": {
+            "ValidatorBottomSheet": {
+              "components": {
+                "ValidatorItem": {
+                  "index": {
+                    "votingPower": "Voting Power"
+                  }
+                }
+              },
+              "index": {
+                "title": "Select Validator",
+                "searchPlaceholder": "Search Validator (Ex. OneWallet)",
+                "validator": "Validator",
+                "commisson": "Commission"
+              }
+            },
+            "UnstakeObjectBottomSheet": {
+              "index": {
+                "title": "Select Validator (Object)",
+                "objectId": "Object ID : {{objectId}}",
+                "staked": "Staked",
+                "earned": "Earned",
+                "totalStaked": "Total Staked"
+              }
+            }
+          },
+          "entry": {
+            "stake": "Stake",
+            "stakingCoin": "{{chainName}} Staking Coin",
+            "validator": "Validator",
+            "stakingAmount": "Staking Amount",
+            "memo": "Memo (Option)",
+            "inform": "Expected Monthly Reward",
+            "inform1": "The estimated {{symbol}} staking",
+            "inform2": "APR is {{apr}}%",
+            "stakeReview": "Confirm Stake",
+            "stakeReviewSub": "Are you sure you want to proceed with the stake? \nThis action cannot be undone once completed.",
+            "commission": "Commission",
+            "txProcessing": "Transaction Processing",
+            "txProcessingSub": "Please wait a moment while the transaction is being processed",
+            "insufficientBalance": "Insufficient balance",
+            "tooLowAmount": "Please enter an amount greater than 0",
+            "noValidator": "No validator selected",
+            "noAmount": "Please enter the amount",
+            "failedToDryRun": "Transaction simulation failed",
+            "failedToBuildTransaction": "Failed to build transaction",
+            "tooSmallToStake": "Minimum stake amount is 1",
+            "stakeReviewWithSymbol": "Confirm to Stake {{symbol}}"
+          },
+          "layout": {
+            "header": "Stake"
+          }
+        }
+      },
+      "unstake": {
+        "$coinId": {
+          "$validatorAddress": {
+            "Entry": {
+              "Cosmos": {
+                "components": {
+                  "ValidatorBottomSheet": {
+                    "index": {
+                      "title": "Select Validator",
+                      "searchPlaceholder": "Search Validator",
+                      "validator": "Validator",
+                      "staked": "Staked"
+                    }
+                  }
+                },
+                "index": {
+                  "unstake": "Unstake",
+                  "stakingCoin": "{{chainName}} Staking Coin",
+                  "validator": "Validator",
+                  "unstakingAmount": "Unstaking Amount",
+                  "staked": "Staked",
+                  "memo": "Memo (Option)",
+                  "inform": "Unstake Period",
+                  "informDescription1": "Unstaking {{symbol}} incurs a ",
+                  "lockUpPeriod": "{{lockUpPeriod}} day ",
+                  "informDescription2": "waiting period, during which you can cancel the process",
+                  "unstakeReview": "Confirm Unstake",
+                  "unstakeReviewDescription": "Are you sure you want to proceed with the unstake? \nThis action cannot be undone once completed.",
+                  "txProcessing": "Transaction Processing",
+                  "txProcessingSub": "Please wait a moment while the transaction is being processed",
+                  "insufficientAmount": "Insufficient amount",
+                  "tooLowAmount": "Please enter an amount greater than 0",
+                  "bankLocked": "Unstake functionality is currently disabled.",
+                  "noAvailableAmount": "No available amount",
+                  "noAmount": "Please enter the amount",
+                  "invalidAmount": "Invalid amount",
+                  "failedToCalculateTransaction": "Failed to build transaction",
+                  "insufficientFee": "Insufficient fee",
+                  "unstakeReviewWithSymbol": "Confirm to Cancel Unstake {{symbol}}"
+                }
+              },
+              "Sui": {
+                "index": {
+                  "inform": "Unstake Period",
+                  "informDescription": "Unstaking SUI incurs instantly without a waiting period, and the process cannot be canceled",
+                  "noObject": "No object selected",
+                  "insufficientFee": "Insufficient fee",
+                  "failedToDryRun": "Transaction simulation failed",
+                  "failedToBuildTransaction": "Failed to build transaction",
+                  "unstake": "Unstake",
+                  "stakingCoin": "{{chainName}} Staking Coin",
+                  "unstakeReview": "Confirm Unstake",
+                  "unstakeReviewDescription": "Are you sure you want to proceed with the unstake? \nThis action cannot be undone once completed.",
+                  "txProcessing": "Transaction Processing",
+                  "txProcessingSub": "Please wait a moment while the transaction is being processed",
+                  "unstakeReviewWithSymbol": "Confirm to Unstake {{symbol}}"
+                }
+              },
+              "Iota": {
+                "index": {
+                  "inform": "Unstake Period",
+                  "informDescription": "Unstaking IOTA incurs instantly without a waiting period, and the process cannot be canceled",
+                  "noObject": "No object selected",
+                  "insufficientFee": "Insufficient fee",
+                  "failedToDryRun": "Transaction simulation failed",
+                  "failedToBuildTransaction": "Failed to build transaction",
+                  "unstake": "Unstake",
+                  "stakingCoin": "{{chainName}} Staking Coin",
+                  "unstakeReview": "Confirm Unstake",
+                  "unstakeReviewDescription": "Are you sure you want to proceed with the unstake? \nThis action cannot be undone once completed.",
+                  "txProcessing": "Transaction Processing",
+                  "txProcessingSub": "Please wait a moment while the transaction is being processed",
+                  "unstakeReviewWithSymbol": "Confirm to Unstake {{symbol}}"
+                }
+              }
+            },
+            "layout": {
+              "header": "Unstake"
+            }
+          },
+          "entry": {
+            "Sui": {
+              "components": {
+                "UnstakeObjectSelectBox": {
+                  "index": {
+                    "objectId": "Object ID : {{objectId}}",
+                    "selectValidator": "Select Validator (Object)",
+                    "amountToStake": "Amount to Unstake",
+                    "staked": "Staked",
+                    "earned": "Earned"
+                  }
+                }
+              }
+            },
+            "Cosmos": {
+              "components": {
+                "ValidatorBottomSheet": {
+                  "components": {
+                    "ValidatorItem": {
+                      "index": {
+                        "commission": "Commission : {{commission}}%",
+                        "staked": "Staked",
+                        "reward": "Reward"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "Iota": {
+              "components": {
+                "UnstakeObjectSelectBox": {
+                  "index": {
+                    "objectId": "Object ID : {{objectId}}",
+                    "selectValidator": "Select Validator (Object)",
+                    "amountToStake": "Amount to Unstake",
+                    "staked": "Staked",
+                    "earned": "Earned"
+                  }
+                }
+              }
+            }
+          },
+          "layout": {
+            "header": "Unstake"
+          }
+        }
+      },
+      "claim-rewards": {
+        "$coinId": {
+          "$validatorAddress": {
+            "Entry": {
+              "Cosmos": {
+                "index": {
+                  "claimSymbolRewards": "Claim {{symbol}} Rewards",
+                  "stakingCoin": "{{chainName}} Staking Coin",
+                  "validator": "Validator",
+                  "rewardAmount": "Reward Amount",
+                  "memo": "Memo (Option)",
+                  "inform": "Rewards Address",
+                  "informDescription": "{{address}}\nrewards will be sent to the above address.",
+                  "claimRewardsReview": "Confirm Claim Rewards",
+                  "claimRewardsReviewDescription": "Are you sure you want to proceed with the claim rewards? \nThis action cannot be undone once completed.",
+                  "claimRewards": "Claim Rewards",
+                  "bankLocked": "Claim functionality is currently disabled.",
+                  "noReward": "No rewards available",
+                  "insufficientAmount": "Insufficient amount",
+                  "failedToCalculateTransaction": "Failed to build transaction",
+                  "txProcessing": "Transaction Processing",
+                  "txProcessingSub": "Please wait a moment while the transaction is being processed",
+                  "subtitle": "{{symbol}} + {{coinCount}} Coins"
+                }
+              }
+            },
+            "layout": {
+              "header": "Claim Rewards"
+            }
+          }
+        }
+      },
+      "claim-all-rewards": {
+        "$coinId": {
+          "$validatorAddress": {
+            "Entry": {
+              "Cosmos": {
+                "index": {
+                  "claimRewards": "Claim Rewards",
+                  "claimSymbolRewards": "Claim {{symbol}} Rewards",
+                  "validator": "Validator",
+                  "rewardAmount": "Reward Amount",
+                  "memo": "Memo (Option)",
+                  "inform": "Rewards Address",
+                  "informDescription": "{{address}}\nrewards will be sent to the above address.",
+                  "claimAllRewardsReview": "Confirm Claim All Rewards",
+                  "claimAllRewardsReviewDescription": "Are you sure you want to proceed with the claim all rewards? \nThis action cannot be undone once completed.",
+                  "claimAllRewards": "Claim All Rewards",
+                  "subtitle": "{{symbol}} + {{coinCount}} Coins",
+                  "stakingCoin": "{{chainName}} Staking Coin",
+                  "bankLocked": "Claim functionality is currently disabled.",
+                  "noReward": "No rewards available",
+                  "insufficientAmount": "Insufficient fee",
+                  "failedToCalculateTransaction": "Failed to build transaction",
+                  "txProcessing": "Transaction Processing",
+                  "txProcessingSub": "Please wait a moment while the transaction is being processed"
+                }
+              }
+            }
+          },
+          "layout": {
+            "header": "Claim Rewards"
+          }
+        }
+      },
+      "cancel-unstaking": {
+        "$coinId": {
+          "Entry": {
+            "Cosmos": {
+              "index": {
+                "bankLocked": "Cancel Unstake functionality is currently disabled.",
+                "insufficientFee": "Insufficient fee",
+                "failedToCalculateTransaction": "Failed to build transaction",
+                "cancelUnstake": "Cancel Unstake {{symbol}}",
+                "stakingCoin": "{{chainName}} Staking Coin",
+                "validator": "Validator",
+                "unstakingAmount": "Unstaking Amount",
+                "memo": "Memo (Option)",
+                "cancelUnstakeReview": "Confirm Cancel Unstake",
+                "cancelUnstakeReviewDescription": "Are you sure you want to proceed with the cancel unstake? \nThis action cannot be undone once completed.",
+                "txProcessing": "Transaction Processing",
+                "txProcessingSub": "Please wait a moment while the transaction is being processed",
+                "cancelUnstakingAmount": "Amount to Unstake",
+                "cancelUnstakeConfirm": "Cancel Unstake",
+                "memoOverflow": "Memo is too long. Please shorten it.",
+                "cancelUnstakeReviewWithSymbol": "Confirm to Cancel Unstake {{symbol}}"
+              }
+            }
+          },
+          "layout": {
+            "header": "Cancel Unstaking"
+          }
+        }
+      },
+      "nft-send": {
+        "$id": {
+          "Entry": {
+            "Cosmos": {
+              "index": {
+                "invalidAddress": "Invalid address",
+                "notFoundNFT": "NFT not found",
+                "notOwnedNFT": "You do not own this NFT",
+                "invalidOwnerAddress": "Invalid owner address",
+                "insufficientAmount": "Insufficient amount",
+                "tokenId": "Token ID: {{tokenId}}",
+                "recipientNetwork": "Recipient Chain",
+                "recipientAddress": "Recipient Address",
+                "memo": "Memo (Option)",
+                "chooseRecipientAddress": "Choose Recipient",
+                "sendNFTReview": "Confirm Send NFT",
+                "sendNFTReviewSub": "Are you sure you want to proceed with the transfer? \nThis action cannot be undone once completed.",
+                "sendNFT": "Send NFT",
+                "txProcessing": "Transaction Processing",
+                "txProcessingSub": "Please wait a moment while the transaction is being processed",
+                "contract": "Contract : "
+              }
+            },
+            "Sui": {
+              "index": {
+                "invalidAddress": "Invalid address",
+                "insufficientAmount": "Insufficient amount",
+                "objectId": "Object ID: {{objectId}}",
+                "recipientNetwork": "Recipient Chain",
+                "recipientAddress": "Recipient Address",
+                "chooseRecipientAddress": "Choose Recipient",
+                "sendNFTReview": "Confirm Send NFT",
+                "sendNFTReviewSub": "Are you sure you want to proceed with the transfer? \nThis action cannot be undone once completed.",
+                "sendNFT": "Send NFT",
+                "txProcessing": "Transaction Processing",
+                "txProcessingSub": "Please wait a moment while the transaction is being processed"
+              }
+            },
+            "EVM": {
+              "index": {
+                "invalidAmount": "Invalid amount",
+                "tooLowAmount": "Please enter an amount greater than 0",
+                "missingNFT": "NFT not found",
+                "notOwnedNFT": "You do not own this NFT",
+                "invalidAddress": "Invalid address",
+                "insufficientAmount": "Insufficient amount",
+                "networkError": "Network Error",
+                "failedToCreateTransaction": "Failed to create transaction",
+                "tokenId": "Token ID: {{tokenId}}",
+                "recipientNetwork": "Recipient Chain",
+                "recipientAddress": "Recipient Address",
+                "chooseRecipientAddress": "Choose Recipient",
+                "sendNFTReview": "Confirm Send NFT",
+                "sendNFTReviewSub": "Are you sure you want to proceed with the transfer? \nThis action cannot be undone once completed.",
+                "sendNFT": "Send NFT",
+                "txProcessing": "Transaction Processing",
+                "txProcessingSub": "Please wait a moment while the transaction is being processed",
+                "quantity": "Quantity",
+                "insufficientNFTAmount": "Cannot send more than the amount you have",
+                "contract": "Contract : "
+              }
+            }
+          },
+          "layout": {
+            "header": "Send NFT"
+          }
+        }
+      },
+      "claim-commission": {
+        "$coinId": {
+          "layout": {
+            "header": "Claim Commissions"
+          },
+          "Entry": {
+            "Cosmos": {
+              "index": {
+                "noCommission": "No Claimable Coins",
+                "insufficientAmount": "Insufficient amount for pay fee",
+                "failedToCalculateTransaction": "Failed to build transaction",
+                "subtitle": "{{symbol}} + {{coinCount}} Coins",
+                "stakingCoin": "{{chainName}} Staking Coin",
+                "validator": "Validator",
+                "commissionAmount": "Amount to claim",
+                "memo": "Memo (Option)",
+                "inform": "Commission Address",
+                "informDescription": "{{address}}\ncommissions will be sent to the above address.",
+                "txProcessing": "Transaction Processing",
+                "txProcessingSub": "Please wait a moment while the transaction is being processed",
+                "claimCommissions": "Claim Commissions",
+                "claimSymbolCommissions": "Claim {{symbol}} Commissions",
+                "claimCommissionsReview": "Confirm Claim Commissions",
+                "claimCommissionsReviewDescription": "Are you sure you want to proceed with the claim rewards? \nThis action cannot be undone once completed."
+              }
+            }
+          }
+        }
+      }
+    },
+    "view": {
+      "multi-chain-privateKey": {
+        "components": {
+          "index": {
+            "copied": "Copied to Clipboard",
+            "hdPath": "HD Path : "
+          }
+        },
+        "entry": {
+          "searchPlaceholder": "Search",
+          "noSearchTitle": "No Result",
+          "noSearchSubTitle": "Please check the network name and try again"
+        }
+      }
+    },
+    "general-setting": {
+      "entry": {
+        "security": "Security",
+        "backupWallet": "Back Up Wallet",
+        "backupWalletDescription": "Back up your wallet to prevent loss of assets",
+        "changePassword": "Change Password",
+        "changePasswordDescription": "Change your wallet password",
+        "setAutoLock": "Set Auto Lock",
+        "setAutoLockDescription": "Set auto-lock time",
+        "preference": "Preference",
+        "language": "Language",
+        "languageDescription": "Select the language to use",
+        "currency": "Currency",
+        "currencyDescription": "Select the currency to use",
+        "priceChangeColor": "Price Trend Color",
+        "priceChangeColorDescription": "Select the color of the price change",
+        "wallet": "Wallet",
+        "addressBook": "Address Book",
+        "addressBookDescription": "Manage frequently used addresses",
+        "manageCustomNetwork": "Manage Custom Network",
+        "manageCustomNetworkDescription": "Manage Added Custom Chains",
+        "prioritize": "Prioritize",
+        "prioritizeDescription": "Set OneWallet as your default wallet.",
+        "support": "Support",
+        "guide": "Guide",
+        "lock": "Lock",
+        "guideDescription": "Learn how to use the wallet",
+        "about": "About",
+        "aboutDescription": "Check wallet version & info",
+        "min": "{{minutes}} min",
+        "never": "Never",
+        "network": "Network",
+        "advanced": "Advanced"
+      },
+      "layout": {
+        "header": "Setting"
+      },
+      "components": {
+        "LanguageBottomSheet": {
+          "components": {
+            "OptionButton": {
+              "index": {
+                "english": "English",
+                "korean": "한국어 ( Korean )",
+                "chinese": "简体中文 ( Simplified Chinese )"
+              }
+            }
+          },
+          "index": {
+            "title": "Select Language"
+          }
+        },
+        "CurrencyBottomSheet": {
+          "index": {
+            "title": "Select Currency"
+          },
+          "components": {
+            "OptionButton": {
+              "index": {
+                "us": "United States Dollar",
+                "kr": "Korean Won",
+                "jp": "Japanese Yen",
+                "cn": "Chinese Yuan",
+                "eu": "Euro"
+              }
+            }
+          }
+        },
+        "SetAutoLockBottomSheet": {
+          "components": {
+            "OptionButton": {
+              "index": {
+                "minutes": "{{minutes}} Minutes",
+                "never": "Never",
+                "notRecommended": "Not Recommended"
+              }
+            }
+          },
+          "index": {
+            "title": "Set Auto Lock"
+          }
+        },
+        "PriceColorSettionBottomSheet": {
+          "components": {
+            "OptionButton": {
+              "index": {
+                "style1": "Style 1",
+                "style2": "Style 2",
+                "style1Description": "Green means increase, Red means decrease",
+                "style2escription": "Red means increase, Red means decrease"
+              }
+            }
+          }
+        },
+        "PriceColorSettingBottomSheet": {
+          "index": {
+            "title": "Price Change Color"
+          }
+        }
+      },
+      "change-password": {
+        "entry": {
+          "success": "Password changed successfully",
+          "title": "Set Wallet Password",
+          "subTitle": "Protects important information within the wallet and is required each time you access the wallet",
+          "currentPassword": "Current Password",
+          "newPassword": "New Password",
+          "confirmNewPassword": "Confirm New Password",
+          "caution": "Caution",
+          "cautionDescription": "If you forget your password, you will not be able to access your wallet. Please write down your password and keep it in a safe place.",
+          "submit": "Submit"
+        },
+        "layout": {
+          "header": "Change Password"
+        }
+      },
+      "address-book": {
+        "components": {
+          "AddressItemBook": {
+            "index": {
+              "memo": "Memo :"
+            }
+          }
+        },
+        "entry": {
+          "addAddress": "Add Address",
+          "noList": "No addresses available",
+          "noListSubtitle": "Your address book is empty. Add a new address to get started",
+          "searchPlaceholder": "Search address or label"
+        },
+        "header": "Address Book",
+        "add-address": {
+          "entry": {
+            "addAddressSuccess": "Address added successfully",
+            "network": "Network",
+            "selectNetwork": "Select Network",
+            "searchNetwork": "Search Network (Ex. OneWallet)",
+            "label": "Label",
+            "address": "Address",
+            "memo": "Memo (Option)",
+            "confirm": "Confirm",
+            "memoInfo": "Enter Memo",
+            "unversalAddressInfo": "Universal Address",
+            "memoInfoDescription": "Depositing Cosmos ecosystem coins to a centralized exchange without a memo may result in loss of funds.",
+            "unversalAddressInfoDescription": "Indicates that a specific address can be used simultaneously across multiple EVM-based networks.",
+            "universal": "Universal",
+            "failedToGetChainId": "Failed to get chain ID",
+            "cosmwasm": "Cosmwasm",
+            "pubkeyStyle": "Pubkey Style"
+          },
+          "header": "Add Address Book",
+          "components": {
+            "EthermintSelectBottomSheet": {
+              "index": {
+                "evmTitle": "EVM Style Address",
+                "evmSubtitle": "Register addresses in '0x...' format",
+                "cosmosSubtitle": "Register addresses in '{{bech32Prefix}}...' format",
+                "cosmosTitle": "COSMOS Style Address",
+                "title": "Select Address Type"
+              }
+            }
+          }
+        },
+        "edit-address": {
+          "$id": {
+            "entry": {
+              "failedToGetChainId": "Failed to get chain ID",
+              "editAddressSuccess": "Address edited successfully",
+              "network": "Network",
+              "universal": "Universal",
+              "selectNetwork": "Select Network",
+              "searchNetwork": "Search Network (Ex. OneWallet)",
+              "label": "Label",
+              "address": "Address",
+              "memo": "Memo (Option)",
+              "deleteAddressDescription": "No longer using this ?",
+              "deleteAddress": "Delete Address",
+              "confirm": "Confirm",
+              "failedToDeleteAddress": "Failed to delete address",
+              "deleteAddressSuccess": "Address deleted successfully"
+            },
+            "header": "Edit Address Book"
+          }
+        }
+      },
+      "about": {
+        "entry": {
+          "termsOfService": "Terms of Service",
+          "termsOfServiceDescription": "Review our service terms",
+          "privacy": "Privacy Policy",
+          "privacyDescription": "How we protect your data",
+          "github": "GitHub",
+          "githubDescription": "Browse our open-source projects",
+          "homepage": "Homepage",
+          "homepageDescription": "Visit our official website",
+          "x": "X (Twitter)",
+          "xDescription": "Explore our latest updates on X"
+        },
+        "header": "About"
+      },
+      "manage-custom-network": {
+        "entry": {
+          "search": "Search Network (Ex. OneWallet)",
+          "network": "Network",
+          "noCustomChains": "No Chains",
+          "noCustomChainsDescription": "There are no chains to display at the moment",
+          "goToAdd": "Go to add",
+          "importNetwork": "Import Network"
+        },
+        "header": "Manage Custom Network",
+        "edit": {
+          "$id": {
+            "header": "Edit Network",
+            "delete": "Delete",
+            "components": {
+              "DeleteBottomSheet": {
+                "index": {
+                  "title": "Delete Confirmation",
+                  "description": "Do you want to delete the registered custom network? Once deleted, the network will no longer be displayed, and you will need to re-enter the information to register it again.",
+                  "cancel": "Cancel",
+                  "delete": "Delete"
+                }
+              }
+            },
+            "Entry": {
+              "EVM": {
+                "success": "Successfully edited the network",
+                "error": "Failed to edit the network",
+                "network": "Network",
+                "selectNetwork": "Select Network",
+                "searchNetwork": "Search Network (Ex. OneWallet)",
+                "networkName": "Network Name",
+                "rpcURL": "RPC URL",
+                "chainId": "Chain ID (e.g., 1 or 0x1)",
+                "symbol": "Symbol (e.g., ETH)",
+                "advanced": "Advanced (Optional)",
+                "chainImage": "Chain Image URL (Optional)",
+                "tokenImageURL": "Token Image URL (Optional)",
+                "exploreURL": "Block explorer URL (Optional)",
+                "confirm": "Confirm",
+                "restURLError": "Failed to get chain information, please check the REST URL"
+              },
+              "Cosmos": {
+                "restURLError": "Failed to get chain information, please check the REST URL",
+                "chainIdError": "This chain is already supported",
+                "success": "Successfully edited the network",
+                "error": "Failed to edit the network",
+                "network": "Network",
+                "selectNetwork": "Select Network",
+                "searchNetwork": "Search Network (Ex. OneWallet)",
+                "chainName": "Chain Name",
+                "restURL": "REST URL",
+                "denom": "Native Denom (e.g., uatom)",
+                "symbol": "Symbol (e.g., ATOM)",
+                "accountPrefix": "Account Prefix (e.g., cosmos)",
+                "advanced": "Advanced (Optional)",
+                "decimals": "Decimals (e.g., 6 by default)",
+                "coinTypePath": "Coin Type (e.g., 118 by default)",
+                "chainImage": "Chain Image URL (Optional)",
+                "tokenImageURL": "Token Image URL (Optional)",
+                "exploreURL": "Block explorer URL (Optional)",
+                "defaultGasLimit": "Default Gas Limit (e.g., 300000 by default)",
+                "gasRateLow": "Low Gas Rate (e.g., 0.00025 by default)",
+                "gasRateAverage": "Average Gas Rate (e.g., 0.0025 by default)",
+                "gasRateHigh": "High Gas Rate (e.g., 0.025 by default)",
+                "confirm": "Confirm",
+                "selectCosmwasm": "Enable CosmWasm",
+                "selectPubkeyStyle": "Select Pubkey Style"
+              }
+            },
+            "layout": {
+              "deleteSuccess": "Successfully deleted the network"
+            }
+          }
+        }
+      },
+      "wallet-prioritize": {
+        "entry": {
+          "title": "Feature Activation",
+          "subTitle": "Prioritize service gets activated when the selected wallet extensions are switched off on chrome://extensions or not installed on your PC"
+        },
+        "header": "Prioritize"
+      },
+      "backup-wallet": {
+        "components": {
+          "MnemonicAccountList": {
+            "index": {
+              "notBackedUp": "Not Backed Up",
+              "noMnemonic": "No Mnemonic Account",
+              "noMnemonicDescription": "Account will be displayed after importing with a mnemonic"
+            }
+          },
+          "PrivateKeyList": {
+            "index": {
+              "noPrivateKey": "No Private Key Account",
+              "noPrivateDescription": "Account will be displayed after importing with a private key"
+            }
+          }
+        },
+        "layout": {
+          "header": "Back Up Wallet"
+        }
+      },
+      "advanced": {
+        "layout": {
+          "header": "Advanced"
+        },
+        "entry": {
+          "developerMode": "Developer Mode",
+          "developerModeEnabled": "Developer Mode Enabled",
+          "developerModeDisabled": "Developer Mode Disabled"
+        }
+      },
+      "lock": {
+        "entry": {
+          "minutes": "{{value}} min",
+          "hours": "{{value}} h",
+          "requirePassword": "Require password every time"
+        }
+      }
+    },
+    "manage-assets": {
+      "visibility": {
+        "layout": {
+          "header": "Manage Crypto",
+          "headerTitle": "Token Listing Information",
+          "contentsSubTitle": "All assets and token information are being developed in collaboration with the community. If your token is not displayed, please provide the following GitHub link to the token issuer or community. Registered information will automatically appear in the wallet and on Mintscan."
+        },
+        "assets": {
+          "entry": {
+            "importCrypto": "Custom",
+            "valueHighOrder": "Value High Order",
+            "alphabeticalAsc": "Alphabetical Asc. (A -> Z)",
+            "supportedCrypto": "Supported Crypto",
+            "customCrypto": "Custom Crypto",
+            "contract": "Contract :",
+            "deleteDescription": "Would you like to delete this custom coin that you added? If you want to add the coin again after deletion, you will need to re-enter the information.",
+            "lastStandingError": "The last coin cannot be hide.",
+            "noResultsTitle": "No Results Found",
+            "noResultsSubtitle": "Try adjusting your filters or search term."
+          }
+        },
+        "asset": {
+          "layout": {
+            "header": "Manage Crypto"
+          }
+        },
+        "network": {
+          "entry": {
+            "searchPlaceholder": "Search Network (Ex. OneWallet)",
+            "viewTestnet": "View Testnet",
+            "importNetwork": "Import Network",
+            "network": "Network",
+            "noCustomChains": "No Custom Chains",
+            "noCustomChainsDescription": "You can manage custom chains by adding or deleting them.",
+            "chainId": "Chain ID : ",
+            "deleteCustomChainDescription": "Do you want to delete this custom network? \nYou'll need to re-enter the info to add it again"
+          },
+          "layout": {
+            "header": "Manage Custom Network"
+          }
+        },
+        "nfts": {
+          "entry": {
+            "searchPlaceholder": "Search NFT",
+            "importNFT": "Import NFT",
+            "deleteCustomNFTDescription": "Would you like to delete this custom NFT that you added? If you want to add the NFT again after deletion, you will need to re-enter the information."
+          },
+          "layout": {
+            "header": "Manage NFTs"
+          },
+          "headerTitle": "NFT Listing Information",
+          "contentsSubTitle": "All NFT information is being developed together with the community. If your NFT is not displayed, please share the GitHub link below with the NFT issuer or community. Once registered, the information will be automatically reflected in the wallet and Mintscan."
+        }
+      },
+      "switch-account-type": {
+        "layout": {
+          "header": "Switch Coin Type"
+        },
+        "entry": {
+          "info": "The default coin type is recommended.",
+          "infoDescription": "Please set a type for one coin. The assets of the selected coin type will be displayed in the portfolio, and using the default type is recommended.",
+          "network": "Network",
+          "selected": "Selected :",
+          "type": "{{accountType}} TYPE",
+          "successSwitch": "Switched HD path. Your wallet address has been updated",
+          "failSwitch": "Failt to switch HD path."
+        },
+        "components": {
+          "coinTypeBottomSheet": {
+            "index": {
+              "coinType": "{{chainName}} Coin Type",
+              "description": "We recommend using the latest default type address, as using an old address may result in compatibility issues."
+            }
+          }
+        }
+      },
+      "import": {
+        "assets": {
+          "components": {
+            "ERC20": {
+              "index": {
+                "success": "Successfully added the ERC20 token.",
+                "contractAddress": "Contract Address",
+                "symbol": "Symbol",
+                "decimals": "Decimals",
+                "logoUrl": "Crypyo Logo URL (Optional)",
+                "addCustomCrypto": "Add Custom Crypto",
+                "error": "Failed to add ERC20 token",
+                "supportedAssets": "This token is already supported!"
+              }
+            },
+            "CW20": {
+              "index": {
+                "supportedAssets": "This token is already supported!",
+                "success": "Successfully added the CW20 token.",
+                "error": "Failed to add CW20 token",
+                "contractAddress": "Contract Address",
+                "symbol": "Symbol",
+                "decimals": "Decimals",
+                "logoUrl": "Crypyo Logo URL (Optional)",
+                "addCustomCrypto": "Add Custom Crypto"
+              }
+            }
+          },
+          "layout": {
+            "header": "Custom Crypto"
+          },
+          "entry": {
+            "network": "Network",
+            "selectNetwork": "Select Network",
+            "searchNetwork": "Search network",
+            "contractAddressLabel": "Contract address",
+            "contractAddressPlaceholder": "Enter contract information",
+            "searching": "Searching for token...",
+            "tokenDetail": "Token Detail",
+            "decimals": "Decimals: {{value}}",
+            "description": "Description: {{value}}",
+            "addAsset": "Add Asset",
+            "addSpecificAsset": "Add {{symbol}}",
+            "addingAsset": "Adding Asset...",
+            "toastAssetExists": "Asset already exists",
+            "toastStorageFailed": "Failed to add asset to storage",
+            "toastNoAsset": "No asset data found. Please enter a valid contract address.",
+            "toastAddSuccess": "Asset {{symbol}} added successfully",
+            "toastAddFailed": "Failed to add asset"
+          }
+        },
+        "network": {
+          "layout": {
+            "header": "Import Network"
+          },
+          "components": {
+            "Cosmos": {
+              "index": {
+                "restURLError": "Failed to get chain information, please check the REST URL",
+                "invalidChainId": "This chain is already supported",
+                "success": "Successfully added the network",
+                "error": "Failed to add the network",
+                "chainName": "Chain Name",
+                "restURL": "REST URL",
+                "denom": "Native Denom (e.g., uatom)",
+                "symbol": "Symbol (e.g., ATOM)",
+                "coinTypePath": "Coin Type (e.g., 118 by default)",
+                "exploreURL": "Block explorer URL (Optional)",
+                "decimals": "Decimals (e.g., 6)",
+                "tokenImageURL": "Token Image URL (Optional)",
+                "gasRateLow": "Low Gas Rate (e.g., 0.00025 by default)",
+                "gasRateAverage": "Average Gas Rate (e.g., 0.0025 by default)",
+                "defaultGasLimit": "Default Gas Limit (e.g., 300000 by default)",
+                "addCustomNetwork": "Add Custom Network",
+                "gasRateHigh": "High Gas Rate (e.g., 0.025 by default)",
+                "accountPrefix": "Account Prefix (e.g., cosmos)",
+                "advanced": "Advanced (Optional)",
+                "chainImage": "Chain Image URL (Optional)",
+                "selectCosmwasm": "Enable CosmWasm",
+                "selectPubkeyStyle": "Select Pubkey Style"
+              }
+            },
+            "EVM": {
+              "index": {
+                "success": "Successfully added the network",
+                "error": "Failed to add the network",
+                "networkName": "Network Name",
+                "rpcURL": "RPC URL",
+                "chainId": "Chain ID (e.g., 1 or 0x1)",
+                "symbol": "Symbol (e.g., ETH)",
+                "advanced": "Advanced (Optional)",
+                "chainImage": "Chain Image URL (Optional)",
+                "tokenImageURL": "Token Image URL (Optional)",
+                "exploreURL": "Block explorer URL (Optional)",
+                "addCustomNetwork": "Add Custom Network",
+                "restURLError": "Failed to get chain information, please check the RPC URL"
+              }
+            }
+          },
+          "entry": {
+            "network": "Network",
+            "selectNetwork": "Select Network",
+            "searchNetwork": "Search Network (Ex. OneWallet)"
+          }
+        },
+        "nft": {
+          "components": {
+            "EVM": {
+              "index": {
+                "invalidAddressTitle": "Invalid Contract Address",
+                "invalidTokenIdTitle": "Invalid token ID",
+                "invalidSourceTitle": "No NFTs found",
+                "invalidOwnershipTitle": "Ownership Mismatch",
+                "networkErrorTitle": "Network Error",
+                "imagePreview": "IMG Preview",
+                "invalidAddress": "Invalid address",
+                "invalidTokenId": "Invalid token ID",
+                "invalidSource": "NFT does not exist for the given contract address or token ID.",
+                "invalidOwnership": "The NFT is not owned by you for the given contract address or token ID.",
+                "networkError": "An error has occurred. please try again later",
+                "previewSubText": "When you enter your own NFT information, the image is displayed",
+                "success": "Successfully added the NFT",
+                "error": "Failed to add the NFT",
+                "contractAddress": "NFT Contract Address",
+                "tokenId": "Token ID",
+                "preview": "NFT Preview",
+                "uri": "URI",
+                "data": "Data",
+                "addNFT": "Add NFT"
+              }
+            },
+            "Cosmos": {
+              "index": {
+                "invalidAddressTitle": "Invalid Contract Address",
+                "invalidTokenIdTitle": "Invalid token ID",
+                "invalidOwnershipTitle": "Ownership Mismatch",
+                "networkErrorTitle": "Network Error",
+                "imagePreview": "IMG Preview",
+                "invalidAddress": "Invalid address",
+                "invalidTokenId": "Invalid token ID",
+                "invalidOwnership": "The NFT is not owned by you for the given contract address or token ID.",
+                "networkError": "An error has occurred. please try again later",
+                "previewSubText": "When you enter your own NFT information, the image is displayed",
+                "success": "Successfully added the NFT",
+                "error": "Failed to add the NFT",
+                "contractAddress": "NFT Contract Address",
+                "tokenId": "Token ID",
+                "preview": "NFT Preview",
+                "addNFT": "Add NFT"
+              }
+            }
+          },
+          "entry": {
+            "network": "Network",
+            "selectNetwork": "Select Network",
+            "searchNetwork": "Search Network (Ex. Ethereum)"
+          },
+          "layout": {
+            "header": "Import NFT"
+          }
+        }
+      },
+      "visibilitynetwork": {
+        "network": {
+          "layout": {
+            "headerTitle": "Token Listing Information",
+            "contentsSubTitle": "All asset and token information is being developed together with the community. If your token is not displayed, please share the GitHub link below with the token issuer or community. Once registered, the information will be automatically reflected in the wallet and Mintscan."
+          }
+        }
+      },
+      "coin-type-setting": {
+        "entry": {
+          "setupSuccess": "Set up success",
+          "setupError": "Set up error",
+          "infoTitle": "The default coin type is recommended.",
+          "infoBody": "You can later change the coin type again via **Portfolio > Network Filter > Switch Coin Type**.",
+          "complete": "Complete"
+        },
+        "layout": {
+          "header": "Coin Type Setting"
+        }
+      }
+    },
+    "manage-dapps": {
+      "components": {
+        "CurrentDapp": {
+          "index": {
+            "currentDapp": "Current Dapp"
+          }
+        },
+        "DappItem": {
+          "index": {
+            "totalTx": "Total Tx:",
+            "transaction": "{{totalTxCount}} Transaction"
+          }
+        },
+        "DisconnectBottomSheet": {
+          "index": {
+            "title": "Do you want to disconnect all connections?",
+            "description": "If you disconnect from all connected Dapps, you will no longer be able to use your wallet with those Dapps, and all related session information will be deleted. Are you sure you want to disconnect?",
+            "cancel": "Cancel",
+            "disconnect": "Disconnect"
+          }
+        }
+      },
+      "entry": {
+        "connectedDapps": "{{dappCount}} Connected Dapps",
+        "alphabeticalAsc": "Alphabetical Asc. (A -> Z)",
+        "searchPlaceholder": "Search Dapp Name, URL",
+        "connectedDateDesc": "Connected Date Desc. (New -> Old)",
+        "noDapps": "No Dapps",
+        "noDappsDescription": "Connected Dapp will show up here"
+      },
+      "layout": {
+        "header": "Manage Dapps",
+        "disconnectAll": "Disconnect All"
+      }
+    },
+    "popup": {
+      "components": {
+        "BaseTxInfo": {
+          "index": {
+            "network": "Network",
+            "networkFee": "Network Fee",
+            "totalFee": "Total Fee",
+            "additionalFee": "Additional Fee",
+            "uncertainFee": "Uncertain Fee"
+          }
+        },
+        "MemoInput": {
+          "components": {
+            "MemoBottomSheet": {
+              "index": {
+                "enterMemo": "Enter Memo",
+                "description": "Memo is a feature that allows users to add personalized notes to their transactions for better tracking and organization.",
+                "memo": "Memo (Optional)",
+                "confirm": "Confirm"
+              }
+            }
+          },
+          "index": {
+            "memo": "Memo (Optional)"
+          }
+        },
+        "NetworkInfo": {
+          "index": {
+            "network": "Network"
+          }
+        },
+        "requests": {
+          "AccessRequest": {
+            "index": {
+              "allowOption": "Allow the Dapp to :",
+              "allowAddress": "Know your wallet address",
+              "allowRequestSign": "Request signatures for transactions",
+              "encryptMessage": "Encrypt/Decrypt messages",
+              "informTitle": "Secure Authorization",
+              "informDescription": "Your mnemonic and private key will not be shared during the authorization.",
+              "reject": "Reject",
+              "access": "Access",
+              "title": "Access Request"
+            }
+          }
+        },
+        "RawTx": {
+          "title": "Transaction Data"
+        }
+      },
+      "cosmos": {
+        "sign": {
+          "entry": {
+            "reject": "Reject",
+            "sign": "Sign"
+          },
+          "amino": {
+            "entry": {
+              "insufficientFeeAmount": "Insufficient fee",
+              "reject": "Reject",
+              "sign": "Sign",
+              "notSimulated": "Simulating transaction...",
+              "memoOverflow": "Memo is too long. Please shorten it."
+            },
+            "components": {
+              "TxMessage": {
+                "messages": {
+                  "Send": {
+                    "index": {
+                      "sendAmount": "Send Amount",
+                      "from": "From Address",
+                      "to": "To Address"
+                    }
+                  },
+                  "IBCSend": {
+                    "index": {
+                      "sendAmount": "Send Amount",
+                      "from": "From Address",
+                      "to": "To Address",
+                      "channel": "Channel",
+                      "memo": "Memo"
+                    }
+                  },
+                  "Commisson": {
+                    "index": {
+                      "validator": "Validator"
+                    }
+                  },
+                  "Contract": {
+                    "index": {
+                      "inputFunds": "Input Funds",
+                      "contract": "Contract",
+                      "msg": "Message"
+                    }
+                  },
+                  "Custom": {
+                    "index": {
+                      "data": "Data"
+                    }
+                  },
+                  "Reward": {
+                    "index": {
+                      "delegator": "Delegator",
+                      "validator": "Validator"
+                    }
+                  },
+                  "Swap": {
+                    "index": {
+                      "input": "Input",
+                      "output": "Output",
+                      "routes": "Routes",
+                      "poolId": "Pool ID"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "direct": {
+            "components": {
+              "TxMessage": {
+                "messages": {
+                  "Commisson": {
+                    "index": {
+                      "validator": "Validator"
+                    }
+                  },
+                  "Contract": {
+                    "index": {
+                      "inputFunds": "Input Funds",
+                      "contract": "Contract",
+                      "msg": "Message"
+                    }
+                  },
+                  "Custom": {
+                    "index": {
+                      "data": "Data"
+                    }
+                  },
+                  "IBCSend": {
+                    "index": {
+                      "sendAmount": "Send Amount",
+                      "from": "From Address",
+                      "to": "To Address",
+                      "channel": "Channel",
+                      "memo": "Memo"
+                    }
+                  },
+                  "Send": {
+                    "index": {
+                      "sendAmount": "Send Amount",
+                      "from": "From Address",
+                      "to": "To Address"
+                    }
+                  }
+                }
+              }
+            },
+            "entry": {
+              "insufficientFeeAmount": "Insufficient fee",
+              "decodedTxInfoTitle": "Decoded Transaction Information",
+              "decodedTxInfoDescription": "Some transactions may not show data because of decryption failures, but this doesn't affect the transaction execution.",
+              "reject": "Reject",
+              "sign": "Sign",
+              "notSimulated": "Simulating transaction...",
+              "memoOverflow": "Memo is too long. Please shorten it."
+            }
+          },
+          "message": {
+            "entry": {
+              "signatureRequest": "Signature Request",
+              "message": "Message",
+              "reject": "Reject",
+              "sign": "Sign"
+            }
+          }
+        },
+        "addChain": {
+          "entry": {
+            "addChain": "Add Chain",
+            "addCustomChain": "Add Custom Chain",
+            "networkToAdd": "Network to Add",
+            "currencySymbol": "Currency Symbol",
+            "networkURL": "Network URL",
+            "cautionTitle": "Not Validated",
+            "cautionDescription": "OneWallet does not validate custom network",
+            "reject": "Reject"
+          }
+        },
+        "add-token": {
+          "entry": {
+            "addCustomToken": "Add Custom Token",
+            "tokenToAdd": "Token to Add",
+            "contractAddress": "Contract Address",
+            "type": "Type",
+            "decimals": "Decimals",
+            "reject": "Reject",
+            "addToken": "Add Token"
+          }
+        },
+        "add-nfts": {
+          "entry": {
+            "addSuggestedNFTs": "Add Suggested NFTs",
+            "reject": "Reject",
+            "addNFT": "Add NFT",
+            "networkError": "Network Error",
+            "notOwned": "Not Owned"
+          }
+        }
+      },
+      "evm": {
+        "switch-network": {
+          "entry": {
+            "switchNetwork": "Switch Network",
+            "infoTitle": "Authorize Network Access",
+            "infoDescription": "Upon authorization, the website will be allowed to access addresses within this network",
+            "reject": "Reject"
+          }
+        },
+        "transaction": {
+          "components": {
+            "TxMessage": {
+              "messages": {
+                "Send": {
+                  "index": {
+                    "sendAmount": "Send Amount",
+                    "from": "From Address",
+                    "to": "To Address"
+                  }
+                },
+                "Approve": {
+                  "index": {
+                    "grantAmount": "Grant Amount",
+                    "grantedAddress": "Granted Address",
+                    "tokenAddress": "Token Contract"
+                  }
+                },
+                "Deploy": {
+                  "index": {
+                    "data": "Data"
+                  }
+                },
+                "Interact": {
+                  "index": {
+                    "contractAddress": "Contract",
+                    "data": "Data",
+                    "function": "Function"
+                  }
+                },
+                "NFT": {
+                  "ERC1155": {
+                    "SafeTransferFrom": {
+                      "index": {
+                        "contractAddress": "Contract",
+                        "from": "From Address",
+                        "to": "To Address"
+                      }
+                    }
+                  },
+                  "ERC721": {
+                    "TransferFrom": {
+                      "index": {
+                        "contractAddress": "Contract",
+                        "from": "From Address",
+                        "to": "To Address"
+                      }
+                    }
+                  }
+                },
+                "OneInchSwap": {
+                  "index": {
+                    "contractAddress": "Contract",
+                    "data": "Data"
+                  }
+                },
+                "Transfer": {
+                  "index": {
+                    "sendAmount": "Send Amount",
+                    "from": "From Address",
+                    "to": "To Address",
+                    "contractAddress": "Contract"
+                  }
+                },
+                "TransferFrom": {
+                  "index": {
+                    "sendAmount": "Send Amount",
+                    "from": "From Address",
+                    "to": "To Address",
+                    "contractAddress": "Contract"
+                  }
+                }
+              }
+            }
+          },
+          "entry": {
+            "insufficientBalance": "Insufficient balance",
+            "reject": "Reject",
+            "sign": "Sign"
+          }
+        },
+        "add-chain": {
+          "entry": {
+            "addCustomChain": "Add Custom Chain",
+            "networkToAdd": "Network to Add",
+            "currencySymbol": "Currency Symbol",
+            "networkURL": "Network URL",
+            "cautionTitle": "Not Validated",
+            "cautionDescription": "OneWallet does not validate custom network",
+            "reject": "Reject",
+            "addChain": "Add Chain"
+          }
+        },
+        "add-token": {
+          "entry": {
+            "addCustomToken": "Add ERC20",
+            "tokenToAdd": "Token to Add",
+            "contractAddress": "Contract Address",
+            "type": "Type",
+            "decimals": "Decimals",
+            "reject": "Reject",
+            "addToken": "Add Token"
+          }
+        },
+        "sign": {
+          "eth-sign": {
+            "entry": {
+              "signatureRequest": "Signature Request",
+              "message": "Message",
+              "reject": "Reject",
+              "sign": "Sign"
+            }
+          },
+          "personal-sign": {
+            "entry": {
+              "signatureRequest": "Signature Request",
+              "message": "Message",
+              "reject": "Reject",
+              "sign": "Sign"
+            }
+          },
+          "sign-typed-data": {
+            "entry": {
+              "signatureRequest": "Signature Request",
+              "domain": "Domain",
+              "message": "Message",
+              "reject": "Reject",
+              "sign": "Sign"
+            }
+          }
+        }
+      },
+      "sui": {
+        "sign": {
+          "transaction": {
+            "components": {
+              "TxMessage": {
+                "messages": {
+                  "DefaultTx": {
+                    "index": {
+                      "data": "Data"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "transaction": {
+          "entry": {
+            "failedToDryRun": "Failed to dry run",
+            "reject": "Reject",
+            "sign": "Sign"
+          }
+        },
+        "sign-message": {
+          "entry": {
+            "signatureRequest": "Signature Request",
+            "message": "Message",
+            "reject": "Reject",
+            "sign": "Sign"
+          }
+        }
+      },
+      "bitcoin": {
+        "switch-network": {
+          "entry": {
+            "switchNetwork": "Switch Network",
+            "infoTitle": "Authorize Network Access",
+            "infoDescription": "Upon authorization, the website will be allowed to access addresses within this network",
+            "reject": "Reject"
+          }
+        },
+        "components": {
+          "TxMessage": {
+            "index": {
+              "inputs": "Inputs",
+              "outputs": "Outputs"
+            }
+          }
+        },
+        "send": {
+          "entry": {
+            "invalidAddress": "Invalid address",
+            "failedLoadFee": "Failed to load fee",
+            "noAvailableAmount": "No available amount",
+            "noAmount": "No amount",
+            "failedCreateTxHex": "Failed to create tx hex",
+            "sendAmount": "Send Amount",
+            "from": "From Address",
+            "to": "To Address",
+            "failedCreateTxHexDescription": "An error occurred while generating the transaction hex, possibly due to invalid inputs, insufficient funds, or signing issues.",
+            "reject": "Reject",
+            "sign": "Sign"
+          }
+        },
+        "sign-psbt": {
+          "entry": {
+            "invalidAddress": "Invalid address",
+            "noAvailableAmount": "No available amount",
+            "noAmount": "No amount",
+            "failedCreateTxHex": "Failed to create tx hex",
+            "reject": "Reject",
+            "sign": "Sign"
+          }
+        },
+        "sign-psbts": {
+          "entry": {
+            "invalidAddress": "Invalid address",
+            "noAvailableAmount": "No available amount",
+            "failedCreateTxHex": "Failed to create tx hex",
+            "reject": "Reject",
+            "sign": "Sign"
+          }
+        },
+        "sign-message": {
+          "entry": {
+            "signatureRequest": "Signature Request",
+            "message": "Message",
+            "reject": "Reject",
+            "sign": "Sign"
+          }
+        }
+      },
+      "aptos": {
+        "transaction": {
+          "entry": {
+            "insufficientBalance": "Insufficient balance",
+            "failedToSimulate": "Fail to simulate",
+            "reject": "Reject",
+            "sign": "Sign"
+          }
+        },
+        "sign-message": {
+          "entry": {
+            "signatureRequest": "Signature Request",
+            "message": "Message",
+            "reject": "Reject",
+            "sign": "Sign"
+          }
+        }
+      },
+      "iota": {
+        "sign-message": {
+          "entry": {
+            "signatureRequest": "Signature Request",
+            "message": "Message",
+            "reject": "Reject",
+            "sign": "Sign"
+          }
+        },
+        "sign": {
+          "transaction": {
+            "components": {
+              "TxMessage": {
+                "messages": {
+                  "DefaultTx": {
+                    "index": {
+                      "data": "Data"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "transaction": {
+          "entry": {
+            "failedToDryRun": "Failed to dry run",
+            "reject": "Reject",
+            "sign": "Sign"
+          }
+        }
+      }
+    },
+    "coin-overview": {
+      "$coinId": {
+        "entry": {
+          "search": "Search for Denom, Contract"
+        }
+      }
+    },
+    "dapp-list": {
+      "components": {
+        "DappDetailBottomSheet": {
+          "index": {
+            "supportedNetwork": "Supported Network",
+            "socialInfo": "Social Info",
+            "cancel": "Cancel",
+            "goToDapp": "Go to Dapp"
+          }
+        }
+      },
+      "entry": {
+        "searchPlaceholder": "Search Dapp",
+        "pinnedDapps": "Pinned Dapps",
+        "alphabeticalAsc": "Alphabetical Asc. (A -> Z)",
+        "multiChainSupport": "Multi-Chain Support",
+        "noResultsTitle": "No Results Found",
+        "noResultsSubtitle": "Try adjusting your filters or search term."
+      },
+      "layout": {
+        "header": "All Dapps",
+        "githubHeaderTitle": "Dapp Listing Information",
+        "githubSubTitle": "DApp information is developed in collaboration with the community.\nIf your DApp is not displayed, share the GitHub link for automatic registration in the wallet."
+      }
+    },
+    "buy-coin": {
+      "entry": {
+        "title": "Buy from a variety of crypto",
+        "subTitle": "Cryptocurrency transactions are irreversible, and once completed, they cannot be refunded. Additional fees may apply to transactions.",
+        "platform": "Platform",
+        "moonpay": "MoonPay",
+        "moonpayDescription": "A whole world of crypto, in one simple account.",
+        "needGuide": "Do you need a guide?",
+        "goToGuide": "Go to Guide"
+      },
+      "layout": {
+        "header": "Buy Coin"
+      }
+    },
+    "components": {
+      "NFTList": {
+        "index": {
+          "search": "Search NFT",
+          "manageNFT": "Manage NFTs",
+          "noNFT": "No NFTs",
+          "noNFTDescription": "You can manage your NFTs by adding or deleting them."
+        }
+      },
+      "AccountInitializer": {
+        "index": {
+          "loadingOverlayTitle": "Syncing your wallet assets...",
+          "loadingOverlayMessage": "Checking your assets. This process may take some time.\nPlease wait a moment."
+        }
+      }
+    },
+    "nft-detail": {
+      "$id": {
+        "entry": {
+          "cosmos": {
+            "index": {
+              "network": "Network",
+              "owner": "Owner Address",
+              "contractAddress": "Contract Address",
+              "tokenId": "Token ID",
+              "tokenStandard": "Token Standard",
+              "attributes": "Attributes",
+              "notOwnedNFT": "Ownership required for this feature.",
+              "nftSend": "Send NFT"
+            }
+          },
+          "evm": {
+            "index": {
+              "network": "Network",
+              "owner": "Owner Address",
+              "contractAddress": "Contract Address",
+              "tokenId": "Token ID",
+              "tokenStandard": "Token Standard",
+              "balance": "Balance",
+              "attributes": "Attributes",
+              "notOwnedNFT": "Ownership required for this feature.",
+              "nftSend": "Send NFT"
+            }
+          },
+          "sui": {
+            "index": {
+              "untransferableObject": "This NFT cannot be transferred.",
+              "owner": "Owner Address",
+              "objectId": "Object ID",
+              "nftSend": "Send NFT",
+              "network": "Network"
+            }
+          },
+          "iota": {
+            "index": {
+              "lockedFeature": "This feature is locked currently",
+              "owner": "Owner Address",
+              "objectId": "Object ID",
+              "nftSend": "Send NFT",
+              "network": "Network"
+            }
+          }
+        }
+      }
+    },
+    "all-history": {
+      "layout": {
+        "header": "Select Coin"
+      }
+    },
+    "all-network": {
+      "layout": {
+        "header": "Select network"
+      }
+    },
+    "error": {
+      "index": {
+        "error": "Error",
+        "errorTitle": "Error!",
+        "errorSubtitle": "Something went wrong",
+        "feedback": "Feedback?",
+        "sendReportEmail": "Send Report Email",
+        "backToHome": "Back to Home"
+      }
+    },
+    "notFound": {
+      "index": {
+        "notFound": "Not Found",
+        "pageNotFound": "Page not found",
+        "pageNotFoundSubtitle": "We couldn't find the page you're looking for. Let's head back home",
+        "feedback": "Feedback?",
+        "sendReportEmail": "Send Report Email",
+        "backToHome": "Back to Home"
+      }
+    }
+  },
+  "schema": {
+    "common": {
+      "string": {
+        "base": "Please enter characters.",
+        "empty": "required",
+        "max": "Please enter less than {#limit} characters.",
+        "min": "Please enter at least {#limit} or more characters.",
+        "min1": "Please enter at least {{limit}} or more characters.",
+        "pattern": {
+          "invalidRange": "Please enter a value less than 10",
+          "invalidType": "Please enter number"
+        }
+      },
+      "any": {
+        "required": "required"
+      },
+      "number": {
+        "base": "Please enter numbers.",
+        "empty": "Please enter numbers.",
+        "min": "Please enter at least {#limit} or more numbers."
+      }
+    },
+    "passwordForm": {
+      "repeatPassword": {
+        "any": {
+          "only": "The password confirmation does not match."
+        }
+      },
+      "password": {
+        "any": {
+          "only": "Please enter a valid password."
+        }
+      }
+    },
+    "privateKeyForm": {
+      "privateKey": "Please enter a valid private key"
+    },
+    "resetForm": {
+      "reset": {
+        "any": {
+          "only": "Please enter the text 'RESET'."
+        }
+      }
+    },
+    "changePasswordForm": {
+      "password": {
+        "any": {
+          "only": "The entered password does not match the current password."
+        }
+      },
+      "repeatPassword": {
+        "any": {
+          "only": "The password confirmation does not match."
+        }
+      }
+    },
+    "importTokenForm": {
+      "address": {
+        "string": {
+          "pattern": {
+            "base": "Invalid token address"
+          }
+        }
+      }
+    },
+    "addressBookForm": {
+      "address": {
+        "string": {
+          "pattern": {
+            "base": "Invalid address"
+          }
+        }
+      }
+    },
+    "addChainForm": {
+      "chainName": {
+        "any": {
+          "invalid": "Already registered chain name"
+        }
+      },
+      "restUrl": {
+        "any": {
+          "invalid": "Already registered chain's rest url"
+        }
+      },
+      "coinType": {
+        "any": {
+          "invalid": "The input format is not valid"
+        }
+      },
+      "decimal": {
+        "base": "Please enter a decimal number"
+      },
+      "gasRate": {
+        "object": {
+          "and": "Please enter whole Gas Rate value"
+        }
+      }
+    },
+    "addNetworkForm": {
+      "address": {
+        "string": {
+          "pattern": {
+            "base": "Must be entered in hexadecimal or decimal (eg. 0x1 or 1)"
+          }
+        }
+      }
+    }
+  }
+}
