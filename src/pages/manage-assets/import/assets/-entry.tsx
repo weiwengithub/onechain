@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import BaseBody from '@/components/BaseLayout/components/BaseBody';
 import EthermintFilterChainSelectBox from '@/components/EthermintFilterChainSelectBox/index.tsx';
 import { useChainList } from '@/hooks/useChainList.ts';
-import type { EvmChain, SuiChain, UniqueChainId } from '@/types/chain.ts';
+import type { EvmChain, SuiChain, TronChain, UniqueChainId } from '@/types/chain.ts';
 import { getUniqueChainId, isMatchingUniqueChainId } from '@/utils/queryParamGenerator.ts';
 
 import { Container } from './-styled.tsx';
@@ -70,9 +70,16 @@ export default function Entry() {
     return [];
   }, [chainList, isDeveloperMode]);
 
-  const selectableChains = useMemo<(SuiChain | EvmChain)[]>(() => {
-    return [...suiChains, ...evmChains];
-  }, [evmChains, suiChains]);
+  const tronChains = useMemo(() => {
+    if (chainList?.tronChains) {
+      return chainList.tronChains.filter((chain) => isDeveloperMode || !chain.isTestnet);
+    }
+    return [];
+  }, [chainList, isDeveloperMode]);
+
+  const selectableChains = useMemo<(SuiChain | EvmChain | TronChain)[]>(() => {
+    return [...suiChains, ...evmChains, ...tronChains];
+  }, [evmChains, suiChains, tronChains]);
 
   const defaultChain = useMemo(() => {
     if (selectableChains.length === 0) return undefined;

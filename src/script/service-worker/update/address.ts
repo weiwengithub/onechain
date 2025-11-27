@@ -22,12 +22,14 @@ export async function address(id: string) {
       }
       throw accountError;
     }
-    const { cosmosChains, evmChains, suiChains, aptosChains, bitcoinChains, iotaChains } = await getChains();
+    const { cosmosChains, evmChains, suiChains, aptosChains, bitcoinChains, iotaChains, tronChains } = await getChains();
 
     const password = await getPassword();
 
-    const chains = [...cosmosChains, ...evmChains, ...suiChains, ...aptosChains, ...bitcoinChains, ...iotaChains];
+    const chains = [...cosmosChains, ...evmChains, ...suiChains, ...aptosChains, ...bitcoinChains, ...iotaChains, ...tronChains];
 
+    console.log('****************** 333-1');
+    console.log(chains);
     const storedAccountAddresses = await getAccountAddress(id);
 
     const { results: addressResponse } = await PromisePool.withConcurrency(100)
@@ -67,16 +69,16 @@ export async function address(id: string) {
             }
 
             const chainItem = { ...etc, accountTypes: [accountType] };
-            
+
             // 特殊处理 zklogin 账户
             if (account.type === 'ZKLOGIN') {
               const zkLoginAccount = account as ZkLoginAccount;
-              const result: AccountAddress = { 
-                chainId: etc.id, 
-                chainType: etc.chainType, 
-                address: zkLoginAccount.address, 
+              const result: AccountAddress = {
+                chainId: etc.id,
+                chainType: etc.chainType,
+                address: zkLoginAccount.address,
                 publicKey: zkLoginAccount.address, // zklogin 使用地址作为公钥标识
-                accountType 
+                accountType
               };
               return result;
             }
@@ -92,7 +94,11 @@ export async function address(id: string) {
         return addresses;
       });
 
+    console.log('************************ 111');
+    console.log(addressResponse);
     const addresses = addressResponse.flat();
+    console.log('*************************** addresses');
+    console.log(addresses);
     await chrome.storage.local.set<Pick<ExtensionStorage, `${string}-address`>>({ [`${account.id}-address`]: addresses });
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -150,16 +156,16 @@ export async function customChainAddress(id: string) {
         }
 
         const chainItem = { ...etc, accountTypes: [primaryAccountType] };
-        
+
         // 特殊处理 zklogin 账户
         if (account.type === 'ZKLOGIN') {
           const zkLoginAccount = account as ZkLoginAccount;
-          const result: AccountAddress = { 
-            chainId: etc.id, 
-            chainType: etc.chainType, 
-            address: zkLoginAccount.address, 
+          const result: AccountAddress = {
+            chainId: etc.id,
+            chainType: etc.chainType,
+            address: zkLoginAccount.address,
             publicKey: zkLoginAccount.address, // zklogin 使用地址作为公钥标识
-            accountType: primaryAccountType 
+            accountType: primaryAccountType
           };
           return result;
         }

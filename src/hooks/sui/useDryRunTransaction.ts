@@ -48,8 +48,6 @@ export function useDryRunTransaction({ coinId, transaction, config }: UseDryRunT
 
       const requestURL = rpcURLs[index];
 
-      // debugger;
-
       if (!transaction) {
         return null;
       }

@@ -286,7 +286,6 @@ export const useZklogin = () => {
   }, []);
 
   const nonce = useMemo(() => {
-    // debugger;
     if (maxEpoch === undefined || !ephemeralKeyPair) return undefined;
     const nonce = generateNonce(
       ephemeralKeyPair.getPublicKey() as PublicKey,

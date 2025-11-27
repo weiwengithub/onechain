@@ -19,7 +19,6 @@ export default function Entry() {
   const { currentSuiNetwork, setCurrentSuiNetwork } = useCurrentSuiNetwork();
   const { chainList } = useChainList();
   // console.log('      chainList', chainList);
-  // debugger;
 
   const { isDeveloperMode, updateExtensionStorageStore } = useExtensionStorageStore((state) => state);
 

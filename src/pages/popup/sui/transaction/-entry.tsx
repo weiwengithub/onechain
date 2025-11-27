@@ -154,8 +154,6 @@ export default function Entry({ request }: EntryProps) {
     return undefined;
   }, [params, request.method]);
 
-  // debugger;
-
   const { data: dryRunTransaction, error: dryRunTransactionError } = useDryRunTransaction({
     coinId: nativeAccountAssetCoinId,
     transaction: parsedTx,

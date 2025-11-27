@@ -186,9 +186,6 @@ export default function ChainListBottomSheet({
     return sortedChainList;
   }, [debouncedSearch, search, sortedChainList]);
 
-  // debugger;
-  // console.log("      filteredChainList", filteredChainList);
-
   const chainsCount = chainList.length.toString();
 
   const currentTempChain = flatChainList.find((chain) => isMatchingUniqueChainId(chain, selectedChangeCoinTypeChainId));

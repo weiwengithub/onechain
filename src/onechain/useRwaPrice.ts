@@ -99,8 +99,6 @@ export const useRwaPrice = (props: Props) => {
     return `/rwa-price/${currentSuiNetwork.id}/${coinId}`;
   }, [coinId, currentSuiNetwork, isValidRequest]);
 
-  // debugger;
-
   const fetchPrice = useCallback(async (): Promise<{ price: number; percent: number }> => {
     if (!isValidRequest || !config || !rpcUrl || !currentSuiNetwork || !coinId) {
       return { price: 0, percent: 0 };
@@ -114,7 +112,6 @@ export const useRwaPrice = (props: Props) => {
 
       const isTestnet = currentSuiNetwork.isTestnet;
       const quoteTokens = isTestnet ? QUOTE_TOKENS.testnet : QUOTE_TOKENS.mainnet;
-      // debugger;
       // Try USDH first, then USDO as fallback
       for (const [tokenName, tokenInfo] of Object.entries(quoteTokens)) {
         try {

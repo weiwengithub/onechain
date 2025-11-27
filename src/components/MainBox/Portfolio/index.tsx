@@ -15,7 +15,7 @@ import { Route as ReceiveWithChainId } from '@/pages/wallet/receive/chain/$chain
 import { Route as SelectSendCoin } from '@/pages/wallet/send';
 import { Route as SendCoinWithChainId } from '@/pages/wallet/send/chain/$chainId';
 import { Route as OneTransfer } from '@/pages/onetransfer';
-import type { EvmChain, SuiChain, UniqueChainId } from '@/types/chain';
+import type { EvmChain, SuiChain, TronChain, UniqueChainId } from '@/types/chain';
 import {
   getFilteredAssetsByChainId,
   getFilteredChainsByChainId,
@@ -70,15 +70,12 @@ export default function PortFolio({ selectedChainId, onChangeChaindId }: PortFol
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  //todo
   const tempDisplay = false;
 
   const { currentAccount } = useCurrentAccount();
   const { setCurrentSuiNetwork } = useCurrentSuiNetwork();
   const { requestFaucet, isRequesting } = useFaucet();
   const { data: accountAddresses } = useCurrentAccountAddresses({ accountId: currentAccount.id });
-
-  // console.log('      accountAddresses', accountAddresses);
 
   const currAddress = useMemo(() => {
     if (!selectedChainId) return undefined;
@@ -175,11 +172,11 @@ export default function PortFolio({ selectedChainId, onChangeChaindId }: PortFol
     setAggregatedTotalValue(Number(aggregateValue).toFixed(2));
   }, [priceInfo, accountAllAssets, coinGeckoPrice, userCurrencyPreference, isLoading, selectedChainId]);
 
-  // 只展示 oct, oct测试网, sui, sui测试网
+  // 只展示 oct, oct测试网, sui, sui测试网, tron, tron测试网
   const filteredChains = useMemo(() => {
-    const res: (SuiChain | EvmChain)[] = [];
+    const res: (SuiChain | EvmChain | TronChain)[] = [];
     chainList.forEach((item) => {
-      if (item.chainType === 'sui' || item.chainType === 'evm') {
+      if (item.chainType === 'sui' || item.chainType === 'evm' || item.chainType === 'tron') {
         // 如果开启开发者模式，保留测试网
         if (isDeveloperMode || !item.id.includes('-testnet')) {
           res.push(item);
@@ -198,8 +195,6 @@ export default function PortFolio({ selectedChainId, onChangeChaindId }: PortFol
   };
 
   const handleChangeId = useCallback((chainId?: UniqueChainId) => {
-
-    // debugger;
 
     onChangeChaindId(chainId);
     if (chainId?.endsWith('__sui')) {

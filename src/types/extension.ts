@@ -13,6 +13,7 @@ import type {
   AccountAddressBalanceEvm,
   AccountAddressBalanceIota,
   AccountAddressBalanceSui,
+  AccountAddressBalanceTron,
   AccountAddressCommissionsCosmos,
   AccountAddressDelegationsCosmos,
   AccountAddressDelegationsIota,
@@ -98,6 +99,7 @@ export interface ExtensionStorage {
   [key: `${string}-balance-sui`]: AccountAddressBalanceSui[];
   [key: `${string}-balance-bitcoin`]: AccountAddressBalanceBitcoin[];
   [key: `${string}-balance-iota`]: AccountAddressBalanceIota[];
+  [key: `${string}-balance-tron`]: AccountAddressBalanceTron[];
   [key: `${string}-balance-erc20`]: AccountAddressBalanceErc20[];
   [key: `${string}-balance-cw20`]: AccountAddressBalanceCw20[];
   [key: `${string}-delegation-cosmos`]: AccountAddressDelegationsCosmos[];

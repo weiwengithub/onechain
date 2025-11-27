@@ -8,7 +8,7 @@ export interface ProofRequest {
   // 注意：后端服务器期望数字类型，而不是字符串！
   refund: number;         // u64 整数，如 1000000000
   nullifier: string;      // 字符串格式的大整数
-  root: string;           // 字符串格式的大整数  
+  root: string;           // 字符串格式的大整数
   nullifier_hash: string; // 字符串格式的大整数
   secret: string;         // 字符串格式的大整数
   path_indices: number[]; // 数字数组，0/1 表示路径方向
@@ -138,7 +138,6 @@ class OneTransferApi {
   //
   //     const response = await this.reqInstance.post('/commitment/list', params);
   //
-  //     debugger;
   //     // 响应拦截器已经返回了 response.data
   //     const data = response.data || response;
   //

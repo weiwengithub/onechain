@@ -47,3 +47,8 @@ export interface TronAccountResource {
   TotalEnergyLimit: number;
   TotalEnergyWeight: number;
 }
+
+export interface TronGetBalance {
+  coinType: string;
+  totalBalance: string;
+}

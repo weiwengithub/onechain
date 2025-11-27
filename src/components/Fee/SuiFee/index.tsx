@@ -47,8 +47,6 @@ export default function SuiFee({
 
   const SUI_COIN_TYPE = getSuiCoinType(id);
 
-  // debugger;
-
   const selectedFeeAsset = accountAsset?.suiAccountAssets.find((item) => item.asset.id === SUI_COIN_TYPE)?.asset;
 
   const coinSymbol = selectedFeeAsset?.symbol || '';

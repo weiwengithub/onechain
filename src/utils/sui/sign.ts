@@ -11,8 +11,6 @@ export async function signAndExecuteTxSequentially(
   options?: SuiTransactionBlockResponseOptions,
 ) {
 
-  // debugger;
-
   for (const url of urls) {
     const isSui = transaction instanceof TransactionType;
     const client = getSuiClient(!isSui, url);
@@ -36,8 +34,6 @@ export async function signAndExecuteTxSequentially(
 }
 
 export async function signTxSequentially(signer: Ed25519Keypair, transaction: TransactionType | TransactionTypeOct, urls: string[]) {
-
-  // debugger;
 
   for (const url of urls) {
     // const client = new SuiClient({ url });

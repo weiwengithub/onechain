@@ -159,7 +159,6 @@ export default function Entry() {
   }, [accountAllAssets?.flatAccountAssets, coinGeckoPrice, selectedChainFilterId, usdCoinGeckoPrice, userCurrencyPreference, userHiddenAssetIds]);
 
   const computedAssetValues = useMemo<PortfolioCoinItem[]>(() => {
-    // debugger;
 
     const baseCoinList = [...(groupAccountAssets?.groupAccountAssets || []), ...(groupAccountAssets?.singleAccountAssets || [])];
 

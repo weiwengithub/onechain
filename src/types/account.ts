@@ -39,6 +39,7 @@ import type { UnbondingResponses } from './cosmos/undelegation';
 import type { Erc20Balance } from './evm/balance';
 import type { IotaGetBalance } from './iota/api';
 import type { SuiGetBalance } from './sui/api';
+import type { TronGetBalance } from './tron/balance';
 
 export type AccountType = 'PRIVATE_KEY' | 'MNEMONIC' | 'ZKLOGIN';
 export type ZkloginProvider = 'apple' | 'google';
@@ -191,6 +192,14 @@ export interface AccountAddressDelegationsIota {
   chainType: ChainType;
   address: string;
   delegations: IotaDelegatedStake[];
+}
+
+export interface AccountAddressBalanceTron {
+  id: Chain['id'];
+  chainId: Chain['chainId'];
+  chainType: ChainType;
+  address: string;
+  balances: TronGetBalance[];
 }
 
 export interface AccountAddressBalanceBitcoin {

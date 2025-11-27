@@ -13,8 +13,6 @@ export const usePrice = (props: Props) => {
   const { coinGeckoId, coinId } = props;
   // "oct-testnet-MBSR26"  "0xab2ea54393f43015e462244726160d3c8cbf979f87e240506e3e82938ab357c0::mbsr26::MBSR26"
 
-  // debugger;
-
   const { priceInfo } = useOctPrice();
   const { price: rwaPrice } = useRwaPrice({ coinGeckoId, coinId });
   const octPrice = coinId ? priceInfo[coinId]?.octPrice ?? 0 : 0;

@@ -1,26 +1,27 @@
 import type { TronTxBase, TronSignedTx } from '@/types/tron/tx';
 import type { ChainType } from '@/types/chain.ts';
+import type { RequestBase } from '.';
 
 // Request Message Types
-export interface TronRequestAccount {
+export interface TronRequestAccount extends RequestBase {
   chainType: Extract<ChainType, 'tron'>;
   method: 'tron_requestAccounts';
   params?: never;
 }
 
-export interface TronGetAccounts {
+export interface TronGetAccounts extends RequestBase {
   chainType: Extract<ChainType, 'tron'>;
   method: 'tron_accounts';
   params?: never;
 }
 
-export interface TronGetNetwork {
+export interface TronGetNetwork extends RequestBase {
   chainType: Extract<ChainType, 'tron'>;
   method: 'tron_chainId';
   params?: never;
 }
 
-export interface TronSignTransaction {
+export interface TronSignTransaction extends RequestBase {
   chainType: Extract<ChainType, 'tron'>;
   method: 'tron_signTransaction';
   params: {
@@ -28,7 +29,7 @@ export interface TronSignTransaction {
   };
 }
 
-export interface TronSignMessage {
+export interface TronSignMessage extends RequestBase {
   chainType: Extract<ChainType, 'tron'>;
   method: 'tron_signMessage';
   params: {
@@ -36,7 +37,7 @@ export interface TronSignMessage {
   };
 }
 
-export interface TronSendTransaction {
+export interface TronSendTransaction extends RequestBase {
   chainType: Extract<ChainType, 'tron'>;
   method: 'tron_sendTransaction';
   params: {
@@ -44,7 +45,7 @@ export interface TronSendTransaction {
   };
 }
 
-export interface TronSwitchNetwork {
+export interface TronSwitchNetwork extends RequestBase {
   chainType: Extract<ChainType, 'tron'>;
   method: 'wallet_switchTronNetwork';
   params: {
@@ -52,7 +53,7 @@ export interface TronSwitchNetwork {
   };
 }
 
-export interface TronAddNetwork {
+export interface TronAddNetwork extends RequestBase {
   chainType: Extract<ChainType, 'tron'>;
   method: 'wallet_addTronNetwork';
   params: {

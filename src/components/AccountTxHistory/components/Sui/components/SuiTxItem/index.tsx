@@ -16,8 +16,6 @@ type SuiTxItemProps = {
 
 export default function SuiTxItem({ tx, coinId }: SuiTxItemProps) {
 
-  // debugger; //tx 分类显示组件
-
   if (tx.important.faucet) {
     return <SuiFaucetTxItem tx={tx.important.faucet} digest={tx.digest} timestampMs={tx.timestampMs} coinId={coinId} />;
   }
@@ -32,11 +30,11 @@ export default function SuiTxItem({ tx, coinId }: SuiTxItemProps) {
   if (tx.important.moveCalls) {
     const moveCall = tx.important.moveCalls[0];
     const isRwaTransaction = moveCall.moduleName === 'rwa';
-    
+
     return <SuiMoveCallsTxItem
-      tx={moveCall} 
-      digest={tx.digest} 
-      timestampMs={tx.timestampMs} 
+      tx={moveCall}
+      digest={tx.digest}
+      timestampMs={tx.timestampMs}
       coinId={coinId}
       originalTransaction={isRwaTransaction ? tx : undefined}
     />;

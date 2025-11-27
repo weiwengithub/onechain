@@ -27,8 +27,6 @@ export function analyzeTransactions(ownerAddress: string, transactions: SuiTrans
 
     const important: ImportantTransactionInfo = {};
 
-    // debugger;
-
     //sui 交易分类
     const stakingTransactions = stakingTransactionAnalysis(ownerAddress, transaction);
     if (stakingTransactions.length > 0) {
@@ -63,8 +61,6 @@ export function analyzeTransactions(ownerAddress: string, transactions: SuiTrans
     }).reduce(
       (acc, { coinType, amount }) => {
         acc[coinType] = amount;
-
-        // debugger;
 
         const isIndex = coinType.indexOf('::oct::OCT') > -1 || coinType.indexOf('::sui::SUI') > -1;
 
@@ -259,13 +255,10 @@ const getStakingFailureInfo = (
 const sendTransactionAnalysis = (ownerAddress: string, transactionResponse: SuiTransactionBlockResponse) => {
   const analysis: SendTransactionInfo[] = [];
 
-  // debugger;
-
   const { effects, events, transaction, balanceChanges, objectChanges } = transactionResponse;
   if (!effects || !events) return analysis;
 
   const sender = transaction?.data?.sender;
-// debugger;
   if (!sender) return analysis;
 
   const gasUsed = getTotalGasUsed(effects) || '0';

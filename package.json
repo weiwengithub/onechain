@@ -1,7 +1,7 @@
 {
-  "name": "OneWallet",
+  "name": "onewallet",
   "private": true,
-  "version": "0.8.0",
+  "version": "0.8.0.1",
   "description": "chrome extension oneWallet",
   "type": "module",
   "scripts": {

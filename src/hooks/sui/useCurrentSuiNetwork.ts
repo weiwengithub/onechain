@@ -18,8 +18,6 @@ export function useCurrentSuiNetwork() {
 
   const allSuiChains = useMemo(() => [...(chainList?.suiChains || [])], [chainList?.suiChains]);
 
-  // debugger;
-
   const currentAccountSelectedSuiNetworkId = useMemo(() => {
     const selectedSuiChain = allSuiChains.find((network) => isMatchingUniqueChainId(network, chosenSuiNetworkId)) ||
                              allSuiChains.find((network) => network.id === ZKLOGIN_SUPPORTED_CHAIN_ID) ||

@@ -55,8 +55,6 @@ export async function suiProcess(message: SuiRequest) {
 
   console.log('      suiProcess', suiChain);
 
-  // debugger;
-
   const suiMethods = Object.values(SUI_METHOD_TYPE) as string[];
   const suiPopupMethods = Object.values(SUI_POPUP_METHOD_TYPE) as string[];
   const suiNoPopupMethods = Object.values(SUI_NO_POPUP_METHOD_TYPE) as string[];

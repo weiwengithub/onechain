@@ -80,8 +80,6 @@ export function useAccountTxs({ coinId, config }: UseAccountTxsProps) {
 
   const analyzedTxBlock = analyzeTransactions(address, uniqueTxBlocks);
 
-  // debugger;
-
   const formattedTxBlocks = analyzedTxBlock.map((analyzedTransaction) => {
     const humanReadable = getHumanReadable(analyzedTransaction);
     return {

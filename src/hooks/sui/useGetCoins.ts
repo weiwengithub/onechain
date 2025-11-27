@@ -15,10 +15,6 @@ type UseGetCoinsProps = {
 export function useGetCoins({ coinId, coinType, config }: UseGetCoinsProps) {
   const { getSuiAccountAsset } = useGetAccountAsset({ coinId });
 
-  // debugger;
-
-  // console.log('     useGetCoins ', coinType);
-
   const [isAllRequestsFailed, setIsAllRequestsFailed] = useState(false);
 
   const accountAsset = getSuiAccountAsset();
@@ -39,7 +35,6 @@ export function useGetCoins({ coinId, coinType, config }: UseGetCoinsProps) {
 
       const returnData: SuiGetCoinsResponse[] = [];
 
-      // debugger;
       const respose = await post<SuiGetCoinsResponse>(requestURL, {
         jsonrpc: '2.0',
         method: 'suix_getCoins',

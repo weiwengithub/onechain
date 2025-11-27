@@ -70,10 +70,8 @@ export function useGroupAccountAssets({ accountId }: UseGroupAccountAssetsProps 
     const singles = assetToSingleOrGroup.singles;
     const groups = assetToSingleOrGroup.groups;
 
-    // debugger;
-
     const validGroups = Object.fromEntries(
-       
+
       Object.entries(groups).filter(([_, value]) => {
         return value.length > 1;
       }),
@@ -81,7 +79,7 @@ export function useGroupAccountAssets({ accountId }: UseGroupAccountAssetsProps 
 
     const invalidGroups = Object.values(
       Object.fromEntries(
-         
+
         Object.entries(groups).filter(([_, value]) => {
           return value.length === 1;
         }),

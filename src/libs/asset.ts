@@ -31,6 +31,7 @@ import type {
   AccountEvmAsset,
   AccountIotaAsset,
   AccountSuiAsset,
+  AccountTronAsset,
 } from '@/types/account';
 import type {
   AptosAsset,
@@ -42,6 +43,7 @@ import type {
   EvmAsset,
   IotaAsset,
   SuiAsset,
+  TronAsset,
 } from '@/types/asset';
 import type { BitcoinChain } from '@/types/chain';
 import type { ExtensionStorage } from '@/types/extension';
@@ -130,9 +132,7 @@ export async function getAssets(forZkLoginOnly = false) {
   if (!assets) {
     throw new Error('No assets found');
   }
-  // console.log("      assetsV11", assets);
-
-  const { evmChains, suiChains, aptosChains, cosmosChains, bitcoinChains, iotaChains } = await getChains();
+  const { evmChains, suiChains, aptosChains, cosmosChains, bitcoinChains, iotaChains, tronChains } = await getChains();
 
   const evmChainIds = evmChains.map((chain) => chain.id);
   const cosmosChainIds = cosmosChains.map((chain) => chain.id);
@@ -140,8 +140,8 @@ export async function getAssets(forZkLoginOnly = false) {
   const aptosChainIds = aptosChains.map((chain) => chain.id);
   const bitcoinChainIds = bitcoinChains.map((chain) => chain.id);
   const iotaChainIds = iotaChains.map((chain) => chain.id);
-
-  // console.log("      suiChainIds", suiChainIds); //['oct', 'oct-testnet', 'sui']
+  // const tronChainIds = tronChains.map((chain) => chain.id);
+  const tronChainIds = ["tron", "tron-shasta"]
 
   const {
     evm: filteredEvmAssets,
@@ -150,6 +150,7 @@ export async function getAssets(forZkLoginOnly = false) {
     aptos: filteredAptosAssets,
     bitcoin: filteredBitcoinAssets,
     iota: filteredIotaAssets,
+    tron: filteredTronAssets,
   } = assets.reduce(
     (acc, asset) => {
       if (evmChainIds.includes(asset.chain)) {
@@ -180,6 +181,9 @@ export async function getAssets(forZkLoginOnly = false) {
       if (iotaChainIds.includes(asset.chain)) {
         acc.iota.push(asset);
       }
+      if (tronChainIds.includes(asset.chain)) {
+        acc.tron.push(asset);
+      }
       return acc;
     },
     {
@@ -189,10 +193,9 @@ export async function getAssets(forZkLoginOnly = false) {
       aptos: [] as typeof assets,
       bitcoin: [] as typeof assets,
       iota: [] as typeof assets,
+      tron: [] as typeof assets,
     },
   );
-
-  // console.log("      filteredSuiAssets", filteredSuiAssets);
 
   const evmAssets: EvmAsset[] = filteredEvmAssets.map((asset) => {
     return {
@@ -250,6 +253,15 @@ export async function getAssets(forZkLoginOnly = false) {
     };
   });
 
+  const tronAssets: TronAsset[] = filteredTronAssets.map((asset) => {
+    return {
+      ...asset,
+      id: asset.denom,
+      chainId: asset.chain,
+      chainType: 'tron',
+    };
+  });
+
   // ZkLogin 用户只返回指定链的资产
   if (forZkLoginOnly) {
     const zkLoginSuiAssets = suiAssets.filter(asset => asset.chainId === ZKLOGIN_SUPPORTED_CHAIN_ID);
@@ -261,6 +273,7 @@ export async function getAssets(forZkLoginOnly = false) {
       aptosAssets: [],
       bitcoinAssets: [],
       iotaAssets: [],
+      tronAssets: [],
       erc20Assets: [],
       customErc20Assets: [],
       cw20Assets: [],
@@ -275,6 +288,7 @@ export async function getAssets(forZkLoginOnly = false) {
     aptosAssets,
     bitcoinAssets,
     iotaAssets,
+    tronAssets,
     erc20Assets,
     customErc20Assets,
     cw20Assets,
@@ -308,6 +322,7 @@ export async function getAccountAssets(id: string, option?: GetAccountAssetsOpti
     `${id}-balance-bitcoin`,
     `${id}-balance-iota`,
     `${id}-delegation-iota`,
+    `${id}-balance-tron`,
     `${id}-balance-erc20`,
     `${id}-balance-cw20`,
     `${id}-custom-balance-erc20`,
@@ -317,7 +332,7 @@ export async function getAccountAssets(id: string, option?: GetAccountAssetsOpti
   const hiddenAssetIds = await getHiddenAssets(id);
   const visibleAssetIds = await getVisibleAssets(id);
 
-  const { aptosChains, cosmosChains, evmChains, suiChains, bitcoinChains, iotaChains } = await getChains();
+  const { aptosChains, cosmosChains, evmChains, suiChains, bitcoinChains, iotaChains, tronChains } = await getChains();
   const addedCustomChains = await getAddedCustomChains();
 
   const allEVMChains = [...evmChains, ...addedCustomChains.filter((chain) => chain.chainType === 'evm')];
@@ -334,10 +349,9 @@ export async function getAccountAssets(id: string, option?: GetAccountAssetsOpti
     suiAssets,
     bitcoinAssets,
     iotaAssets,
+    tronAssets,
   } =
     await getAssets();
-
-  // debugger;
 
   const filterHiddenAssets = <T extends Asset>(assets: T[]): T[] => {
     if (option?.disableFilterHidden) {
@@ -372,9 +386,12 @@ export async function getAccountAssets(id: string, option?: GetAccountAssetsOpti
   const suiAssetsWithoutHidden = filterHiddenAssets(suiAssets);
   const bitcoinAssetsWithoutHidden = filterHiddenAssets(bitcoinAssets);
   const iotaAssetsWithoutHidden = filterHiddenAssets(iotaAssets);
+  const tronAssetsWithoutHidden = filterHiddenAssets(tronAssets);
 
+  console.log('************ 6666');
+  console.log(tronAssetsWithoutHidden);
   let accountAddress = storage[`${id}-address`] || [];
-
+  // debugger;
   // ZkLogin 特殊处理：如果没有标准地址数据，尝试从 localStorage 获取
   if (accountAddress.length === 0) {
     try {
@@ -417,6 +434,8 @@ export async function getAccountAssets(id: string, option?: GetAccountAssetsOpti
 
   const iotaBalances = storage[`${id}-balance-iota`] || [];
   const iotaDelegations = storage[`${id}-delegation-iota`] || [];
+
+  const tronBalances = storage[`${id}-balance-tron`] || [];
 
   const bitcoinBalances = storage[`${id}-balance-bitcoin`] || [];
   const erc20Balances = storage[`${id}-balance-erc20`] || [];
@@ -506,7 +525,6 @@ export async function getAccountAssets(id: string, option?: GetAccountAssetsOpti
             if (isVestingChainMainAsset && accountInfo) {
               const vestingRemained = getVestingRemained(accountInfo, type);
               const delegatedVestingTotal = chain.id === KAVA_CHAINLIST_ID ? getDelegatedVestingTotal(accountInfo, type) : delegation;
-
 
               const [vestingRelatedAvailable, _] = (() => {
                 if (gt(vestingRemained, '0')) {
@@ -798,6 +816,9 @@ export async function getAccountAssets(id: string, option?: GetAccountAssetsOpti
   const suiPromise = PromisePool.withConcurrency(concurrency)
     .for(suiAssetsWithoutHidden)
     .process(async (asset) => {
+      // debugger;
+      console.log(accountAddress);
+      console.log("sui promise ************************");
       const addresses = accountAddress.filter((address) => address.chainId === asset.chainId && address.chainType === asset.chainType);
       const chain = suiChains.find((chain) => chain.id === asset.chainId && chain.chainType === asset.chainType)!;
 
@@ -974,62 +995,24 @@ export async function getAccountAssets(id: string, option?: GetAccountAssetsOpti
     });
 
   const tronPromise = PromisePool.withConcurrency(concurrency)
-    .for(iotaAssetsWithoutHidden)
+    .for(tronAssetsWithoutHidden)
     .process(async (asset) => {
+      // debugger;
+      console.log(accountAddress);
+      console.log("tron promise ************************");
       const addresses = accountAddress.filter((address) => address.chainId === asset.chainId && address.chainType === asset.chainType);
-      const chain = iotaChains.find((chain) => chain.id === asset.chainId && chain.chainType === asset.chainType)!;
+      const chain = tronChains.find((chain) => chain.id === asset.chainId && chain.chainType === asset.chainType)!;
 
       const { results } = await PromisePool.withConcurrency(concurrency)
         .for(addresses)
         .process((address) => {
           const type = asset.id;
-          const balanceInfo = iotaBalances?.find(
+          const balanceInfo = tronBalances?.find(
             (balance) => balance.chainId === address.chainId && balance.chainType === address.chainType && balance.address === address.address,
           );
           const balance = balanceInfo?.balances?.find((balance) => balance.coinType === type)?.totalBalance || '0';
 
-          if (type === IOTA_COIN_TYPE) {
-            const delegationInfo = iotaDelegations?.find(
-              (balance) => balance.chainId === address.chainId && balance.chainType === address.chainType && balance.address === address.address,
-            );
-
-            const delegation =
-              delegationInfo?.delegations.reduce(
-                (allValidatorStakedSum, item) =>
-                  plus(
-                    allValidatorStakedSum,
-                    item.stakes.reduce((eachValidatorStakedSum, stakeItem) => plus(eachValidatorStakedSum, stakeItem.principal), '0'),
-                  ),
-                '0',
-              ) || '0';
-            const reward =
-              delegationInfo?.delegations?.reduce(
-                (allValidatorRewardsSum, item) =>
-                  plus(
-                    allValidatorRewardsSum,
-                    item.stakes.reduce(
-                      (eachValidatorRewardSum, stakeItem) => plus(eachValidatorRewardSum, 'estimatedReward' in stakeItem ? stakeItem.estimatedReward : '0'),
-                      '0',
-                    ),
-                  ),
-                '0',
-              ) || '0';
-            const totalBalance = sum([balance, delegation, reward]);
-
-            const result: AccountIotaAsset = {
-              chain,
-              asset,
-              address,
-              balance: balance,
-              delegation,
-              reward,
-              totalBalance,
-            };
-
-            return result;
-          }
-
-          const result: AccountIotaAsset = {
+          const result: AccountTronAsset = {
             chain,
             asset,
             address,
@@ -1055,7 +1038,8 @@ export async function getAccountAssets(id: string, option?: GetAccountAssetsOpti
     iotaPromise,
     tronPromise,
   ]);
-
+  console.log('**********************88 777');
+  console.log(results);
   const cosmosAccountAssets = results[0].results.flat().filter((asset) => asset.chain && asset.address);
   const evmAccountAssets = results[1].results.flat().filter((asset) => asset.chain && asset.address);
   const aptosAccountAssets = results[2].results.flat().filter((asset) => asset.chain && asset.address);
@@ -1107,7 +1091,7 @@ export async function getAccountAssets(id: string, option?: GetAccountAssetsOpti
     }
   };
 
-  const filterHiddenStakableAssetsByBalance = <T extends AccountCosmosAsset | AccountEvmAsset | AccountSuiAsset | AccountIotaAsset>(assets: T[]): T[] => {
+  const filterHiddenStakableAssetsByBalance = <T extends AccountCosmosAsset | AccountEvmAsset | AccountSuiAsset | AccountIotaAsset | AccountTronAsset>(assets: T[]): T[] => {
     if (option?.disableBalanceFilter) {
       return assets;
     } else {

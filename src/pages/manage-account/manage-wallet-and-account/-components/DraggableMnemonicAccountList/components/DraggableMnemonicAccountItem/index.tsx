@@ -373,7 +373,6 @@ export default function DraggableMnemonicAccountItem({
           //   if (mnemonicId) handleSubmit('viewMnemonic');
           //   if (accountId) handleSubmit('viewPrivatekey');
           // }
-          // debugger;
           if (isOpenVerifyPasswordBottomSheetWithRemove) {
             if (mnemonicId) handleSubmit('removeMnemonic');
             if (accountId) handleSubmit('removeAccount');

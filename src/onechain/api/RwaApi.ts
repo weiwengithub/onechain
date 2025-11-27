@@ -22,7 +22,6 @@ class RwaApi {
    */
   async getRwaProjectDetail(contractAddress: string): Promise<RwaProjectDetailResp | undefined> {
     try {
-      // debugger;
       const res = await this.reqInstance.post(
         `/project/detailByPackageId/${contractAddress}`,
         undefined,

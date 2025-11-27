@@ -62,7 +62,6 @@ export function useTransactionBlocks({ coinId, queryOptions, config }: UseTransa
       });
 
       console.log("      SuiRpcGetTransactionBlocksResponse", respose);
-      // debugger;
 
       return respose;
     } catch (e) {

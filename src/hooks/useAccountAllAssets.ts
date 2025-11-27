@@ -47,8 +47,6 @@ export function useAccountAllAssets({
   const { currentAccount } = useCurrentAccount();
   const extensionStorageState = useExtensionStorageStore((state) => state);
 
-  // debugger;
-
   const param = useMemo(() => accountId || currentAccount.id, [accountId, currentAccount.id]);
   const accountType = useMemo(() => extensionStorageState.preferAccountType[param], [extensionStorageState.preferAccountType, param]);
 
@@ -58,12 +56,13 @@ export function useAccountAllAssets({
     try {
       const accountAssets = await getAccountAssets(param, { disableFilterHidden: true, disableBalanceFilter: true });
 
-      // debugger;
-
       const accountCustomAssets = await getAccountCustomAssets(param, {
         disableFilterHidden: true,
         disableBalanceFilter: true,
       });
+      console.log('************** 000');
+      console.log(accountAssets);
+      console.log(accountCustomAssets);
       return {
         ...accountAssets,
         ...accountCustomAssets,
@@ -80,6 +79,9 @@ export function useAccountAllAssets({
     staleTime: 1000 * 30, //30秒请求一次 assets，减少缓存时间以获得更及时的数据
     ...config,
   });
+
+  // console.log('***************************** account all assets');
+  // console.log(data);
 
   const hiddenAssetIds = useMemo(() => extensionStorageState[`${param}-hidden-assetIds`] || [], [extensionStorageState, param]);
   const hiddenCustomAssetIds = useMemo(() => extensionStorageState['customHiddenAssetIds'] || [], [extensionStorageState]);

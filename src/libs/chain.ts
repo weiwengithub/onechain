@@ -62,8 +62,6 @@ export async function getChains(forZkLoginOnly = false) {
   const iotaChains = supportedChains.filter((chainInfo) => chainInfo.params.chainlist_params?.chain_type?.includes('iota'));
   const tronChains = supportedChains.filter((chainInfo) => chainInfo.params.chainlist_params?.chain_type?.includes('tron'));
 
-  // debugger;
-
   const remappedCosmosChains: CosmosChain[] = cosmosChains.map((chain) => {
     const id = chain.id;
     const chainType = 'cosmos';

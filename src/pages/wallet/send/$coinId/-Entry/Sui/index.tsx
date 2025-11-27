@@ -215,7 +215,6 @@ export default function Sui({ coinId }: SuiProps) {
   })();
 
   const errorMessage = useMemo(() => {
-    // debugger;
     if (!recipientAddress) {
       return t('pages.wallet.send.$coinId.Entry.Sui.index.noRecipientAddress');
     }
@@ -235,7 +234,6 @@ export default function Sui({ coinId }: SuiProps) {
     if (gt(sendDisplayAmount || '0', displayAvailableAmount)) {
       return t('pages.wallet.send.$coinId.Entry.Sui.index.insufficientAmount');
     }
-    // debugger;
     if (dryRunTransactionError?.message) {
       const idx = dryRunTransactionError.message.lastIndexOf(':');
 

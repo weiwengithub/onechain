@@ -16,6 +16,10 @@ import {
   sui_mainnet_assets,
   sui_testnet_assets,
   suiTestnet,
+  tronMainnet,
+  tronTestnet,
+  tron_mainnet_assets,
+  tron_shasta_assets,
 } from '@/script/service-worker/update/constant.ts';
 import { SUI_COIN_TYPE } from '@/constants/sui';
 import erc20Json from '@/onechain/s3/erc20.json';
@@ -36,9 +40,7 @@ export async function v11() {
     const filteredChains: Record<string, V11Param> = Object.fromEntries(
       Object.entries(params).filter(([key]) => filterKeys.includes(key)),
     );
-
-    // 手动添加oct主网, oct测试网, sui测试网
-    // debugger;
+    // 手动添加oct主网, oct测试网, sui测试网, tron主网, tron测试网
 
     // @ts-expect-error -- oct
     filteredChains['oct'] = octMainnet;
@@ -46,6 +48,10 @@ export async function v11() {
     filteredChains['oct-testnet'] = octTestnet;
     // @ts-expect-error -- sui-testnet
     filteredChains['sui-testnet'] = suiTestnet;
+    // @ts-expect-error -- tron
+    filteredChains['tron'] = tronMainnet;
+    // @ts-expect-error -- tron-testnet
+    filteredChains['tron-testnet'] = tronTestnet;
 
     // const chains = params;
 
@@ -73,7 +79,7 @@ export async function v11() {
       throw new Error('No assets found');
     }
 
-    const newAssets = [...assets, ...eth_mainnet_coin];
+    const newAssets = [...assets, ...eth_mainnet_coin, ...tron_mainnet_assets, ...tron_shasta_assets];
 
     // Preserve user-added custom assets (type: 'bridge') before overwriting
     let existingUserAssets: V11Asset[] = [];
@@ -88,8 +94,6 @@ export async function v11() {
 
     // Merge system assets with preserved user assets, avoiding duplicates
     const mergedAssets = [...newAssets];
-
-    // debugger;
 
     existingUserAssets.forEach(userAsset => {
       // Check if user asset already exists in system assets (by denom + chain)
