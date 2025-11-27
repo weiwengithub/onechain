@@ -30,4 +30,5 @@ export const DEFAULT_MAJOR_CHAINS: MajorChain[] = [
   { id: 'cosmos', chainType: 'cosmos' },
   { id: 'bitcoin', chainType: 'bitcoin' },
   { id: 'ethereum', chainType: 'evm' },
+  { id: 'tron', chainType: 'tron' },
 ];

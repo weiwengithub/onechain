@@ -119,23 +119,54 @@ export function useChainList() {
       })
       .filter((item) => !!item);
 
+    const filteredTronChains = chainList.allTronChains
+      ?.map((chain) => {
+        const selectedChainAccountType = accountType?.[chain.id];
+
+        if (selectedChainAccountType) {
+          if (
+            chain.accountTypes.some(
+              (accountType) =>
+                accountType.hdPath === selectedChainAccountType.hdPath &&
+                accountType.pubkeyStyle === selectedChainAccountType.pubkeyStyle &&
+                accountType.pubkeyType === selectedChainAccountType.pubkeyType,
+            )
+          ) {
+            return produce(chain, (draft) => {
+              draft.accountTypes = draft.accountTypes.filter(
+                (item) =>
+                  item.hdPath === selectedChainAccountType.hdPath &&
+                  item.pubkeyStyle === selectedChainAccountType.pubkeyStyle &&
+                  item.pubkeyType === selectedChainAccountType.pubkeyType,
+              );
+            });
+          }
+          return null;
+        }
+        return chain;
+      })
+      .filter((item) => !!item);
+
     const customCosmosChains = addedCustomChainList.filter((chain) => chain.chainType === 'cosmos');
     const customEvmChains = addedCustomChainList.filter((chain) => chain.chainType === 'evm');
 
     const allCosmosChains = [...(filteredCosmosChains || []), ...customCosmosChains];
     const allEVMChains = [...(filteredEVMChains || []), ...customEvmChains];
+    const allTronChains = filteredTronChains || [];
 
     return {
       ...data,
       cosmosChains: filteredCosmosChains,
       evmChains: filteredEVMChains,
       bitcoinChains: filteredBitcoinChains,
+      tronChains: filteredTronChains,
       customCosmosChains,
       customEvmChains,
       allCosmosChains,
       allEVMChains,
+      allTronChains,
     };
-  }, [accountType, addedCustomChainList, chainList.bitcoinChains, data]);
+  }, [accountType, addedCustomChainList, chainList.bitcoinChains, chainList.allTronChains, data]);
 
   const flatChainList = useMemo(
     () =>
