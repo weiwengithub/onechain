@@ -13,6 +13,7 @@ import { SHA3 } from 'sha3';
 import ecc from '@bitcoinerlab/secp256k1';
 import { Ed25519PublicKey as IotaEd25519PublicKey } from '@iota/iota-sdk/keypairs/ed25519';
 import { Ed25519PublicKey } from '@onelabs/sui/keypairs/ed25519';
+import bs58check from 'bs58check';
 
 import type { Account } from '@/types/account';
 import type { Chain } from '@/types/chain';
@@ -45,7 +46,7 @@ export function getKeypair(chain: Chain, account: Account, password: string | nu
 
     const decryptedMnemonic = aesDecrypt(encryptedMnemonic, password);
 
-    if (chainType === 'cosmos' || chainType === 'evm' || chainType === 'bitcoin') {
+    if (chainType === 'cosmos' || chainType === 'evm' || chainType === 'bitcoin' || chainType === 'tron') {
       const path = hdPath.replace('${index}', `${index}`);
 
       const seed = bip39.mnemonicToSeedSync(decryptedMnemonic);
@@ -77,7 +78,7 @@ export function getKeypair(chain: Chain, account: Account, password: string | nu
     const { encryptedPrivateKey } = account;
     const decryptedPrivateKey = aesDecrypt(encryptedPrivateKey, password);
 
-    if (chainType === 'cosmos' || chainType === 'evm' || chainType === 'bitcoin') {
+    if (chainType === 'cosmos' || chainType === 'evm' || chainType === 'bitcoin' || chainType === 'tron') {
       const ecpair = ECPair.fromPrivateKey(Buffer.from(decryptedPrivateKey, 'hex'), {
         compressed: true,
       });
@@ -176,6 +177,24 @@ export function getAddress(chain: Chain, publicKey: string) {
       });
       return p2wpkhSh.address!;
     }
+  }
+
+  if (chainType === 'tron') {
+    // 1. 先从压缩公钥得到 20 字节地址
+    const uncompressedPublicKey = Buffer.from(
+      ecc.pointCompress(Buffer.from(publicKey, 'hex'), false).slice(1)
+    );
+    const evmAddress = Address.fromPublicKey(uncompressedPublicKey).toString(); // 0x + 40 hex
+
+    const hexWithout0x = evmAddress.replace(/^0x/, '');
+
+    // 2. TRON 地址 hex：前缀 0x41 + 20 字节地址
+    const tronHex = `41${hexWithout0x}`;
+
+    // 3. Base58Check 编码成 T 开头地址
+    const tronAddress = bs58check.encode(Buffer.from(tronHex, 'hex'));
+
+    return tronAddress;
   }
 
   throw new Error('Invalid chain type');

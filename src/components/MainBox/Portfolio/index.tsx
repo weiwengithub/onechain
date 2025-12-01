@@ -97,7 +97,6 @@ export default function PortFolio({ selectedChainId, onChangeChaindId }: PortFol
   const { data: accountAllAssets } = useAccountAllAssets({
     filterByPreferAccountType: true,
   });
-
   const [aggregatedTotalValue, setAggregatedTotalValue] = useState('0');
 
   const [isOpenCurrencyBottomSheet, setIsOpenCurrencyBottomSheet] = useState(false);
@@ -139,8 +138,9 @@ export default function PortFolio({ selectedChainId, onChangeChaindId }: PortFol
     if (!accountAllAssets?.flatAccountAssets || accountAllAssets.flatAccountAssets.length === 0) {
       return;
     }
-
-    const filteredAssetsByChainId = getFilteredAssetsByChainId(accountAllAssets?.flatAccountAssets, selectedChainId);
+    console.error('******************** 141');
+    console.log(accountAllAssets);
+    const filteredAssetsByChainId = getFilteredAssetsByChainId(selectedChainId && selectedChainId.indexOf('tron') >= 0 ? accountAllAssets?.tronAccountAssets : accountAllAssets?.flatAccountAssets, selectedChainId);
 
     const aggregateValue = filteredAssetsByChainId.reduce((acc, item) => {
       const balance = isStakeableAsset(item) ? item.totalBalance || '0' : item.balance;

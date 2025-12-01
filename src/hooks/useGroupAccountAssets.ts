@@ -42,7 +42,6 @@ export function useGroupAccountAssets({ accountId }: UseGroupAccountAssetsProps 
     disableHiddenFilter: false,
     filterByPreferAccountType: true,
   });
-
   const groupAccountAssets = useMemo(() => {
     const assetToSingleOrGroup = currentAccountAssets?.flatAccountAssets.reduce<SingleAndGroupedAssets>(
       (acc, asset) => {

@@ -28,9 +28,6 @@ type MnemnicBackupCheckerProps = {
 
 export default function MnemnicBackupChecker({ mnemonic, checkWords, onClickFirstAnswer, onClickSecondAnswer, onClickThirdAnswer }: MnemnicBackupCheckerProps) {
   // const { t } = useTranslation();
-  console.log("111 ******** create wallet");
-  console.log(mnemonic);
-  console.log(checkWords);
   // const values = [...mnemonic];
   const mnemonicList = mnemonic.split(" ");
   const indexArray: number[] = [];

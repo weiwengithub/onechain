@@ -295,7 +295,7 @@ export default function Entry() {
   const filteredAssets = useMemo(() => {
     const res: PortfolioCoinItem[] = [];
     filteredAssetsBySearch.forEach((item) => {
-      if (item.chain.chainType === 'sui' || item.chain.chainType === 'evm') {
+      if (item.chain.chainType === 'sui' || item.chain.chainType === 'evm' || item.chain.chainType === 'tron') {
         // 如果isDeveloperMode为false，过滤掉测试网资产
         if (!isDeveloperMode && item.chain.id.includes('-testnet')) {
           return;

@@ -171,7 +171,7 @@ export const tronMainnet = {
       api_name: 'tron',
       chain_id: '2b6653dc', // 去掉 0x
       chain_name: 'Tron',
-      chain_image: 'https://raw.githubusercontent.com/cosmostation/chainlist/master/chain/tron/resource/chain_tron.png',
+      chain_image: 'https://uni.onekey-asset.com/server-service-indexer/tron--0x2b6653dc/tokens/address--1720669765494.png',
 
       staking_asset_denom: 'trx',
       staking_asset_symbol: 'TRX',
@@ -241,7 +241,7 @@ export const tronTestnet = {
       api_name: 'tron-shasta',
       chain_id: '94a9059e', // 去掉 0x
       chain_name: 'Tron Shasta',
-      chain_image: 'https://raw.githubusercontent.com/cosmostation/chainlist/master/chain/tron/resource/chain_tron.png',
+      chain_image: 'https://uni.onekey-asset.com/server-service-indexer/tron--0x2b6653dc/tokens/address--1720669765494.png',
 
       staking_asset_denom: 'trx',
       staking_asset_symbol: 'TRX',
@@ -491,10 +491,10 @@ export const tron_mainnet_assets: V11Asset[] = [
   },
 ];
 
-export const tron_shasta_assets: V11Asset[] = [
+export const tron_testnet_assets: V11Asset[] = [
   {
     symbol: 'TRX',
-    chain: 'tron-shasta',
+    chain: 'tron-testnet',
     type: 'native',
     denom: 'trx',
     name: 'TRON (Shasta)',

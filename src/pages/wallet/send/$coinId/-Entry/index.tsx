@@ -6,6 +6,7 @@ import Cosmos from './Cosmos';
 import EVM from './EVM';
 import Iota from './Iota';
 import Sui from './Sui';
+import Tron from './Tron';
 
 type EntryProps = {
   coinId: string;
@@ -38,6 +39,10 @@ export default function Entry({ coinId }: EntryProps) {
 
   if (selectedAccountAsset?.asset.chainType === 'iota') {
     return <Iota coinId={coinId} />;
+  }
+
+  if (selectedAccountAsset?.asset.chainType === 'tron') {
+    return <Tron coinId={coinId} />;
   }
 
   return null;

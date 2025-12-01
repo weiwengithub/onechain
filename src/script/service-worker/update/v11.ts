@@ -19,7 +19,7 @@ import {
   tronMainnet,
   tronTestnet,
   tron_mainnet_assets,
-  tron_shasta_assets,
+  tron_testnet_assets,
 } from '@/script/service-worker/update/constant.ts';
 import { SUI_COIN_TYPE } from '@/constants/sui';
 import erc20Json from '@/onechain/s3/erc20.json';
@@ -79,7 +79,7 @@ export async function v11() {
       throw new Error('No assets found');
     }
 
-    const newAssets = [...assets, ...eth_mainnet_coin, ...tron_mainnet_assets, ...tron_shasta_assets];
+    const newAssets = [...assets, ...eth_mainnet_coin, ...tron_mainnet_assets, ...tron_testnet_assets];
 
     // Preserve user-added custom assets (type: 'bridge') before overwriting
     let existingUserAssets: V11Asset[] = [];

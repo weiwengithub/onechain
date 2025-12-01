@@ -28,8 +28,6 @@ export async function address(id: string) {
 
     const chains = [...cosmosChains, ...evmChains, ...suiChains, ...aptosChains, ...bitcoinChains, ...iotaChains, ...tronChains];
 
-    console.log('****************** 333-1');
-    console.log(chains);
     const storedAccountAddresses = await getAccountAddress(id);
 
     const { results: addressResponse } = await PromisePool.withConcurrency(100)
@@ -94,11 +92,7 @@ export async function address(id: string) {
         return addresses;
       });
 
-    console.log('************************ 111');
-    console.log(addressResponse);
     const addresses = addressResponse.flat();
-    console.log('*************************** addresses');
-    console.log(addresses);
     await chrome.storage.local.set<Pick<ExtensionStorage, `${string}-address`>>({ [`${account.id}-address`]: addresses });
   } catch (error) {
     if (axios.isAxiosError(error)) {

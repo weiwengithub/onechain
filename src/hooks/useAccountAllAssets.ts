@@ -51,18 +51,12 @@ export function useAccountAllAssets({
   const accountType = useMemo(() => extensionStorageState.preferAccountType[param], [extensionStorageState.preferAccountType, param]);
 
   const fetcher = async () => {
-    console.log('      useAccountAllAssets start fetch');
-
     try {
       const accountAssets = await getAccountAssets(param, { disableFilterHidden: true, disableBalanceFilter: true });
-
       const accountCustomAssets = await getAccountCustomAssets(param, {
         disableFilterHidden: true,
         disableBalanceFilter: true,
       });
-      console.log('************** 000');
-      console.log(accountAssets);
-      console.log(accountCustomAssets);
       return {
         ...accountAssets,
         ...accountCustomAssets,
@@ -79,10 +73,6 @@ export function useAccountAllAssets({
     staleTime: 1000 * 30, //30秒请求一次 assets，减少缓存时间以获得更及时的数据
     ...config,
   });
-
-  // console.log('***************************** account all assets');
-  // console.log(data);
-
   const hiddenAssetIds = useMemo(() => extensionStorageState[`${param}-hidden-assetIds`] || [], [extensionStorageState, param]);
   const hiddenCustomAssetIds = useMemo(() => extensionStorageState['customHiddenAssetIds'] || [], [extensionStorageState]);
   const visibleAssetIds = useMemo(() => extensionStorageState[`${param}-visible-assetIds`] || [], [extensionStorageState, param]);
@@ -325,7 +315,25 @@ export function useAccountAllAssets({
         return true;
       });
 
+      const filteredTron = filteredByVisibleList.tronAccountAssets.filter((item) => {
+        const selectedChainAccountType = accountType?.[item.chain.id];
 
+        if (selectedChainAccountType) {
+          const isSamePubkeyType = (() => {
+            if (selectedChainAccountType.pubkeyType && item.address.accountType.pubkeyType) {
+              return selectedChainAccountType.pubkeyType === item.address.accountType.pubkeyType;
+            }
+            return true;
+          })();
+
+          return (
+            selectedChainAccountType.hdPath === item.address.accountType.hdPath &&
+            selectedChainAccountType.pubkeyStyle === item.address.accountType.pubkeyStyle &&
+            isSamePubkeyType
+          );
+        }
+        return true;
+      });
       const filteredAccountAssets = produce(filteredByVisibleList, (draft) => {
         draft.cosmosAccountAssets = filteredCosmos;
         draft.cw20AccountAssets = filteredCW20;
@@ -333,8 +341,8 @@ export function useAccountAllAssets({
         draft.erc20AccountAssets = filteredERC20Assets;
         draft.bitcoinAccountAssets = filteredBitcoin;
         draft.suiAccountAssets = filteredSui;
+        draft.tronAccountAssets = filteredTron;
       });
-
       const flatAccountAssets = Object.values(filteredAccountAssets).flat() as FlatAccountAssets[];
 
       const returnData: UseAccountAssetsResponse = {

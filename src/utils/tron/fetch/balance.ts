@@ -12,22 +12,33 @@ import { base58ToHexAddress } from '../address';
 export async function fetchTrxBalance(address: string, rpcUrl: string): Promise<TronAccountBalance> {
   const hexAddress = base58ToHexAddress(address);
 
-  const response = await fetch(`${rpcUrl}/${TRON_RPC_METHOD.GET_ACCOUNT}`, {
+  const url = `${rpcUrl}/${TRON_RPC_METHOD.GET_ACCOUNT}`;
+  const requestBody = {
+    address: hexAddress,
+    visible: false,
+  };
+
+  console.log(`[fetchTrxBalance] Requesting ${url}`);
+  console.log(`[fetchTrxBalance] Request body:`, requestBody);
+
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      address: hexAddress,
-      visible: false,
-    }),
+    body: JSON.stringify(requestBody),
   });
 
+  console.log(`[fetchTrxBalance] Response status: ${response.status} ${response.statusText}`);
+
   if (!response.ok) {
-    throw new Error(`Failed to fetch balance: ${response.statusText}`);
+    const errorText = await response.text();
+    console.error(`[fetchTrxBalance] Error response:`, errorText);
+    throw new Error(`Failed to fetch balance: ${response.status} ${response.statusText} - ${errorText}`);
   }
 
   const data: TronAccountInfo = await response.json();
+  console.log(`[fetchTrxBalance] Response data:`, data);
 
   return {
     address,
@@ -226,4 +237,51 @@ function parseStringResult(hexResult: string): string {
   } catch {
     return '';
   }
+}
+
+/**
+ * Fetch TRX balances from multiple RPC endpoints
+ * @param address - TRON address (base58)
+ * @param rpcUrls - Array of RPC endpoint URLs
+ * @param mainAssetDenom - Main asset denomination (e.g., 'TRX' for mainnet, could be different for testnet)
+ * @returns Array of balance information
+ */
+export async function fetchTronBalances(
+  address: string,
+  rpcUrls: string[],
+  mainAssetDenom = 'trx'
+): Promise<any[]> {
+  console.log(`[fetchTronBalances] Address: ${address}, Asset: ${mainAssetDenom}`);
+  console.log(`[fetchTronBalances] Trying ${rpcUrls.length} RPC endpoints`);
+
+  for (const rpcUrl of rpcUrls) {
+    try {
+      console.log(`[fetchTronBalances] Trying RPC: ${rpcUrl}`);
+      const balanceData = await fetchTrxBalance(address, rpcUrl);
+
+      // Balance is in SUN (1 TRX = 1,000,000 SUN)
+      const balanceInSun = balanceData.balance.toString();
+
+      console.log(`[fetchTronBalances] Success! Balance: ${balanceInSun} SUN`);
+
+      return [
+        {
+          coinType: mainAssetDenom,
+          totalBalance: balanceInSun,
+        },
+      ];
+    } catch (error) {
+      console.error(`[fetchTronBalances] Failed to fetch from ${rpcUrl}:`, error);
+      continue;
+    }
+  }
+
+  // If all RPCs failed, return empty balance
+  console.warn(`[fetchTronBalances] All RPCs failed for address ${address}, returning 0 balance`);
+  return [
+    {
+      coinType: mainAssetDenom,
+      totalBalance: '0',
+    },
+  ];
 }

@@ -15,6 +15,7 @@ import type {
   AccountAddressBalanceEvm,
   AccountAddressBalanceIota,
   AccountAddressBalanceSui,
+  AccountAddressBalanceTron,
   AccountAddressLockedBalanceCosmos,
 } from '@/types/account';
 import type { AptosResourceResponse } from '@/types/aptos/api';
@@ -35,6 +36,7 @@ import { minus } from '@/utils/numbers';
 import { getUniqueChainIdWithManual, isMatchingUniqueChainId, parseUniqueChainId } from '@/utils/queryParamGenerator';
 import { isEqualsIgnoringCase } from '@/utils/string';
 import { fetchSuiBalances } from '@/utils/sui/fetch/balance';
+import { fetchTronBalances } from '@/utils/tron/fetch/balance';
 
 export interface BalanceFetchOption {
   address?: string;
@@ -173,6 +175,9 @@ async function fetchChainBalanceByType(id: string, chainId: UniqueChainId, addre
     if (chainType === 'iota') {
       await Promise.all([iotaBalances(id, { address, chainId })]);
     }
+    if (chainType === 'tron') {
+      await Promise.all([tronBalances(id, { address, chainId })]);
+    }
   }
 }
 
@@ -187,6 +192,7 @@ export async function updateBalance(id: string) {
       aptosBalances(id),
       suiBalances(id),
       iotaBalances(id),
+      tronBalances(id),
       bitcoinBalances(id),
       erc20Balance(id),
       cw20Balance(id),
@@ -804,6 +810,62 @@ async function iotaBalances(id: string, { address, chainId }: BalanceFetchOption
     await chrome.storage.local.set<Pick<ExtensionStorage, `${string}-balance-iota`>>({ [`${id}-balance-iota`]: updatedIotaBalances });
   } else {
     await chrome.storage.local.set<Pick<ExtensionStorage, `${string}-balance-iota`>>({ [`${id}-balance-iota`]: results });
+  }
+}
+
+async function tronBalances(id: string, { address, chainId }: BalanceFetchOption = {}) {
+  const accountAddress = await getAccountAddress(id);
+  const { tronChains } = await getChains();
+
+  const isUpdateSpecificAddress = !!address && !!chainId;
+
+  const addressList = isUpdateSpecificAddress
+    ? accountAddress.filter((addr) => getUniqueChainIdWithManual(addr.chainId, addr.chainType) === chainId && isEqualsIgnoringCase(addr.address, address))
+    : accountAddress;
+
+  const addressWithChain = addressList
+    .map((addr) => {
+      const chain = tronChains.find((chain) => chain.chainType === addr.chainType && chain.id === addr.chainId)!;
+      return { ...addr, chain };
+    })
+    .filter((addr) => addr.chain);
+
+  const { results } = await PromisePool.withConcurrency(10)
+    .for(addressWithChain)
+    .process(async (addr) => {
+      const { chainId, chainType, address, chain } = addr;
+
+      const { rpcUrls } = chain;
+
+      console.log(`[TRON Balance] Fetching for chain: ${chainId}, address: ${address}`);
+      console.log(`[TRON Balance] RPC URLs:`, rpcUrls.map((item) => item.url));
+      console.log(`[TRON Balance] Main asset denom: ${chain.mainAssetDenom}`);
+
+      try {
+        const balances = await fetchTronBalances(
+          address,
+          rpcUrls.map((item) => item.url).filter(Boolean),
+        );
+
+        const result: AccountAddressBalanceTron = { id, chainId, chainType, address, balances };
+        return result;
+      } catch (error) {
+        const result: AccountAddressBalanceTron = { id, chainId, chainType, address, balances: [] };
+
+        return result;
+      }
+    });
+
+  if (isUpdateSpecificAddress) {
+    const storage = await chrome.storage.local.get<ExtensionStorage>([`${id}-balance-tron`]);
+
+    const storedTronBalances = storage[`${id}-balance-tron`] || [];
+
+    const updatedTronBalances = upsertList(storedTronBalances, results, isSameUpsertItem, (e, i) => (e.balances = i.balances));
+
+    await chrome.storage.local.set<Pick<ExtensionStorage, `${string}-balance-tron`>>({ [`${id}-balance-tron`]: updatedTronBalances });
+  } else {
+    await chrome.storage.local.set<Pick<ExtensionStorage, `${string}-balance-tron`>>({ [`${id}-balance-tron`]: results });
   }
 }
 
